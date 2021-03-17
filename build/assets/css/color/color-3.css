@@ -52,7 +52,9 @@ h1 {
   background: linear-gradient(to bottom, #1bee90 0, #14e296 99%); }
 
 .address-bar {
-  background: linear-gradient(to bottom, #1bee90 0, #14e296 99%); }
+  /* background: linear-gradient(to bottom, #1bee90 0, #14e296 99%); } */
+  background: #eeeeee;
+}
 
 .feature {
   background-image: url(../../images/color/color-3/feature-bg1.png); }

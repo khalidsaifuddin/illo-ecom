@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import * as Actions from '../store/actions';
 
 import moment from 'moment';
+import Footer from '../components/footer';
 
 class BlogDetails extends React.Component {
 
@@ -204,7 +205,7 @@ class BlogDetails extends React.Component {
 						</div>
 					</section>
 
-					<div className="bg-light">
+					{/* <div className="bg-light">
 						<div className="container">
 							<div className="row">
 								<div className="col-md-12">
@@ -214,7 +215,10 @@ class BlogDetails extends React.Component {
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> */}
+
+					<Footer />
+					
 				</div>
 			</div>
 		);

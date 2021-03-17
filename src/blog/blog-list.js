@@ -4,6 +4,7 @@ import Navbar from '../components/navbar';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as Actions from '../store/actions';
+import Footer from '../components/footer';
 
 class BlogList extends React.Component {
 
@@ -276,7 +277,7 @@ class BlogList extends React.Component {
 					{/*blog Section End*/}
 
 					{/*Footer Section start*/}
-					<div className="bg-light">
+					{/* <div className="bg-light">
 						<div className="container">
 							<div className="row">
 								<div className="col-md-12">
@@ -286,7 +287,8 @@ class BlogList extends React.Component {
 								</div>
 							</div>
 						</div>
-					</div>
+					</div> */}
+					<Footer />
 					{/*Footer Section End*/}
 				</div>
 			</div>

@@ -36,7 +36,11 @@ class HomeThree extends React.Component {
 
 	state = {
 		isOpen: false,
-		routeParams: {}
+		routeParams: {},
+		produk: {
+			rows: [],
+			total: 0
+		}
 	}
 
 	images = [
@@ -61,6 +65,11 @@ class HomeThree extends React.Component {
 	componentDidMount() {
 
 		this.props.getPengguna(this.state.routeParams)
+		this.props.getProduk(this.state.routeParams).then((result)=>{
+			this.setState({
+				produk: result.payload
+			})
+		})
 		
         setTimeout(function() {
             document.querySelector(".loader-wrapper").style = "display: none";
@@ -78,7 +87,7 @@ class HomeThree extends React.Component {
   			<Navbar />
 
   			{/* Home Two Section Start */}
-  			<section id="home" className="home home-three vertical-scrolling">
+  			<section id="home" className="home home-three vertical-scrolling" style={{marginBottom:'0px'}}>
 			  	<div className="home-decor">
 					<div className="home-circle1"><img src="assets/images/main-banner3.png" alt="" /></div>
 					<div className="home-circle2"><img src="assets/images/main-banner12.png" alt="" /></div>
@@ -87,7 +96,7 @@ class HomeThree extends React.Component {
 			   	<div className="container">
 			      <div className="row">
 			         <div className="col-md-12 col-sm-12">
-						<div style={{minHeight:'36px'}}></div>
+						<div style={{minHeight:'8px'}}></div>
 						<ImageGallery 
 							items={this.images} 
 							className="galeriBesar" 
@@ -95,32 +104,58 @@ class HomeThree extends React.Component {
 							showFullscreenButton={false}
 							autoPlay={true}
 						/>
-			            {/* <div className="home-contain"> */}
-			               {/* <div className="text-white">
-			                  <div className="contain">
-			                  <h4>Aplikasi</h4>
-			                  <img src="assets/images/diskuis_white.png" style={{width:'300px'}} />
-			                  <p className="slide-cap-desc">Pembelajaran <i>Online</i>/Daring kolaboratif yang seru & menyenangkan untuk semua, dalam satu aplikasi!</p>
-			                  <a target="_blank" href={"https://play.google.com/store/apps/details?id=io.timkayu.diskuisapp&hl=en&gl=US"}><img className="ml-10 store" style={{width:'200px'}} src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="play-store" /></a>
-			                  </div>
-			                  <div className="play-button">
-			                  	<ModalVideo channel='vimeo' isOpen={this.state.isOpen} videoId='54298665' height={600} width={800} onClose={() => this.setState({isOpen: false})} />
-			                  	<a className="animated-circle" href="https://app.diskuis.id" target="_blank">
-			                     	<img src="assets/images/home2/play-buttons.png" alt="play-button" onClick={this.openModal} className="img-fluid" />
-								</a>
-			                  </div>
-			               </div> */}
-			            {/* </div> */}
-			         </div>
-			         <div className="col-sm-7">
-			            {/* <div className="home-right">
-			            	<Tilt options={{ perspective: 110, speed: 400, max: 1.2, scale:1 }}>
-			               		<img src="assets/images/mobile.png" className="img-fluid" alt="slider-caption" style={{marginTop:'-100px', width:'90%'}} />
-			               	</Tilt>
-			            </div> */}
 			         </div>
 			      </div>
 			   </div>
+			</section>
+			<section id="produk_rekomendasi" style={{marginTop:'-300px', backgroundColor:'white'}}>
+				<div className="container">
+					<div className="row">
+						<div className="col-md-6 col-sm-6 col-text-center d-align-center" style={{borderBottom:'5px solid #ccc', paddingBottom:'0px', height:'45px'}}>
+							<h2 className="title">
+								<span style={{fontSize:'20px'}}>Rekomendasi Untuk Anda</span>
+							</h2>
+						</div>
+						<div className="col-md-12 col-sm-12" style={{display:'inline-flex', overflow:'auto', marginTop:'8px', paddingBottom:'16px'}}>
+							{this.state.produk.rows.map((option)=>{
+								return (
+									<div className="card" style={{
+										minWidth:'256px', 
+										height:'365px', 
+										marginRight:'16px', 
+										borderRadius:'20px',
+										boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+										transition: '0.3s',
+										border: '0px solid #ccc'
+									}}>
+										{/* {option.nama} */}
+										{option.gambar_produk && option.gambar_produk.length > 0 &&
+										<div
+											style={{
+												width:'100%',
+												height:'240px',
+												backgroundImage: 'url('+localStorage.getItem('api_base')+option.gambar_produk[0].nama_file+')',
+												backgroundRepeat:'no-repeat',
+												backgroundSize: 'cover',
+												backgroundPosition:'center',
+												borderRadius:'20px 20px 0px 0px'
+											}}
+										>&nbsp;</div>
+										}
+										<div style={{margin:'8px', maxHeight:'30px', overflow:'hidden', textOverflow:'ellipsis', flexFlow:'nowrap', width:'100%'}}>
+											<h3 className="title" style={{marginTop:'0px'}}>{option.nama}</h3>
+										</div>
+										<div style={{paddingTop:'0px', margin:'8px', maxHeight:'50px', overflow:'hidden', textOverflow:'ellipsis', flexFlow:'nowrap', marginTop:'-8px'}}>
+											{option.keterangan &&
+											<div className="boxKeterangan" style={{marginTop:'0px', fontSize:'10px'}} dangerouslySetInnerHTML={{ __html: option.keterangan.replace(/noreferrer/g, 'noreferrer" class="link external"').replace('<p class=""><br></p>','').replace(/(<([^>]+)>)/gi, "").substring(0,100) }} />
+											}
+										</div>
+									</div>
+								)
+							})}
+						</div>
+					</div>
+				</div>
 			</section>
 			{/* Home Two Section End */}
 
@@ -152,7 +187,7 @@ class HomeThree extends React.Component {
 			{/* <Subscribe /> */}
 
 			{/*Footer Component*/}
-			{/* <Footer /> */}
+			<Footer />
   		</div>
   	);
   }
@@ -162,7 +197,8 @@ class HomeThree extends React.Component {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
 		getArtikel: Actions.getArtikel,
-		getPengguna: Actions.getPengguna
+		getPengguna: Actions.getPengguna,
+		getProduk: Actions.getProduk
     }, dispatch);
 }
 

@@ -27,6 +27,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import {Provider} from 'react-redux';
 import store from './store';
 import tentang from './components/tentang';
+import kategori from './components/kategori';
 
 // localStorage.setItem('api_base','https://be.diskuis.id')
 localStorage.setItem('api_base','http://illobackend:8888')
@@ -43,6 +44,7 @@ class Root extends React.Component {
 			  <Route path={`${process.env.PUBLIC_URL}/blog-details`} component={BlogDetails}/>
 			  <Route path={`${process.env.PUBLIC_URL}/blog`} component={BlogList}/>
 			  <Route path={`${process.env.PUBLIC_URL}/tentang`} component={tentang}/>
+			  <Route path={`${process.env.PUBLIC_URL}/kategori`} component={kategori}/>
 			  <Route path={`${process.env.PUBLIC_URL}/blog-left-sidebar`} component={BlogLeftSidebar}/>
 			  <Route path={`${process.env.PUBLIC_URL}/blog-right-sidebar`} component={BlogRightSidebar}/>
 			  <Route path={`${process.env.PUBLIC_URL}/blog-leftside`} component={BlogLeftside}/>

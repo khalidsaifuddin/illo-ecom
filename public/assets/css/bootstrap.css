@@ -9023,3 +9023,7 @@ a.text-dark:hover, a.text-dark:focus {
   font-feature-settings: "liga";
   text-align: center;
 }
+
+.boxKeterangan p {
+  font-size: 10px;
+}

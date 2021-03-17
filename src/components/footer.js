@@ -22,51 +22,32 @@ class Footer extends React.Component {
            <div className="bottom-section">
               <div className="row">
                  <div className="col-md-12 p-0">
-                    <div className="address-bar">
-                       <div>
-                          {/* Buka Aplikasi Sekarang */}
-                          <a href={"https://app.diskuis.id/"} className="btn btn-custom theme-color" role="button" style={{background:'#DF6321', marginBottom:'8px', fontSize:'30px'}} >
-                              Buka Aplikasi <b>Diskuis</b> Sekarang
-                           </a>
-                          {/* <ul className="footer-style">
-                             <li>
-                                <div className="footer-icon">
-                                   <img src="assets/images/locate.png" alt="locate" />
-                                </div>
-                                <div className="footer-address">
-                                   <a href={null}>Diskuis</a>
-                                </div>
-                             </li>
-                             <li>
-                                <div className="footer-icon">
-                                   <img src="assets/images/telephone.png" alt="telephone" />
-                                </div>
-                                <div className="footer-address">
-                                    <a href={null}>admin@diskuis.id</a>
-                                </div>
-                             </li>
-                             <li>
-                                <div className="footer-icon">
-                                   <img src="assets/images/fax.png" alt="" />
-                                </div>
-                                <div className="footer-address">
-                                    <a href={null}>---</a>
-                                </div>
-                             </li>
-                          </ul> */}
-                       </div>
+                    <div className="address-bar" style={{background:'#cccccc', display:'block', paddingTop:'16px'}}>
+                       {/* <div style={{textAlign:'left'}}>
+                          mantab
+                       </div> */}
+                       <div className="container">
+                           <div className="row">
+                              <div className="col-sm-4">
+                                 Footer column 1
+                              </div>
+                              <div className="col-sm-4">
+                                 Footer column 2
+                              </div>
+                              <div className="col-sm-4" style={{textAlign:'right'}}>
+                                 Footer column 3
+                              </div>
+                           </div>
+                        </div>
                     </div>
                  </div>
-                 {/* <div className="col-md-6 p-0">
-                    <iframe title="google-map" src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d35391.48685150366!2d72.77537852898678!3d21.18930639680146!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1530610361925" allowFullScreen className="md-height"></iframe>
-                 </div> */}
               </div>
            </div>
            </div>
         </section>
 
         <div className="copyright-section index-footer">
-           <p>2020 copyright by Diskuis</p>
+           <p>2021 copyright by Illo</p>
         </div>
 
         <div className="tap-top">
