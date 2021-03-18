@@ -35,10 +35,10 @@ class Navbar extends React.Component {
 								<a className="nav-link" href="/produk/semua">Produk</a>
 							</li>
 							<li className="nav-item">
-								<a className="nav-link" href="/blog">Blog</a>
+								<a className="nav-link" href="/mitra">Mitra</a>
 							</li>
 							<li className="nav-item">
-								<a className="nav-link" href="/tentang">Tentang</a>
+								<a className="nav-link" href="/blog">Blog</a>
 							</li>
 							<li className="nav-item">
 								<a className="nav-link" href="/keranjang">

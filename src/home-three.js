@@ -130,7 +130,8 @@ class HomeThree extends React.Component {
   			<Navbar />
 
   			{/* Home Two Section Start */}
-  			<section id="home" className="home home-three vertical-scrolling" style={{marginBottom:'0px'}}>
+  			{/* <section id="home" className="home home-three vertical-scrolling" style={{marginBottom:'0px'}}> */}
+  			{/* <section id="home" className="home home-three vertical-scrolling">
 			  	<div className="home-decor">
 					<div className="home-circle1"><img src="assets/images/main-banner3.png" alt="" /></div>
 					<div className="home-circle2"><img src="assets/images/main-banner12.png" alt="" /></div>
@@ -150,13 +151,33 @@ class HomeThree extends React.Component {
 			         </div>
 			      </div>
 			   </div>
+			</section> */}
+			{/* <section id="banner" style={{background:'linear-gradient(60deg, #96deda 0%, #50c9c3 100%)'}}> */}
+			{/* <section id="banner" style={{background:'linear-gradient(60deg, #96deda 0%, #50c9c3 100%)'}}> */}
+			{/* <section id="banner" style={{background:'linear-gradient(to top, #52c234, #061700)'}}> */}
+			<section id="banner" style={{background:'linear-gradient(to bottom, #1d976c, #93f9b9)'}}>
+				<div className="container" style={{paddingTop:'0px'}}>
+					<div className="row">
+						<div className="col-md-12 col-sm-12">
+						<div style={{minHeight:'8px'}}></div>
+						<ImageGallery 
+							items={this.images} 
+							className="galeriBesar" 
+							showThumbnails={false}
+							showFullscreenButton={false}
+							autoPlay={true}
+						/>
+						</div>
+					</div>
+				</div>
 			</section>
-			<section id="produk_rekomendasi" style={{marginTop:'-340px', backgroundColor:'white'}}>
+			{/* <section id="produk_rekomendasi" style={{backgroundColor:'white'}}> */}
+			<section id="produk_rekomendasi" style={{marginTop:'-80px', backgroundColor:'white', paddingTop:'16px'}}>
 				<div className="container">
 					<div className="row">
 						<div className="col-md-6 col-sm-6 col-text-center d-align-center" style={{borderBottom:'5px solid #ccc', paddingBottom:'0px', height:'45px'}}>
 							<h2 className="title">
-								<span style={{fontSize:'20px', color:'white'}}>Rekomendasi Untuk Anda</span>
+								<span style={{fontSize:'20px', color:'#434343'}}>Rekomendasi Untuk Anda</span>
 							</h2>
 						</div>
 						<div className="col-md-12 col-sm-12" style={{display:'inline-flex', overflow:'auto', marginTop:'8px', paddingBottom:'16px'}}>
