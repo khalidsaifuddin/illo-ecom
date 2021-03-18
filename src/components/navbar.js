@@ -32,7 +32,7 @@ class Navbar extends React.Component {
 								<a className="nav-link" href="/kategori">Kategori</a>
 							</li>
 							<li className="nav-item">
-								<a className="nav-link" href="/produk">Produk</a>
+								<a className="nav-link" href="/produk/semua">Produk</a>
 							</li>
 							<li className="nav-item">
 								<a className="nav-link" href="/blog">Blog</a>

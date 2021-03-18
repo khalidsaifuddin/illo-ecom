@@ -28,9 +28,13 @@ import {Provider} from 'react-redux';
 import store from './store';
 import tentang from './components/tentang';
 import kategori from './components/kategori';
+import login from './components/login';
+import produk from './components/produk';
+import tampilProduk from './components/tampilProduk';
 
 // localStorage.setItem('api_base','https://be.diskuis.id')
-localStorage.setItem('api_base','http://illobackend:8888')
+localStorage.setItem('api_base','http://117.53.47.43:8085')
+// localStorage.setItem('api_base','http://illobackend:8888')
 
 class Root extends React.Component {
   render() {
@@ -43,8 +47,12 @@ class Root extends React.Component {
 			  <Route path={`${process.env.PUBLIC_URL}/home-three`} component={HomeThree}/>
 			  <Route path={`${process.env.PUBLIC_URL}/blog-details`} component={BlogDetails}/>
 			  <Route path={`${process.env.PUBLIC_URL}/blog`} component={BlogList}/>
+			  <Route path={`${process.env.PUBLIC_URL}/login`} component={SignIn}/>
+			  <Route path={`${process.env.PUBLIC_URL}/daftar`} component={SignUp}/>
 			  <Route path={`${process.env.PUBLIC_URL}/tentang`} component={tentang}/>
 			  <Route path={`${process.env.PUBLIC_URL}/kategori`} component={kategori}/>
+			  <Route path={`${process.env.PUBLIC_URL}/tampilProduk/:produk_id`} component={tampilProduk}/>
+			  <Route path={`${process.env.PUBLIC_URL}/produk/:kategori_produk_id`} component={produk}/>
 			  <Route path={`${process.env.PUBLIC_URL}/blog-left-sidebar`} component={BlogLeftSidebar}/>
 			  <Route path={`${process.env.PUBLIC_URL}/blog-right-sidebar`} component={BlogRightSidebar}/>
 			  <Route path={`${process.env.PUBLIC_URL}/blog-leftside`} component={BlogLeftside}/>

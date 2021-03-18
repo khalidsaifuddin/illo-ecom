@@ -12,14 +12,17 @@ class SignIn extends React.Component {
    render() {
 
       return (
-         <section className="authentication-form">
+         <section className="authentication-form" style={{paddingTop:'32px'}}>
             <div className="innerpage-decor">
                <div className="innerpage-circle1"><img src="assets/images/Testimonial2.png" alt="" /></div>
                <div className="innerpage-circle2"><img src="assets/images/Testimonial1.png" alt="" /></div>
             </div>
             <div>
-               <h2 className="title text-center"><span> Login</span></h2>
-               <p className="text-center">Welcome to tovo, Please Login with your personal account information.</p>
+               <div style={{width:'100%', textAlign:'center', marginBottom:'8px'}}>
+                  <a className="navbar-brand" href={`${process.env.PUBLIC_URL}/`}><img src="/assets/images/illo-logo.png" alt="logo" style={{width:'100px'}} /></a>
+               </div>
+               <h2 className="title text-center"><span> Login Pengguna</span></h2>
+               <p className="text-center">Silakan Login menggunakan akun Anda, atau <a href="/daftar">daftar</a> bila Anda belum memiliki akun</p>
                <div className="card">
                   <form className="theme-form">
                      <div className="form-group">
