@@ -15,7 +15,7 @@ class CardProdukMini extends React.Component {
 		
         return (
             <div className="card" style={{
-                minWidth:'256px', 
+                minWidth:'100%', 
                 height:'160px',
                 marginRight:'16px', 
                 borderRadius:'20px',

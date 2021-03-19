@@ -1,7 +1,8 @@
 import React from 'react';
 
 import Navbar from '../components/navbar';
-import {withRouter} from 'react-router';
+import {withRouter, browserRouter} from 'react-router';
+// import { useHistory } from "react-router-dom";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -11,13 +12,17 @@ import moment from 'moment';
 import Footer from './footer';
 import CardProduk from './CardProduk';
 import CardProdukMini from './CardProdukMini';
+import { Alert, Confirm } from 'react-st-modal';
+
 
 class tampilProduk extends React.Component {
 	state = {
 		routeParams: {
 			start: 0,
 			limit: 20,
-            produk_id: (this.props.match.params.produk_id ? this.props.match.params.produk_id : null)
+            produk_id: (this.props.match.params.produk_id ? this.props.match.params.produk_id : null),
+			varian_produk_id: null,
+			jumlah: 0
 		},
 		kategori_produk: {
 			rows: [],
@@ -31,7 +36,8 @@ class tampilProduk extends React.Component {
             rows: [],
 			total: 0
         },
-        produk_record: {}
+        produk_record: {},
+		gambar_utama: ''
 	}
 
 	gradients = [
@@ -59,6 +65,10 @@ class tampilProduk extends React.Component {
         'November',
         'Desember'
     ]
+
+	formatAngka = (num) => {
+        return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+    }
 	
 	componentDidMount() {
         
@@ -69,6 +79,23 @@ class tampilProduk extends React.Component {
 				produk: result.payload,
                 produk_record: result.payload.total > 0 ? result.payload.rows[0] : {}
 			},()=>{
+
+				if(this.state.produk_record.gambar_produk && this.state.produk_record.gambar_produk.length > 0){
+					this.state.produk_record.gambar_produk.map((option)=>{
+						if(parseInt(option.gambar_utama) === 1){
+							this.setState({
+								gambar_utama: option.nama_file
+							})
+						}else{
+							if(this.state.produk_record.gambar_produk.indexOf(option) === 0){
+								this.setState({
+									gambar_utama: option.nama_file
+								})	
+							}
+						}
+					})
+				}
+
                 this.props.getKategoriProduk({...this.state.routeParams, kategori_produk_id: null}).then((result)=>{
                     this.setState({
                         kategori_produk: result.payload
@@ -88,6 +115,67 @@ class tampilProduk extends React.Component {
 		}, 2000);
 	}
 
+	gantiGambar = (nama_file) => {
+		this.setState({
+			gambar_utama: nama_file
+		})
+	}
+	
+	gantiVarian = (varian_produk_id) => {
+		this.setState({
+			routeParams: {
+				...this.state.routeParams,
+				varian_produk_id: varian_produk_id
+			}
+		})
+	}
+
+	ubahJumlah = (e) => {
+		// console.log(e.currentTarget.value)
+		if(e.currentTarget.value < 0){
+			// alert('Jumlah tidak bisa kurang dari 0!')
+			const result = Alert('Jumlah pembelian tidak bisa kurang dari 0!', 'Peringatan');
+			
+			this.setState({
+				routeParams: {
+					...this.state.routeParams,
+					jumlah: 0
+				}
+			},()=>{
+				return true
+			})
+		}else{
+
+			this.setState({
+				routeParams: {
+					...this.state.routeParams,
+					jumlah: e.currentTarget.value
+				}
+			})
+		}
+
+	}
+
+	beli = () => {
+		// alert(produk_id)
+		if(parseInt(localStorage.getItem('sudah_login')) === 1){
+			//sudah login
+			alert('sudah login')
+		}else{
+
+			//belum login. arahkan ke halaman login/daftar
+			// console.log(this.props.location)
+			this.props.history.push('/login?redirect='+this.props.location.pathname)
+			// console.log(this.props.history)
+			// const history = useHistory()
+			// history.push("/login")
+			// window.location.href('/login')
+			// alert('belum login bos')
+			// useHistory.push('/login')
+			// console.log(useHistory)
+		}
+	}
+
 	render() {
 		return (
 			<div>
@@ -99,7 +187,7 @@ class tampilProduk extends React.Component {
 						<div className="container">
 							<div className="row">
 								<div className="col-md-6 col-sm-6 col-text-center d-align-center">
-									<h2 className="title"><span>Produk</span></h2>
+									<h2 className="title"><span>{this.state.produk_record.nama}</span></h2>
 								</div>
 								<div className="col-md-6 col-sm-6 col-text-center">
 									<nav aria-label="breadcrumb" className="blog-bradcrumb ">
@@ -118,17 +206,128 @@ class tampilProduk extends React.Component {
 					{/*breadcrumb end*/}
 
 					{/*blog Section start*/}
-					<section style={{marginTop:'-80px'}}>
+					<section style={{marginTop:'-70px'}}>
 						<div className="container">
 							<div className="row">
 								<div className="col-md-8 col-lg-9 blog-sec">
 									<div className="row blog-list">
 
                                         {/* detail produk */}
-                                        <div className="col-md-12 col-lg-12 order-md-last list-sidebar">
-                                            detail produknya
-                                        </div>
-                                    
+                                        <div className="col-md-6 col-lg-6 order-md-last list-sidebar">
+                                            {this.state.produk_record.gambar_produk && this.state.produk_record.gambar_produk.length > 0 &&
+											<div style={{width:'100&'}}>
+												<div
+												style={{
+													width:'100%',
+													height:'400px',
+													background:'#4f4f4f',
+													backgroundImage: 'url('+localStorage.getItem('api_base')+this.state.gambar_utama+')',
+													backgroundSize:'cover',
+													backgroundPosition:'center',
+													backgroundRepeat:'no-repeat'
+												}}
+												>&nbsp;</div>
+												<div style={{
+													display:'inline-flex', 
+													marginTop:'8px', 
+													overflow:'auto',
+													width:'100%'
+												}}>
+												{this.state.produk_record.gambar_produk.map((option)=>{
+													return (
+														<a style={{width:'100px',marginRight:'4px', cursor:'pointer'}} onClick={()=>this.gantiGambar(option.nama_file)}>
+															<div
+															style={{
+																minWidth:'100px',
+																height:'100px',
+																background:'#434343',
+																marginBottom:'16px',
+																backgroundImage: 'url('+localStorage.getItem('api_base')+option.nama_file+')',
+																backgroundSize:'cover',
+																backgroundPosition:'center',
+																backgroundRepeat:'no-repeat'
+															}}
+															>&nbsp;</div>
+														</a>
+													)
+												})}
+												</div>
+                                        	</div>
+											}
+										</div>
+										<div className="col-md-6 col-lg-6 order-md-last list-sidebar">
+											<h2 style={{fontWeight:'500', marginBottom:'8px'}}>
+												Rp {(this.state.produk_record.harga_produk && this.state.produk_record.harga_produk.length > 0 ? this.formatAngka(this.state.produk_record.harga_produk[0].nominal) : 0)}
+											</h2>
+											<div style={{color:'#a0a0a0'}}>
+												Harga Retail
+											</div>
+											
+											<div style={{marginTop:'8px'}}>
+												Jumlah Stok: 0
+											</div>
+											<div className="blog-divider"></div>
+											
+											{this.state.produk_record.varian_produk && this.state.produk_record.varian_produk.length > 0 &&
+											<div style={{marginTop:'8px'}}>
+												Varian:<br/>
+												<div style={{
+													display:'inline-flex', 
+													marginTop:'8px', 
+													overflow:'auto',
+													width:'100%'
+												}}>
+													{this.state.produk_record.varian_produk.map((option)=>{
+														return (
+															<a style={{width:'100px',marginRight:'4px', cursor:'pointer'}} onClick={()=>this.gantiVarian(option.varian_produk_id)}>
+																<div
+																className="card"
+																style={{
+																	minWidth:'100px',
+																	minHeight:'60px',
+																	marginBottom:'16px',
+																	textAlign:'center',
+																	padding:'8px',
+																	fontSize:'12px',
+																	background: (this.state.routeParams.varian_produk_id === option.varian_produk_id ? '#e8fffb' : 'white'),
+																	border:(this.state.routeParams.varian_produk_id === option.varian_produk_id ? '2px solid green' : '1px solid #ccc')
+																}}
+																>
+																	{option.nama}
+																</div>
+															</a>
+														)
+													})}
+												</div>
+											</div>
+											}
+											<div style={{marginTop:'8px'}}>
+												<input type="number" className="form-control" placeholder="Jumlah" onChange={this.ubahJumlah} value={this.state.routeParams.jumlah} />
+											</div>
+											<div style={{marginTop:'8px'}}>
+												<div style={{padding:'8px'}}>
+													<button 
+														onClick={()=>this.beli()} 
+														className="btn btn-custom btn-block theme-color" 
+														style={{borderRadius:'15px'}}
+													>
+														<i className="f7-icons" style={{fontWeight:'bold'}}>cart</i>&nbsp;
+														Tambah ke Keranjang
+													</button>
+												</div>
+											</div>
+											<div className="blog-divider"></div>
+											<div>
+												{this.state.produk_record.keterangan &&
+                                                <div style={{marginTop:'8px', fontSize:'12px'}} dangerouslySetInnerHTML={{ __html: this.state.produk_record.keterangan.replace(/noreferrer/g, 'noreferrer" class="link external"').replace('<p class=""><br></p>','') }} />
+                                                }
+                                                {!this.state.produk_record.keterangan &&
+                                                <div style={{marginTop:'8px', fontSize:'12px'}}>
+                                                    Tidak ada keterangan produk
+                                                </div>
+                                                }
+											</div>
+										</div>
 									</div>
 								</div>
 								<div className="col-md-4 col-lg-3 order-md-last list-sidebar">

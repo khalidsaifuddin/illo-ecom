@@ -20,20 +20,20 @@ class SignUp extends React.Component {
                   <form className="theme-form">
                      <div className="form-group">
                         <div className="md-fgrup-margin">
-                           <input type="text" className="form-control" placeholder="your name" required="required" />
+                           <input type="text" className="form-control" placeholder="Nama Anda" required="required" />
                         </div>
                      </div>
                      <div className="form-group">
-                        <input type="number" className="form-control" placeholder="phone" required="required" />
+                        <input type="number" className="form-control" placeholder="No Whatsapp Aktif" required="required" />
                      </div>
                      <div className="form-group">
-                        <input type="email" className="form-control" placeholder="email address" required="required" />
+                        <input type="email" className="form-control" placeholder="Alamat email aktif" required="required" />
                      </div>
                      <div className="form-group">
                         <input required="" type="password" className="form-control" placeholder="Password" />
                      </div>
                      <div className="form-group">
-                        <input type="password" name="login[password]" className="form-control" placeholder="Conform password" required="required" />
+                        <input type="password" name="login[password]" className="form-control" placeholder="Konfirmasi password" required="required" />
                         <div className="show-hide">
                            <span className="show"></span>
                         </div>
@@ -48,10 +48,10 @@ class SignUp extends React.Component {
                      <div className="form-button text-center">
                         <button type="submit" className="btn btn-custom theme-color">Sign Up</button>
                      </div>
-                     <div className="or-saparator"><span>or</span></div>
-                     <h6 className="text-center mt-0 mb-3">Sign up with:</h6>
+                     <div className="or-saparator"><span>atau</span></div>
+                     <h6 className="text-center mt-0 mb-3">Daftar dengan:</h6>
                      <div className="form-button text-center social-btns">
-                        <button type="submit" className="btn btn-custom fb">Facebook</button>
+                        {/* <button type="submit" className="btn btn-custom fb">Facebook</button> */}
                         <button type="submit" className="btn btn-custom ggl">Google</button>
                      </div>
                   </form>

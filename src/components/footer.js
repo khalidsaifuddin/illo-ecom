@@ -53,6 +53,7 @@ class Footer extends React.Component {
                                     Metode Pembayaran
                                  </div>
                                  <img src="/assets/images/vismas.png" style={{width:'160px', marginTop:'8px'}}/>
+                                 <img src="/assets/images/ATM_Bersama_2016.png" style={{height:'35px', marginTop:'8px'}}/>
                               </div>
                            </div>
                         </div>
