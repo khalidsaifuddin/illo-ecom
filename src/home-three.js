@@ -155,7 +155,7 @@ class HomeThree extends React.Component {
 			{/* <section id="banner" style={{background:'linear-gradient(60deg, #96deda 0%, #50c9c3 100%)'}}> */}
 			{/* <section id="banner" style={{background:'linear-gradient(60deg, #96deda 0%, #50c9c3 100%)'}}> */}
 			{/* <section id="banner" style={{background:'linear-gradient(to top, #52c234, #061700)'}}> */}
-			<section id="banner" style={{background:'linear-gradient(to bottom, #1d976c, #93f9b9)'}}>
+			<section id="banner" className="bannerAtas">
 				<div className="container" style={{paddingTop:'0px'}}>
 					<div className="row">
 						<div className="col-md-12 col-sm-12">
@@ -172,7 +172,7 @@ class HomeThree extends React.Component {
 				</div>
 			</section>
 			{/* <section id="produk_rekomendasi" style={{backgroundColor:'white'}}> */}
-			<section id="produk_rekomendasi" style={{marginTop:'-80px', backgroundColor:'white', paddingTop:'16px'}}>
+			<section id="produk_rekomendasi" className="produkRekomendasi">
 				<div className="container">
 					<div className="row">
 						<div className="col-md-6 col-sm-6 col-text-center d-align-center" style={{borderBottom:'5px solid #ccc', paddingBottom:'0px', height:'45px'}}>

@@ -91,7 +91,7 @@ class produk extends React.Component {
 								<div className="col-md-6 col-sm-6 col-text-center">
 									<nav aria-label="breadcrumb" className="blog-bradcrumb ">
 										<ol className="breadcrumb bg-transparent mb-0">
-											<li className="breadcrumb-item"><a href="/">Home</a></li>
+											<li className="breadcrumb-item"><a href="/">Beranda</a></li>
 											<li className="breadcrumb-item"><a href="/produk/semua">Produk</a></li>
 											<li className="breadcrumb-item active"><a href={null}>
                                                 {this.props.match.params.kategori_produk_id && this.props.match.params.kategori_produk_id === 'semua' && 'Semua'}

@@ -9030,3 +9030,22 @@ a.text-dark:hover, a.text-dark:focus {
 .boxKeterangan p {
   font-size: 10px;
 }
+
+.bannerAtas {
+  background-image: url('/assets/images/mons_80.png');
+  background-image: url('/assets/images/mons_80.png'), linear-gradient(to bottom, #1d976c, #93f9b9);
+  background-attachment: fixed;
+  /* min-height: 200px; */
+  padding-bottom: 120px;
+}
+
+.produkRekomendasi {
+  margin-top: -80px; 
+  background-color: white;
+  padding-top: 16px;
+  background-image: url('/assets/images/mons222.png');
+  /* background-size:contain; */
+  /* background-attachment: fixed; */
+  background-position: bottom;
+  background-size: contain;
+}

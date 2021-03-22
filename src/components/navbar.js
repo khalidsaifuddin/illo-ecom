@@ -1,11 +1,15 @@
 import React from 'react';
 
 class Navbar extends React.Component {
+	
 	componentDidMount() {
+		console.log(localStorage.getItem('sudah_login'))
+
 		setTimeout(function () {
 			document.querySelector(".loader-wrapper").style = "display: none";
 		}, 2000);
 	}
+
 	render() {
 		return (
 			<nav className="navbar navbar-expand-lg navbar-light theme-nav fixed-top">
@@ -46,15 +50,15 @@ class Navbar extends React.Component {
 									Keranjang (0)
 								</a>
 							</li>
-							{localStorage.getItem('sudah_login') === 1 &&
+							{parseInt(localStorage.getItem('sudah_login')) === 1 &&
 							<li className="nav-item">
 								<a className="nav-link" href="/profil">
 									<i className="f7-icons">person</i>&nbsp;
-									Profil
+									{JSON.parse(localStorage.getItem('user')).nama}
 								</a>
 							</li>
 							}
-							{localStorage.getItem('sudah_login') !== 1 &&
+							{parseInt(localStorage.getItem('sudah_login')) !== 1 &&
 							<li className="nav-item">
 								<a className="nav-link" href="/login">
 									<i className="f7-icons">square_arrow_right</i>&nbsp;

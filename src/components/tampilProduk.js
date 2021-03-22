@@ -192,7 +192,7 @@ class tampilProduk extends React.Component {
 								<div className="col-md-6 col-sm-6 col-text-center">
 									<nav aria-label="breadcrumb" className="blog-bradcrumb ">
 										<ol className="breadcrumb bg-transparent mb-0">
-											<li className="breadcrumb-item"><a href="/">Home</a></li>
+											<li className="breadcrumb-item"><a href="/">Beranda</a></li>
 											<li className="breadcrumb-item"><a href="/produk/semua">Produk</a></li>
 											<li className="breadcrumb-item active"><a href={null}>
                                                 {this.state.produk_record.nama}
@@ -220,6 +220,7 @@ class tampilProduk extends React.Component {
 												style={{
 													width:'100%',
 													height:'400px',
+													border:'1px solid #eee',
 													background:'#4f4f4f',
 													backgroundImage: 'url('+localStorage.getItem('api_base')+this.state.gambar_utama+')',
 													backgroundSize:'cover',
@@ -242,6 +243,7 @@ class tampilProduk extends React.Component {
 																height:'100px',
 																background:'#434343',
 																marginBottom:'16px',
+																border:'1px solid #eee',
 																backgroundImage: 'url('+localStorage.getItem('api_base')+option.nama_file+')',
 																backgroundSize:'cover',
 																backgroundPosition:'center',
