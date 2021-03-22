@@ -275,6 +275,7 @@ class profil extends React.Component {
                                             </div>
                                         </div>
                                         <div className="col-sm-12 col-md-9 col-lg-9">
+                                            <div className="or-saparator"><span>Identitas Utama</span></div>
                                             <div className="theme-form" style={{marginTop:'0px'}}>
                                                 <div className="form-group">
                                                     <div className="md-fgrup-margin">
@@ -320,8 +321,25 @@ class profil extends React.Component {
                                                         Simpan
                                                     </button>
                                                 </div> */}
+
                                             </div>
-                                            
+                                            <div className="or-saparator"><span>Alamat Pengiriman</span></div>
+                                            <br/>
+                                            <div className="form-control" style={{paddingLeft:'32px', paddingRight:'32px', borderRadius:'20px'}}>
+                                                {this.state.routeParams.alamat_pengguna && this.state.routeParams.alamat_pengguna.length > 0 &&
+                                                <div>
+                                                    Nama Penerima: <b>{this.state.routeParams.alamat_pengguna[0].nama_penerima}</b>
+                                                    <br/>
+                                                    {this.state.routeParams.alamat_pengguna[0].alamat_jalan}<br/> 
+                                                    {this.state.routeParams.alamat_pengguna[0].kode_wilayah_kecamatan}, {this.state.routeParams.alamat_pengguna[0].kode_wilayah_kabupaten}, {this.state.routeParams.alamat_pengguna[0].kode_wilayah_provinsi}
+                                                </div>
+                                                }
+                                            </div>
+                                            <div style={{width:'100%', textAlign:'right', fontSize:'12px', paddingTop:'16px'}}>
+                                                <a href="/alamatPengguna" style={{display:'inline-flex'}}>
+                                                    <i className="f7-icons">pencil</i>&nbsp;Kelola Alamat Pengiriman
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
 								</div>

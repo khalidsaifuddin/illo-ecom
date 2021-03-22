@@ -9033,7 +9033,9 @@ a.text-dark:hover, a.text-dark:focus {
 
 .bannerAtas {
   background-image: url('/assets/images/mons_80.png');
-  background-image: url('/assets/images/mons_80.png'), linear-gradient(to bottom, #1d976c, #93f9b9);
+  background-image: url('/assets/images/mons_80.png'), linear-gradient(45deg, #fcc5e4 0%, #fda34b 15%, #ff7882 35%, #c8699e 52%, #7046aa 100%);
+  /* background-image: url('/assets/images/mons_80.png'), linear-gradient(120deg, #f093fb 0%, #f5576c 100%); */
+  /* background-image: url('/assets/images/mons_80.png'), linear-gradient(to bottom, #1d976c, #93f9b9); */
   background-attachment: fixed;
   /* min-height: 200px; */
   padding-bottom: 120px;
