@@ -36,7 +36,9 @@ class tampilProduk extends React.Component {
             rows: [],
 			total: 0
         },
-        produk_record: {},
+        produk_record: {
+			harga_produk: []
+		},
 		gambar_utama: ''
 	}
 
@@ -258,12 +260,63 @@ class tampilProduk extends React.Component {
 											}
 										</div>
 										<div className="col-md-6 col-lg-6 order-md-last list-sidebar">
-											<h2 style={{fontWeight:'500', marginBottom:'8px'}}>
-												Rp {(this.state.produk_record.harga_produk && this.state.produk_record.harga_produk.length > 0 ? this.formatAngka(this.state.produk_record.harga_produk[0].nominal) : 0)}
-											</h2>
-											<div style={{color:'#a0a0a0'}}>
-												Harga Retail
+											{parseInt(localStorage.getItem('sudah_login')) === 1 &&
+											<div>
+												<div style={{display:'inline-flex', marginBottom:'16px'}}>
+													<div style={{
+														width:'45px', 
+														height:'45px', 
+														borderRadius:'50%', 
+														background:'#434343',
+														backgroundImage: 'url(/assets/images/illo-logo-icon.png)',
+														backgroundSize: 'cover',
+														backgroundPosition: 'center',
+														backgroundRepeat: 'no-repeat',
+														border: '1px solid #ccc',
+														// margin: 'auto'
+													}}>&nbsp;</div>
+													<div style={{marginLeft:'8px'}}>
+														<b>{JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra} Illo</b>
+														<br/>
+														wilayah&nbsp;
+														{parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 3 && <span>{JSON.parse(localStorage.getItem('mitra_terdekat')).kecamatan}</span>}
+														{parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 4 && <span>{JSON.parse(localStorage.getItem('mitra_terdekat')).kabupaten}</span>}
+														{parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 5 && <span>{JSON.parse(localStorage.getItem('mitra_terdekat')).provinsi}</span>}
+													</div>
+												</div>
+												{/* <h2 style={{fontWeight:'500', marginBottom:'8px'}}> */}
+												<div>
+													{this.state.produk_record.harga_produk.map((option)=>{
+														if(parseInt(option.jenis_harga_id) === 1){
+															return (
+																<span style={{textDecoration:'line-through'}}>Rp {this.formatAngka(option.nominal)}</span>
+															)
+														}
+													})}
+												</div>
+												<div style={{fontSize:'18px', fontWeight:'bold'}}>
+													{parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id) === 2 &&
+													<span>
+														{this.state.produk_record.harga_produk.map((option)=>{
+															if(parseInt(option.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
+																return (
+																	<span style={{fontSize:'25px'}}>Rp {this.formatAngka(option.nominal)}</span>
+																)
+															}
+														})}
+													</span>
+													}
+												</div>
+												<div style={{fontSize:'10px'}}>
+													Harga {JSON.parse(localStorage.getItem('user')).jenis_mitra}
+												</div>
+													{/* Rp {(this.state.produk_record.harga_produk && this.state.produk_record.harga_produk.length > 0 ? this.formatAngka(this.state.produk_record.harga_produk[0].nominal) : 0)} */}
+												{/* </h2> */}
 											</div>
+											}
+											{/* <div style={{color:'#a0a0a0'}}>
+												Harga Retail
+											</div> */}
 											
 											<div style={{marginTop:'8px'}}>
 												Jumlah Stok: 0

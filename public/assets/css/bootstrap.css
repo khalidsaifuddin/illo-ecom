@@ -9051,3 +9051,72 @@ a.text-dark:hover, a.text-dark:focus {
   background-position: bottom;
   background-size: contain;
 }
+
+/* .card{
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+} */
+
+.card20 {
+  border-radius: 20px;
+  padding:8px;
+  padding-left: 16px;
+  padding-right: 16px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1);
+  margin-top: 8px;
+}
+
+/* .card20:hover{
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+} */
+
+.divAnggotaReseller {
+  width: 100%;
+  background: #283c86;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #45a247, #283c86);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #45a247, #283c86); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  color:white;
+  padding:8px;
+  border-radius: 20px;
+  padding-left: 16px;
+  padding-right: 16px;
+  margin-top: 8px;
+}
+
+.divAnggotaAgen {
+  width: 100%;
+  background: #8E2DE2;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #4A00E0, #8E2DE2);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #4A00E0, #8E2DE2); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  color:white;
+  padding:8px;
+  border-radius: 20px;
+  padding-left: 16px;
+  padding-right: 16px;
+  margin-top: 8px;
+}
+
+.divAnggotaDistributor {
+  width: 100%;
+  background: #8A2387;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #F27121, #E94057, #8A2387);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #F27121, #E94057, #8A2387); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  color:white;
+  padding:8px;
+  border-radius: 20px;
+  padding-left: 16px;
+  padding-right: 16px;
+  margin-top: 8px;
+}
+
+.divAnggotaPriv {
+  width: 100%;
+  background: #3C3B3F;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #605C3C, #3C3B3F);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #605C3C, #3C3B3F); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  color:white;
+  padding:8px;
+  border-radius: 20px;
+  padding-left: 16px;
+  padding-right: 16px;
+  margin-top: 8px;
+}

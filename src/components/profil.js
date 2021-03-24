@@ -267,12 +267,18 @@ class profil extends React.Component {
                                                 border: '1px solid #ccc',
                                                 margin: 'auto'
                                             }}>&nbsp;</div>
-                                            <div style={{width:'100%', textAlign:'center', marginTop:'16px'}}>
+                                            <div style={{width:'100%', textAlign:'center', marginTop:'8px'}}>
+                                                <b>Keanggotaan</b>
+                                            </div>
+                                            <div className={(parseInt(this.state.routeParams.jenis_mitra_id) === 2 ? "divAnggotaPriv" : (parseInt(this.state.routeParams.jenis_mitra_id) === 3 ? "divAnggotaReseller" : (parseInt(this.state.routeParams.jenis_mitra_id) === 4 ? "divAnggotaAgen" : (parseInt(this.state.routeParams.jenis_mitra_id) === 5 ? "divAnggotaDistributor" : "divAnggotaPriv"))))}>
+                                                {this.state.routeParams.jenis_mitra}
+                                            </div>
+                                            {/* <div style={{width:'100%', textAlign:'center', marginTop:'16px'}}>
                                                 <button onClick={()=>this.simpan()} className="btn btn-custom theme-color">
                                                     <i className="f7-icons">floppy_disk</i>&nbsp;
                                                     Simpan
                                                 </button>
-                                            </div>
+                                            </div> */}
                                         </div>
                                         <div className="col-sm-12 col-md-9 col-lg-9">
                                             <div className="or-saparator"><span>Identitas Utama</span></div>
@@ -315,15 +321,15 @@ class profil extends React.Component {
                                                         <input value={this.state.routeParams.jenis_kelamin} onChange={this.setValue('jenis_kelamin')} type="text" className="form-control" placeholder="Jenis kelamin" />
                                                     </div>
                                                 </div> */}
-                                                {/* <div className="form-button text-center">
+                                                <div className="form-button text-right">
                                                     <button onClick={()=>this.simpan()} className="btn btn-custom theme-color">
                                                         <i className="f7-icons">floppy_disk</i>&nbsp;
-                                                        Simpan
+                                                        Simpan Perubahan
                                                     </button>
-                                                </div> */}
+                                                </div>
 
                                             </div>
-                                            <div className="or-saparator"><span>Alamat Pengiriman</span></div>
+                                            <div className="or-saparator" style={{marginTop:'16px'}}><span>Alamat Pengiriman</span></div>
                                             <br/>
                                             <div className="form-control" style={{paddingLeft:'32px', paddingRight:'32px', borderRadius:'20px'}}>
                                                 {this.state.routeParams.alamat_pengguna && this.state.routeParams.alamat_pengguna.length > 0 &&
@@ -336,7 +342,7 @@ class profil extends React.Component {
                                                 }
                                             </div>
                                             <div style={{width:'100%', textAlign:'right', fontSize:'12px', paddingTop:'16px'}}>
-                                                <a href="/alamatPengguna" style={{display:'inline-flex'}}>
+                                                <a href="/AlamatPengguna" style={{display:'inline-flex', color:'#434343'}}>
                                                     <i className="f7-icons">pencil</i>&nbsp;Kelola Alamat Pengiriman
                                                 </a>
                                             </div>

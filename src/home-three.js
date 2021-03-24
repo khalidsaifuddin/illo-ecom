@@ -52,7 +52,9 @@ class HomeThree extends React.Component {
 		kategori_produk: {
 			rows: [],
 			total: 0
-		}
+		},
+		routeParams: (parseInt(localStorage.getItem('sudah_login')) === 1 ? JSON.parse(localStorage.getItem('user')) : {}),
+		mitra_terdekat: []
 	}
 
 	gradients = [
@@ -95,7 +97,22 @@ class HomeThree extends React.Component {
 
 	componentDidMount() {
 
-		this.props.getPengguna(this.state.routeParams)
+		if(parseInt(localStorage.getItem('sudah_login')) === 1){
+			//sudah login
+			this.props.getPengguna(this.state.routeParams).then((result)=>{
+				if(result.payload.total > 0){
+					//sudah login
+					localStorage.setItem('user', JSON.stringify(result.payload.rows[0]))
+					// console.log(localStorage.getItem('user'))
+
+
+
+				}
+			})
+		}else{
+			//belum login
+		}
+
 		this.props.getProduk(this.state.routeParams).then((result)=>{
 			this.setState({
 				produk: result.payload
@@ -113,6 +130,26 @@ class HomeThree extends React.Component {
 				})
 			})
 		})
+
+		if(parseInt(localStorage.getItem('sudah_login')) === 1){
+			this.props.getMitraTerdekat({
+				pengguna_id: JSON.parse(localStorage.getItem('user')).pengguna_id,
+				kode_wilayah_kecamatan: JSON.parse(localStorage.getItem('user')).alamat_pengguna[0].kode_wilayah_kecamatan,
+				kode_wilayah_kabupaten: JSON.parse(localStorage.getItem('user')).alamat_pengguna[0].kode_wilayah_kabupaten,
+				kode_wilayah_provinsi: JSON.parse(localStorage.getItem('user')).alamat_pengguna[0].kode_wilayah_provinsi,
+				jenis_mitra_id: JSON.parse(localStorage.getItem('user')).jenis_mitra_id
+			}).then((result)=>{
+				this.setState({
+					mitra_terdekat: result.payload
+				},()=>{
+
+					if(result.payload.length > 0){
+						localStorage.setItem('mitra_terdekat',JSON.stringify(result.payload[0]))
+					}
+
+				})
+			})
+		}
 		
         setTimeout(function() {
             document.querySelector(".loader-wrapper").style = "display: none";
@@ -158,7 +195,7 @@ class HomeThree extends React.Component {
 			<section id="banner" className="bannerAtas">
 				<div className="container" style={{paddingTop:'0px'}}>
 					<div className="row">
-						<div className="col-md-12 col-sm-12">
+						<div className="col-md-12 col-sm-12" style={{paddingRight:'8px', paddingLeft:'8px'}}>
 						<div style={{minHeight:'8px'}}></div>
 						<ImageGallery 
 							items={this.images} 
@@ -171,139 +208,220 @@ class HomeThree extends React.Component {
 					</div>
 				</div>
 			</section>
-			{/* <section id="produk_rekomendasi" style={{backgroundColor:'white'}}> */}
 			<section id="produk_rekomendasi" className="produkRekomendasi">
 				<div className="container">
 					<div className="row">
-						<div className="col-md-6 col-sm-6 col-text-center d-align-center" style={{borderBottom:'5px solid #ccc', paddingBottom:'0px', height:'45px'}}>
-							<h2 className="title">
-								<span style={{fontSize:'20px', color:'#434343'}}>Rekomendasi Untuk Anda</span>
-							</h2>
-						</div>
-						<div className="col-md-12 col-sm-12" style={{display:'inline-flex', overflow:'auto', marginTop:'8px', paddingBottom:'16px'}}>
-							{this.state.produk.rows.map((option)=>{
-								return (
-									<CardProduk produk={option} />
-									// <div className="card" style={{
-									// 	minWidth:'256px', 
-									// 	height:'365px', 
-									// 	marginRight:'16px', 
-									// 	borderRadius:'20px',
-									// 	boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
-									// 	transition: '0.3s',
-									// 	border: '0px solid #ccc'
-									// }}>
-									// 	{/* {option.nama} */}
-									// 	{option.gambar_produk && option.gambar_produk.length > 0 &&
-									// 	<div
-									// 		style={{
-									// 			width:'100%',
-									// 			height:'240px',
-									// 			backgroundImage: 'url('+localStorage.getItem('api_base')+option.gambar_produk[0].nama_file+')',
-									// 			backgroundRepeat:'no-repeat',
-									// 			backgroundSize: 'cover',
-									// 			backgroundPosition:'center',
-									// 			borderRadius:'20px 20px 0px 0px'
-									// 		}}
-									// 	>&nbsp;</div>
-									// 	}
-									// 	<div style={{margin:'8px', maxHeight:'30px', overflow:'hidden', textOverflow:'ellipsis', flexFlow:'nowrap', width:'100%'}}>
-									// 		<h3 className="title" style={{marginTop:'0px'}}>{option.nama}</h3>
-									// 	</div>
-									// 	<div style={{paddingTop:'0px', margin:'8px', maxHeight:'50px', overflow:'hidden', textOverflow:'ellipsis', flexFlow:'nowrap', marginTop:'-8px'}}>
-									// 		{option.keterangan &&
-									// 		<div className="boxKeterangan" style={{marginTop:'0px', fontSize:'10px'}} dangerouslySetInnerHTML={{ __html: option.keterangan.replace(/noreferrer/g, 'noreferrer" class="link external"').replace('<p class=""><br></p>','').replace(/(<([^>]+)>)/gi, "").substring(0,100) }} />
-									// 		}
-									// 	</div>
-									// </div>
-								)
-							})}
-						</div>
-						<div className="col-md-6 col-sm-12 col-text-center d-align-center" style={{borderBottom:'5px solid #ccc', paddingBottom:'0px', height:'45px', marginTop:'16px'}}>
-							<h2 className="title">
-								<a href="/kategori"><span style={{fontSize:'20px', color:'#434343'}}>Kategori Produk</span></a>
-							</h2>
-						</div>
-						<div className="col-md-12 col-sm-12" style={{display:'inline-flex', overflow:'auto', marginTop:'8px', paddingBottom:'16px'}}>
-							{this.state.kategori_produk.rows.map((option)=>{
-								return (
-									<a href={"/produk/"+option.kategori_produk_id} style={{width:'100%'}}>
-										<div className="card" style={{
-											margin:'8px', 
-											width:'200px', 
-											background:(this.gradients[this.state.kategori_produk.rows.indexOf(option)]),minHeight:'60px', 
-											textAlign:'right',
-											color:'white', 
-											fontWeight:'400',
-											marginLeft:'0px',
-											border:'none',
-											minHeight:'100px',
-											fontSize: '20px',
-											borderRadius: '20px'
-										}}>
-											<div style={{
-												width:'100%', 
-												height:'100px', 
-												background:'rgba(0, 0, 0, 0.4)',
-												padding:'8px',
-												borderRadius: '20px'
-											}}>
-												<span style={{textShadow:'2px 2px #434343'}}>
-													{option.nama}
-												</span>
-											</div>
+						<div className="col-md-3 col-sm-12" style={{paddingRight:'8px', paddingLeft:'8px'}}>
+							< a href="/profil" style={{color:'#434343'}}>
+								<div className="card card20" style={{textAlign:'center'}}>
+									<div style={{
+										width:'50px', 
+										height:'50px', 
+										borderRadius:'50%', 
+										background:'#434343',
+										backgroundImage: 'url('+(this.state.routeParams.gambar ? this.state.routeParams.gambar : '/assets/images/boy.jpg')+')',
+										backgroundSize: 'cover',
+										backgroundPosition: 'center',
+										backgroundRepeat: 'no-repeat',
+										border: '1px solid #ccc',
+										margin: 'auto'
+									}}>&nbsp;</div>
+									<b>{JSON.parse(localStorage.getItem('user')).nama}</b>
+									<span style={{fontSize:'10px'}}>{JSON.parse(localStorage.getItem('user')).username}</span>
+									<span style={{fontSize:'10px'}}>{JSON.parse(localStorage.getItem('user')).no_hp}</span><br/>
+									
+									<b>Keanggotaan</b>
+									{/* <div className="divAnggotaReseller"> */}
+									{/* <div className="divAnggotaAgen"> */}
+									<div className={(parseInt(this.state.routeParams.jenis_mitra_id) === 2 ? "divAnggotaPriv" : (parseInt(this.state.routeParams.jenis_mitra_id) === 3 ? "divAnggotaReseller" : (parseInt(this.state.routeParams.jenis_mitra_id) === 4 ? "divAnggotaAgen" : (parseInt(this.state.routeParams.jenis_mitra_id) === 5 ? "divAnggotaDistributor" : "divAnggotaPriv"))))}>
+										{this.state.routeParams.jenis_mitra}
+									</div>
+								</div>
+							</a>
+							<div className="card card20" style={{textAlign:'left'}}>
+								Alamat Pengiriman:<br/>
+								<div>
+									{this.state.routeParams.alamat_pengguna && this.state.routeParams.alamat_pengguna.length > 0 &&
+									<div style={{fontSize:'10px'}}>
+										<b>{this.state.routeParams.alamat_pengguna[0].nama_penerima}</b>
+										<br/>
+										{this.state.routeParams.alamat_pengguna[0].alamat_jalan}<br/> 
+										{this.state.routeParams.alamat_pengguna[0].kode_wilayah_kecamatan}, {this.state.routeParams.alamat_pengguna[0].kode_wilayah_kabupaten}, {this.state.routeParams.alamat_pengguna[0].kode_wilayah_provinsi}
+									</div>
+									}
+									<div style={{width:'100%', textAlign:'right', fontSize:'12px', paddingTop:'16px'}}>
+										<a href="/AlamatPengguna" style={{display:'inline-flex', color:'#434343'}}>
+											<i className="f7-icons">pencil</i>&nbsp;Kelola Alamat Pengiriman
+										</a>
+									</div>
+								</div>
+							</div>
+							<div className="card card20" style={{textAlign:'left'}}>
+								Mitra Terdekat:<br/>
+								<div style={{marginTop:'8px'}}>
+									{this.state.mitra_terdekat.length > 0 &&
+									<div style={{display:'inline-flex'}}>
+										<div style={{
+											width:'45px', 
+											height:'45px', 
+											borderRadius:'50%', 
+											background:'#434343',
+											backgroundImage: 'url(/assets/images/illo-logo-icon.png)',
+											backgroundSize: 'cover',
+											backgroundPosition: 'center',
+											backgroundRepeat: 'no-repeat',
+											border: '1px solid #ccc',
+											// margin: 'auto'
+										}}>&nbsp;</div>
+										<div style={{marginLeft:'8px'}}>
+											<b>{this.state.mitra_terdekat[0].jenis_mitra} Illo</b>
+											<br/>
+											wilayah&nbsp;
+											{parseInt(this.state.mitra_terdekat[0].jenis_mitra_id) === 3 && <span>{this.state.mitra_terdekat[0].kecamatan}</span>}
+											{parseInt(this.state.mitra_terdekat[0].jenis_mitra_id) === 4 && <span>{this.state.mitra_terdekat[0].kabupaten}</span>}
+											{parseInt(this.state.mitra_terdekat[0].jenis_mitra_id) === 5 && <span>{this.state.mitra_terdekat[0].provinsi}</span>}
 										</div>
-									</a>
-								)
-							})}
+									</div>
+									}
+								</div>
+							</div>
 						</div>
-						<div className="col-md-6 col-sm-12 col-text-center d-align-center" style={{borderBottom:'5px solid #ccc', paddingBottom:'0px', height:'45px', marginTop:'16px'}}>
-							<h2 className="title">
-								<span style={{fontSize:'20px', color:'#434343'}}>Produk Best Seller</span>
-							</h2>
-						</div>
-						<div className="col-md-12 col-sm-12" style={{display:'inline-flex', overflow:'auto', marginTop:'8px', paddingBottom:'16px'}}>
-							{this.state.produk_best_seller.rows.map((option)=>{
-								return (
-									<CardProduk produk={option} />
-									// <div className="card" style={{
-									// 	minWidth:'256px', 
-									// 	height:'365px', 
-									// 	marginRight:'16px', 
-									// 	borderRadius:'20px',
-									// 	boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
-									// 	transition: '0.3s',
-									// 	border: '0px solid #ccc'
-									// }}>
-									// 	{/* {option.nama} */}
-									// 	{option.gambar_produk && option.gambar_produk.length > 0 &&
-									// 	<div
-									// 		style={{
-									// 			width:'100%',
-									// 			height:'240px',
-									// 			backgroundImage: 'url('+localStorage.getItem('api_base')+option.gambar_produk[0].nama_file+')',
-									// 			backgroundRepeat:'no-repeat',
-									// 			backgroundSize: 'cover',
-									// 			backgroundPosition:'center',
-									// 			borderRadius:'20px 20px 0px 0px'
-									// 		}}
-									// 	>&nbsp;</div>
-									// 	}
-									// 	<div style={{margin:'8px', maxHeight:'30px', overflow:'hidden', textOverflow:'ellipsis', flexFlow:'nowrap', width:'100%'}}>
-									// 		<h3 className="title" style={{marginTop:'0px'}}>{option.nama}</h3>
-									// 	</div>
-									// 	<div style={{paddingTop:'0px', margin:'8px', maxHeight:'50px', overflow:'hidden', textOverflow:'ellipsis', flexFlow:'nowrap', marginTop:'-8px'}}>
-									// 		{option.keterangan &&
-									// 		<div className="boxKeterangan" style={{marginTop:'0px', fontSize:'10px'}} dangerouslySetInnerHTML={{ __html: option.keterangan.replace(/noreferrer/g, 'noreferrer" class="link external"').replace('<p class=""><br></p>','').replace(/(<([^>]+)>)/gi, "").substring(0,100) }} />
-									// 		}
-									// 	</div>
-									// </div>
-								)
-							})}
+						<div className="col-md-9 col-sm-12" style={{paddingRight:'8px', paddingLeft:'8px'}}>
+							<div className="card card20">
+								<div className="row">
+									<div className="col-md-6 col-sm-6 col-text-center d-align-center" style={{borderBottom:'5px solid #ccc', paddingBottom:'0px', height:'45px'}}>
+										<h2 className="title">
+											<span style={{fontSize:'20px', color:'#434343'}}>Rekomendasi Untuk Anda</span>
+										</h2>
+									</div>
+									<div className="col-md-12 col-sm-12" style={{display:'inline-flex', overflow:'auto', marginTop:'8px', paddingBottom:'16px'}}>
+										{this.state.produk.rows.map((option)=>{
+											return (
+												<CardProduk produk={option} pengguna={JSON.parse(localStorage.getItem('user'))} />
+												// <div className="card" style={{
+												// 	minWidth:'256px', 
+												// 	height:'365px', 
+												// 	marginRight:'16px', 
+												// 	borderRadius:'20px',
+												// 	boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+												// 	transition: '0.3s',
+												// 	border: '0px solid #ccc'
+												// }}>
+												// 	{/* {option.nama} */}
+												// 	{option.gambar_produk && option.gambar_produk.length > 0 &&
+												// 	<div
+												// 		style={{
+												// 			width:'100%',
+												// 			height:'240px',
+												// 			backgroundImage: 'url('+localStorage.getItem('api_base')+option.gambar_produk[0].nama_file+')',
+												// 			backgroundRepeat:'no-repeat',
+												// 			backgroundSize: 'cover',
+												// 			backgroundPosition:'center',
+												// 			borderRadius:'20px 20px 0px 0px'
+												// 		}}
+												// 	>&nbsp;</div>
+												// 	}
+												// 	<div style={{margin:'8px', maxHeight:'30px', overflow:'hidden', textOverflow:'ellipsis', flexFlow:'nowrap', width:'100%'}}>
+												// 		<h3 className="title" style={{marginTop:'0px'}}>{option.nama}</h3>
+												// 	</div>
+												// 	<div style={{paddingTop:'0px', margin:'8px', maxHeight:'50px', overflow:'hidden', textOverflow:'ellipsis', flexFlow:'nowrap', marginTop:'-8px'}}>
+												// 		{option.keterangan &&
+												// 		<div className="boxKeterangan" style={{marginTop:'0px', fontSize:'10px'}} dangerouslySetInnerHTML={{ __html: option.keterangan.replace(/noreferrer/g, 'noreferrer" class="link external"').replace('<p class=""><br></p>','').replace(/(<([^>]+)>)/gi, "").substring(0,100) }} />
+												// 		}
+												// 	</div>
+												// </div>
+											)
+										})}
+									</div>
+									<div className="col-md-6 col-sm-12 col-text-center d-align-center" style={{borderBottom:'5px solid #ccc', paddingBottom:'0px', height:'45px', marginTop:'16px'}}>
+										<h2 className="title">
+											<a href="/kategori"><span style={{fontSize:'20px', color:'#434343'}}>Kategori Produk</span></a>
+										</h2>
+									</div>
+									<div className="col-md-12 col-sm-12" style={{display:'inline-flex', overflow:'auto', marginTop:'8px', paddingBottom:'16px'}}>
+										{this.state.kategori_produk.rows.map((option)=>{
+											return (
+												<a href={"/produk/"+option.kategori_produk_id} style={{width:'100%'}}>
+													<div className="card" style={{
+														margin:'8px', 
+														width:'200px', 
+														background:(this.gradients[this.state.kategori_produk.rows.indexOf(option)]),minHeight:'60px', 
+														textAlign:'right',
+														color:'white', 
+														fontWeight:'400',
+														marginLeft:'0px',
+														border:'none',
+														minHeight:'100px',
+														fontSize: '20px',
+														borderRadius: '20px'
+													}}>
+														<div style={{
+															width:'100%', 
+															height:'100px', 
+															background:'rgba(0, 0, 0, 0.4)',
+															padding:'8px',
+															borderRadius: '20px'
+														}}>
+															<span style={{textShadow:'2px 2px #434343'}}>
+																{option.nama}
+															</span>
+														</div>
+													</div>
+												</a>
+											)
+										})}
+									</div>
+									<div className="col-md-6 col-sm-12 col-text-center d-align-center" style={{borderBottom:'5px solid #ccc', paddingBottom:'0px', height:'45px', marginTop:'16px'}}>
+										<h2 className="title">
+											<span style={{fontSize:'20px', color:'#434343'}}>Produk Best Seller</span>
+										</h2>
+									</div>
+									<div className="col-md-12 col-sm-12" style={{display:'inline-flex', overflow:'auto', marginTop:'8px', paddingBottom:'16px'}}>
+										{this.state.produk_best_seller.rows.map((option)=>{
+											return (
+												<CardProduk produk={option} pengguna={JSON.parse(localStorage.getItem('user'))} />
+												// <div className="card" style={{
+												// 	minWidth:'256px', 
+												// 	height:'365px', 
+												// 	marginRight:'16px', 
+												// 	borderRadius:'20px',
+												// 	boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+												// 	transition: '0.3s',
+												// 	border: '0px solid #ccc'
+												// }}>
+												// 	{/* {option.nama} */}
+												// 	{option.gambar_produk && option.gambar_produk.length > 0 &&
+												// 	<div
+												// 		style={{
+												// 			width:'100%',
+												// 			height:'240px',
+												// 			backgroundImage: 'url('+localStorage.getItem('api_base')+option.gambar_produk[0].nama_file+')',
+												// 			backgroundRepeat:'no-repeat',
+												// 			backgroundSize: 'cover',
+												// 			backgroundPosition:'center',
+												// 			borderRadius:'20px 20px 0px 0px'
+												// 		}}
+												// 	>&nbsp;</div>
+												// 	}
+												// 	<div style={{margin:'8px', maxHeight:'30px', overflow:'hidden', textOverflow:'ellipsis', flexFlow:'nowrap', width:'100%'}}>
+												// 		<h3 className="title" style={{marginTop:'0px'}}>{option.nama}</h3>
+												// 	</div>
+												// 	<div style={{paddingTop:'0px', margin:'8px', maxHeight:'50px', overflow:'hidden', textOverflow:'ellipsis', flexFlow:'nowrap', marginTop:'-8px'}}>
+												// 		{option.keterangan &&
+												// 		<div className="boxKeterangan" style={{marginTop:'0px', fontSize:'10px'}} dangerouslySetInnerHTML={{ __html: option.keterangan.replace(/noreferrer/g, 'noreferrer" class="link external"').replace('<p class=""><br></p>','').replace(/(<([^>]+)>)/gi, "").substring(0,100) }} />
+												// 		}
+												// 	</div>
+												// </div>
+											)
+										})}
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</section>
+			{/* <section id="produk_rekomendasi" style={{backgroundColor:'white'}}> */}
 			{/* Home Two Section End */}
 
 			{/* About Component*/}
@@ -346,7 +464,8 @@ function mapDispatchToProps(dispatch) {
 		getArtikel: Actions.getArtikel,
 		getPengguna: Actions.getPengguna,
 		getProduk: Actions.getProduk,
-		getKategoriProduk: Actions.getKategoriProduk
+		getKategoriProduk: Actions.getKategoriProduk,
+		getMitraTerdekat: Actions.getMitraTerdekat
     }, dispatch);
 }
 
