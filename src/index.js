@@ -32,6 +32,7 @@ import login from './components/login';
 import produk from './components/produk';
 import tampilProduk from './components/tampilProduk';
 import profil from './components/profil';
+import keranjang from './components/keranjang';
 
 // localStorage.setItem('api_base','https://be.diskuis.id')
 localStorage.setItem('api_base','http://117.53.47.43:8085')
@@ -51,6 +52,7 @@ class Root extends React.Component {
 			  <Route path={`${process.env.PUBLIC_URL}/login`} component={SignIn}/>
 			  <Route path={`${process.env.PUBLIC_URL}/daftar`} component={SignUp}/>
 			  <Route path={`${process.env.PUBLIC_URL}/profil`} component={profil}/>
+			  <Route path={`${process.env.PUBLIC_URL}/keranjang`} component={keranjang}/>
 			  <Route path={`${process.env.PUBLIC_URL}/tentang`} component={tentang}/>
 			  <Route path={`${process.env.PUBLIC_URL}/kategori`} component={kategori}/>
 			  <Route path={`${process.env.PUBLIC_URL}/tampilProduk/:produk_id`} component={tampilProduk}/>

@@ -1,9 +1,31 @@
 import React from 'react';
 
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as Actions from '../store/actions';
+
 class Navbar extends React.Component {
+
+	state = {
+		routeParams: {
+			start: 0,
+			limit: 20,
+			pengguna_id: (parseInt(localStorage.getItem('sudah_login')) === 1 ? JSON.parse(localStorage.getItem('user')).pengguna_id : null)
+		},
+		keranjang: {
+			rows: [],
+			total: 0
+		}
+	}
 	
 	componentDidMount() {
 		console.log(localStorage.getItem('sudah_login'))
+
+		this.props.getKeranjang(this.state.routeParams).then((result)=>{
+			this.setState({
+				keranjang: result.payload
+			})
+		})
 
 		setTimeout(function () {
 			document.querySelector(".loader-wrapper").style = "display: none";
@@ -47,7 +69,7 @@ class Navbar extends React.Component {
 							<li className="nav-item">
 								<a className="nav-link" href="/keranjang">
 									<i className="f7-icons">cart</i>&nbsp;
-									Keranjang (0)
+									Keranjang ({this.state.keranjang.total > 0 ? this.state.keranjang.total : '0'})
 								</a>
 							</li>
 							{parseInt(localStorage.getItem('sudah_login')) === 1 &&
@@ -105,4 +127,11 @@ class Navbar extends React.Component {
 	}
 }
 
-export default Navbar;
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators({
+		getKeranjang: Actions.getKeranjang
+    }, dispatch);
+}
+
+export default (connect(null, mapDispatchToProps)(Navbar));
+// export default Navbar;

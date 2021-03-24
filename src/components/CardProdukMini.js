@@ -65,10 +65,53 @@ class CardProdukMini extends React.Component {
                             </span>
                             }
                         </div>
-                        <div style={{paddingLeft:'8px', fontSize:'10px', fontWeight:'500', color:'#9b9b9b'}}>
+                        {/* <div style={{paddingLeft:'8px', fontSize:'10px', fontWeight:'500', color:'#9b9b9b'}}>
                             {parseInt(localStorage.getItem('sudah_login')) !== 1 &&
                             <span>
                                 Harga retail
+                            </span>
+                            }
+                        </div> */}
+                        <div style={{paddingLeft:'8px', paddingRight:'16px', fontSize:'8px', fontWeight:'500', color:'#9b9b9b'}}>
+                            {parseInt(localStorage.getItem('sudah_login')) !== 1 &&
+                            <span>
+                                <div style={{fontSize:'18px', fontWeight:'bold'}}>
+                                    {this.props.produk.harga_produk.map((option)=>{
+                                        if(parseInt(option.jenis_harga_id) === 1){
+                                            return (
+                                                <span>Rp {this.formatAngka(option.nominal)}</span>
+                                            )
+                                        }
+                                    })}
+                                </div>
+                                Harga retail
+                            </span>
+                            }
+                            {parseInt(localStorage.getItem('sudah_login')) === 1 &&
+                            <span>
+                                <div>
+                                    {this.props.produk.harga_produk.map((option)=>{
+                                        if(parseInt(option.jenis_harga_id) === 1){
+                                            return (
+                                                <span style={{textDecoration:'line-through'}}>Rp {this.formatAngka(option.nominal)}</span>
+                                            )
+                                        }
+                                    })}
+                                </div>
+                                <div style={{fontSize:'18px', fontWeight:'bold'}}>
+                                    {parseInt(this.props.pengguna.jenis_mitra_id) === 2 &&
+                                    <span>
+                                        {this.props.produk.harga_produk.map((option)=>{
+                                            if(parseInt(option.jenis_harga_id) === parseInt(this.props.pengguna.jenis_mitra_id)){
+                                                return (
+                                                    <span>Rp {this.formatAngka(option.nominal)}</span>
+                                                )
+                                            }
+                                        })}
+                                    </span>
+                                    }
+                                </div>
+                                Harga {this.props.pengguna.jenis_mitra}
                             </span>
                             }
                         </div>

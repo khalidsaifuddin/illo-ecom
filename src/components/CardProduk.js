@@ -38,22 +38,22 @@ class CardProduk extends React.Component {
                     }}
                 >&nbsp;</div>
                 }
-                <div style={{margin:'8px', maxHeight:'30px', overflow:'hidden', textOverflow:'ellipsis', flexFlow:'nowrap', width:'100%'}}>
+                <div style={{margin:'8px', maxHeight:'30px', overflow:'hidden', textOverflow:'ellipsis', flexFlow:'nowrap', width:'100%', paddingLeft:'8px', paddingRight:'8px'}}>
                     <a href={"/tampilProduk/"+this.props.produk.produk_id}>
                         <h3 className="title" style={{marginTop:'0px'}}>
                             {this.props.produk.nama}
                         </h3>
                     </a>
                 </div>
-                <div style={{minHeight:'30px', paddingTop:'0px', margin:'8px', maxHeight:'50px', overflow:'hidden', textOverflow:'ellipsis', flexFlow:'nowrap', marginTop:'-8px'}}>
+                <div style={{minHeight:'30px', paddingTop:'0px', margin:'8px', maxHeight:'50px', overflow:'hidden', textOverflow:'ellipsis', flexFlow:'nowrap', marginTop:'-8px', paddingLeft:'8px', paddingRight:'8px'}}>
                     {this.props.produk.keterangan &&
                     <div className="boxKeterangan" style={{marginTop:'0px', fontSize:'10px'}} dangerouslySetInnerHTML={{ __html: this.props.produk.keterangan.replace(/noreferrer/g, 'noreferrer" class="link external"').replace('<p class=""><br></p>','').replace(/(<([^>]+)>)/gi, "").substring(0,50) }} />
                     }
                 </div>
-                <div style={{paddingLeft:'8px', fontSize:'12px', color:'#9b9b9b'}}>
+                <div style={{paddingLeft:'16px', paddingRight:'16px', fontSize:'12px', color:'#9b9b9b'}}>
                     {this.props.produk.kategori_produk}
                 </div>
-                <div style={{paddingLeft:'8px', fontSize:'18px', fontWeight:'500'}}>
+                <div style={{paddingLeft:'16px', paddingRight:'16px', fontSize:'18px', fontWeight:'500'}}>
                     {/* Rp 100.000 */}
                     {parseInt(localStorage.getItem('sudah_login')) !== 1 &&
                     <span>
@@ -61,7 +61,7 @@ class CardProduk extends React.Component {
                     </span>
                     }
                 </div>
-                <div style={{paddingLeft:'8px', fontSize:'10px', fontWeight:'500', color:'#9b9b9b'}}>
+                <div style={{paddingLeft:'16px', paddingRight:'16px', fontSize:'10px', fontWeight:'500', color:'#9b9b9b'}}>
                     {parseInt(localStorage.getItem('sudah_login')) !== 1 &&
                     <span>
                         <div style={{fontSize:'18px', fontWeight:'bold'}}>
@@ -104,12 +104,12 @@ class CardProduk extends React.Component {
                     </span>
                     }
                 </div>
-                <div style={{padding:'8px'}}>
+                {/* <div style={{padding:'8px'}}>
                     <button onClick={()=>this.beli(this.props.produk.produk_id)} type="submit" className="btn btn-custom btn-block theme-color" style={{borderRadius:'15px'}}>
                         <i className="f7-icons" style={{fontWeight:'bold'}}>cart</i>&nbsp;
                         Beli
                     </button>
-                </div>
+                </div> */}
             </div>
         )
     }

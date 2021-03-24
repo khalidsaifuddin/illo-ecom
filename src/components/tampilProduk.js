@@ -22,7 +22,8 @@ class tampilProduk extends React.Component {
 			limit: 20,
             produk_id: (this.props.match.params.produk_id ? this.props.match.params.produk_id : null),
 			varian_produk_id: null,
-			jumlah: 0
+			pengguna_id: (parseInt(localStorage.getItem('sudah_login')) === 1 ? JSON.parse(localStorage.getItem('user')).pengguna_id : null),
+			jumlah: 1
 		},
 		kategori_produk: {
 			rows: [],
@@ -76,7 +77,7 @@ class tampilProduk extends React.Component {
         
         // console.log(this.props.match.params)
 
-		this.props.getProduk(this.state.routeParams).then((result)=>{
+		this.props.getProduk({...this.state.routeParams, mitra_id: ( JSON.parse(localStorage.getItem('mitra_terdekat')) ? JSON.parse(localStorage.getItem('mitra_terdekat')).mitra_id : null )}).then((result)=>{
 			this.setState({
 				produk: result.payload,
                 produk_record: result.payload.total > 0 ? result.payload.rows[0] : {}
@@ -162,7 +163,29 @@ class tampilProduk extends React.Component {
 		// alert(produk_id)
 		if(parseInt(localStorage.getItem('sudah_login')) === 1){
 			//sudah login
-			alert('sudah login')
+			// alert('sudah login')
+			if(this.state.produk_record.varian_produk.length > 0 && !this.state.routeParams.varian_produk_id){
+				Alert('Mohon pilih varian terlebih dahulu!', 'Peringatan')
+				return true
+			}
+
+			this.props.simpanKeranjang({
+				...this.state.routeParams
+			}).then((result)=>{
+				if(result.payload.sukses){
+					//berhasil
+					Alert('Produk berhasil ditambahkan ke keranjang', ()=>{
+						this.props.history.push('/keranjang')
+					})
+				}else{
+					//gagal
+					Alert('Ada yang salah pada sistem Kami. Mohon coba kembali dalam beberapa saat ke depan')
+				}
+			}).catch(()=>{
+				Alert('Ada yang salah pada sistem Kami. Mohon coba kembali dalam beberapa saat ke depan')
+			})
+
+			// Alert(this.state.routeParams.varian_produk_id)
 		}else{
 
 			//belum login. arahkan ke halaman login/daftar
@@ -319,7 +342,7 @@ class tampilProduk extends React.Component {
 											</div> */}
 											
 											<div style={{marginTop:'8px'}}>
-												Jumlah Stok: 0
+												Jumlah Stok: {this.state.produk_record.stok ? this.state.produk_record.stok : '0'}
 											</div>
 											<div className="blog-divider"></div>
 											
@@ -357,6 +380,7 @@ class tampilProduk extends React.Component {
 											</div>
 											}
 											<div style={{marginTop:'8px'}}>
+												<span>Jumlah pembelian</span>
 												<input type="number" className="form-control" placeholder="Jumlah" onChange={this.ubahJumlah} value={this.state.routeParams.jumlah} />
 											</div>
 											<div style={{marginTop:'8px'}}>
@@ -365,6 +389,7 @@ class tampilProduk extends React.Component {
 														onClick={()=>this.beli()} 
 														className="btn btn-custom btn-block theme-color" 
 														style={{borderRadius:'15px'}}
+														disabled={this.state.produk_record.stok > 0 ? false : true}
 													>
 														<i className="f7-icons" style={{fontWeight:'bold'}}>cart</i>&nbsp;
 														Tambah ke Keranjang
@@ -393,7 +418,7 @@ class tampilProduk extends React.Component {
                                             <div className="blog-cat-detail">
                                                 {this.state.produk_lain.rows.map((option)=>{
                                                     return (
-                                                        <CardProdukMini produk={option} />
+                                                        <CardProdukMini produk={option} pengguna={JSON.parse(localStorage.getItem('user'))} />
                                                     )
                                                 })}
                                             </div>
@@ -439,7 +464,8 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
 		getArtikel: Actions.getArtikel,
 		getProduk: Actions.getProduk,
-        getKategoriProduk: Actions.getKategoriProduk
+        getKategoriProduk: Actions.getKategoriProduk,
+		simpanKeranjang: Actions.simpanKeranjang
     }, dispatch);
 }
 
