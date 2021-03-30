@@ -22,6 +22,7 @@ class tampilProduk extends React.Component {
 			limit: 20,
             produk_id: (this.props.match.params.produk_id ? this.props.match.params.produk_id : null),
 			varian_produk_id: null,
+			mitra_id: JSON.parse(localStorage.getItem('mitra_terdekat')).mitra_id,
 			pengguna_id: (parseInt(localStorage.getItem('sudah_login')) === 1 ? JSON.parse(localStorage.getItem('user')).pengguna_id : null),
 			jumlah: 1
 		},

@@ -67,6 +67,11 @@ class keranjang extends React.Component {
 	
 	componentDidMount() {
 
+        if(parseInt(localStorage.getItem('sudah_login')) !== 1){
+            this.props.history.push('/login?redirect='+this.props.location.pathname)
+            return true
+        }
+
 		this.props.getKategoriProduk({...this.state.routeParams, kategori_produk_id: null}).then((result)=>{
             this.setState({
                 kategori_produk: result.payload
@@ -118,45 +123,83 @@ class keranjang extends React.Component {
             jumlah_aktif: e.currentTarget.value
         },()=>{
 
-            const delayDebounceFn = setTimeout(() => {
-                // console.log(e.currentTarget.value)
-                // console.log(option)
-                
-                this.props.simpanKeranjang({...this.state.produk_aktif, jumlah: this.state.jumlah_aktif}).then((result)=>{
-                    this.props.getKeranjang(this.state.routeParams).then((result)=>{
-                        this.setState({
-                            keranjang: result.payload
-                        },()=>{
-                            let barang_total = 0
-                            let harga_total = 0
-                            this.state.keranjang.rows.map((option)=>{
-        
-                                let harga = 0;
-        
-                                option.harga_produk.map((optionHarga)=>{
-                                    if(parseInt(optionHarga.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
-                                        harga = parseFloat(optionHarga.nominal)
-                                    }
-                                })
-        
-                                barang_total = barang_total+parseInt(option.jumlah)
-                                harga_total = harga_total+(parseInt(option.jumlah)* (harga) )
-                            })
-        
+            if(this.state.jumlah_aktif > 0){
+
+                const delayDebounceFn = setTimeout(() => {
+                    // console.log(e.currentTarget.value)
+                    // console.log(option)
+                    
+                    this.props.simpanKeranjang({...this.state.produk_aktif, jumlah: this.state.jumlah_aktif}).then((result)=>{
+                        this.props.getKeranjang(this.state.routeParams).then((result)=>{
                             this.setState({
-                                barang_total: barang_total,
-                                harga_total: harga_total
+                                keranjang: result.payload
+                            },()=>{
+                                let barang_total = 0
+                                let harga_total = 0
+                                this.state.keranjang.rows.map((option)=>{
+            
+                                    let harga = 0;
+            
+                                    option.harga_produk.map((optionHarga)=>{
+                                        if(parseInt(optionHarga.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
+                                            harga = parseFloat(optionHarga.nominal)
+                                        }
+                                    })
+            
+                                    barang_total = barang_total+parseInt(option.jumlah)
+                                    harga_total = harga_total+(parseInt(option.jumlah)* (harga) )
+                                })
+            
+                                this.setState({
+                                    barang_total: barang_total,
+                                    harga_total: harga_total
+                                })
                             })
                         })
                     })
-                })
-                
-            }, 1500)
-    
-            return () => clearTimeout(delayDebounceFn)
+                    
+                }, 1000)
+        
+                return () => clearTimeout(delayDebounceFn)
+            }else{
+                this.hapus(this.state.produk_aktif)
+            }
+
         })
         
+    }
 
+    hapus = (option) => {
+        // alert(keranjang_id)
+        
+        this.props.simpanKeranjang({...option, soft_delete:1}).then((result)=>{
+            this.props.getKeranjang(this.state.routeParams).then((result)=>{
+                this.setState({
+                    keranjang: result.payload
+                },()=>{
+                    let barang_total = 0
+                    let harga_total = 0
+                    this.state.keranjang.rows.map((option)=>{
+
+                        let harga = 0;
+
+                        option.harga_produk.map((optionHarga)=>{
+                            if(parseInt(optionHarga.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
+                                harga = parseFloat(optionHarga.nominal)
+                            }
+                        })
+
+                        barang_total = barang_total+parseInt(option.jumlah)
+                        harga_total = harga_total+(parseInt(option.jumlah)* (harga) )
+                    })
+
+                    this.setState({
+                        barang_total: barang_total,
+                        harga_total: harga_total
+                    })
+                })
+            })
+        })
     }
 	
 	render() {
@@ -214,6 +257,17 @@ class keranjang extends React.Component {
                                         </div>
                                     </div>
                                     <div className="daftar_barang_di_keranjang">
+                                        {this.state.keranjang.total < 1 &&
+                                        <div className="card card20" style={{paddingLeft:'8px', textAlign:'center', paddingBottom:'32px', paddingTop:'32px'}}>
+                                            <img src="./assets/images/keranjang.jpg" style={{width:'120px', margin:'auto'}} />
+                                            <br/>
+                                            <div style={{color:'#434343'}}>
+                                                Belum ada barang di keranjang Anda
+                                            </div>
+                                        </div>
+                                        }
+                                        {this.state.keranjang.total > 0 &&
+                                        <div>
                                         {this.state.keranjang.rows.map((option)=>{
                                             return (
                                                 <div className="card card20" style={{paddingLeft:'8px'}}>
@@ -240,8 +294,11 @@ class keranjang extends React.Component {
                                                                     <div style={{margin:'8px', marginTop:'0px', maxHeight:'30px', overflow:'hidden', textOverflow:'ellipsis', flexFlow:'nowrap', width:'100%'}}>
                                                                         <a href={"/tampilProduk/"+option.produk_id}>
                                                                             <h3 className="title" style={{marginTop:'0px'}}>
-                                                                                {option.nama}
+                                                                                {option.nama} {option.varian_produk_id ? <span> - {option.varian_produk}</span> : ''}
                                                                             </h3>
+                                                                            {/* <h4>
+                                                                                {option.varian_produk}
+                                                                            </h4> */}
                                                                         </a>
                                                                     </div>
                                                                     
@@ -323,12 +380,35 @@ class keranjang extends React.Component {
                                                                 defaultValue={option.jumlah} 
                                                                 style={{textAlign:'right'}} 
                                                             />
+                                                            <button 
+                                                                onClick={()=>this.hapus(option)} 
+                                                                className="btn" 
+                                                                style={{
+                                                                    borderRadius:'15px', 
+                                                                    background:'white', 
+                                                                    color:'#434343',
+                                                                    marginTop:'8px'
+                                                                }}
+                                                            >
+                                                                <i className="f7-icons" style={{fontWeight:'bold'}}>trash</i>&nbsp;
+                                                                Hapus
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
                                             )
                                         })}
+                                        </div>
+                                        }
 
+                                        {this.state.keranjang.total < 1 &&
+                                        <div>
+                                            <button onClick={()=>this.props.history.push('/produk/semua')} style={{marginTop:'16px'}} className="btn btn-custom btn-block theme-color" >
+                                                Belanja Sekarang
+                                            </button>
+                                        </div>
+                                        }
+                                        {this.state.keranjang.total > 0 &&
                                         <div className="card card20">
                                             <div className="row">
                                                 <div className="col-md-12 col-lg-12">
@@ -353,6 +433,7 @@ class keranjang extends React.Component {
                                                 </div>
                                             </div>
                                         </div>
+                                        }
                                     </div>
 								</div>
 								<div className="col-md-4 col-lg-3 order-md-last list-sidebar">
