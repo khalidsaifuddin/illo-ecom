@@ -42,7 +42,7 @@ class CardProdukMini extends React.Component {
                         }
                     </div>
                     <div className="col-md-7 col-lg-7 order-md-last list-sidebar" style={{paddingLeft:'0px'}}>
-                        <div style={{margin:'8px', maxHeight:'30px', overflow:'hidden', textOverflow:'ellipsis', flexFlow:'nowrap', width:'100%'}}>
+                        <div style={{margin:'8px', maxHeight:'30px', overflow:'hidden', flexFlow:'nowrap', width:'calc( 100% - 16px )'}}>
                             <a href={"/tampilProduk/"+this.props.produk.produk_id}>
                                 <h3 className="title" style={{marginTop:'0px'}}>
                                     {this.props.produk.nama}
@@ -73,7 +73,7 @@ class CardProdukMini extends React.Component {
                             }
                         </div> */}
                         <div style={{paddingLeft:'8px', paddingRight:'16px', fontSize:'8px', fontWeight:'500', color:'#9b9b9b'}}>
-                            {parseInt(localStorage.getItem('sudah_login')) !== 1 &&
+                            {/* {parseInt(localStorage.getItem('sudah_login')) !== 1 &&
                             <span>
                                 <div style={{fontSize:'18px', fontWeight:'bold'}}>
                                     {this.props.produk.harga_produk.map((option)=>{
@@ -86,7 +86,7 @@ class CardProdukMini extends React.Component {
                                 </div>
                                 Harga retail
                             </span>
-                            }
+                            } */}
                             {parseInt(localStorage.getItem('sudah_login')) === 1 &&
                             <span>
                                 <div>

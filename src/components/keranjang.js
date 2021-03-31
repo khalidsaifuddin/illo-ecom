@@ -201,6 +201,10 @@ class keranjang extends React.Component {
             })
         })
     }
+
+    checkout = () => {
+        alert('okte')
+    }
 	
 	render() {
 
@@ -432,6 +436,15 @@ class keranjang extends React.Component {
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                        }
+
+                                        {this.state.keranjang.total > 0 &&
+                                        <div style={{width:'100%', textAlign:'right'}}>
+                                            <button onClick={this.checkout} style={{marginTop:'16px'}} className="btn btn-custom theme-color" >
+                                                <i className="f7-icons">cart_fill</i>&nbsp;
+                                                Checkout
+                                            </button>
                                         </div>
                                         }
                                     </div>

@@ -82,7 +82,11 @@ class SignUp extends React.Component {
                   localStorage.setItem('sudah_login', 1)
 
                   setTimeout(() => {
-                     this.props.history.push(this.getParameterByName('redirect'))
+                     if(this.getParameterByName('redirect')){
+                        this.props.history.push(this.getParameterByName('redirect'))
+                     }else{
+                        this.props.history.push('/')
+                     }
                   }, 2000);
                })
 
@@ -203,7 +207,7 @@ class SignUp extends React.Component {
                   </div>
                </Modal>
                <h2 className="title text-center">Daftar<span> Pengguna Baru</span></h2>
-               <p className="text-center">Sudah punya akun? Silakan <a href="/login">login di sini</a></p>
+               <p className="text-center">Sudah punya akun? Silakan <a style={{color:'#434343', fontWeight:'bold'}} href="/login">login di sini</a></p>
                <div className="card">
                   <div className="theme-form">
                      <div className="form-group">

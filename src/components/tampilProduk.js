@@ -284,6 +284,25 @@ class tampilProduk extends React.Component {
 											}
 										</div>
 										<div className="col-md-6 col-lg-6 order-md-last list-sidebar">
+											{parseInt(localStorage.getItem('sudah_login')) !== 1 &&
+											<div>
+												<div>
+													{this.state.produk_record.harga_produk.map((option)=>{
+														if(parseInt(option.jenis_harga_id) === 1){
+															return (
+																<span style={{fontSize:'25px'}}>Rp {this.formatAngka(option.nominal)}</span>
+															)
+														}
+													})}
+												</div>
+												<div style={{fontSize:'10px'}}>
+													Harga Retail
+												</div>
+												<div className="card card20" style={{borderRadius:'0px', color:'white', fontSize:'15px', textAlign:'left', background:'linear-gradient(to right, #b8cbb8 0%, #b8cbb8 0%, #b465da 0%, #cf6cc9 33%, #ee609c 66%, #ee609c 100%)'}}>
+													Daftar/Login sekarang dan dapatkan produk ini penawaran spesial!
+												</div>
+											</div>
+											}
 											{parseInt(localStorage.getItem('sudah_login')) === 1 &&
 											<div>
 												<div style={{display:'inline-flex', marginBottom:'16px'}}>
@@ -302,10 +321,11 @@ class tampilProduk extends React.Component {
 													<div style={{marginLeft:'8px'}}>
 														<b>{JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra} Illo</b>
 														<br/>
-														wilayah&nbsp;
-														{parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 3 && <span>{JSON.parse(localStorage.getItem('mitra_terdekat')).kecamatan}</span>}
-														{parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 4 && <span>{JSON.parse(localStorage.getItem('mitra_terdekat')).kabupaten}</span>}
-														{parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 5 && <span>{JSON.parse(localStorage.getItem('mitra_terdekat')).provinsi}</span>}
+														{/* wilayah&nbsp; */}
+														{parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 3 && <span>Wilayah {JSON.parse(localStorage.getItem('mitra_terdekat')).kecamatan}</span>}
+														{parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 4 && <span>Wilayah {JSON.parse(localStorage.getItem('mitra_terdekat')).kabupaten}</span>}
+														{parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 5 && <span>Wilayah {JSON.parse(localStorage.getItem('mitra_terdekat')).provinsi}</span>}
+														{parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 6 && <span>Indonesia</span>}
 													</div>
 												</div>
 												{/* <h2 style={{fontWeight:'500', marginBottom:'8px'}}> */}
@@ -334,6 +354,9 @@ class tampilProduk extends React.Component {
 												<div style={{fontSize:'10px'}}>
 													Harga {JSON.parse(localStorage.getItem('user')).jenis_mitra}
 												</div>
+												<div style={{marginTop:'8px'}}>
+													Jumlah Stok: {this.state.produk_record.stok ? this.state.produk_record.stok : '0'}
+												</div>
 													{/* Rp {(this.state.produk_record.harga_produk && this.state.produk_record.harga_produk.length > 0 ? this.formatAngka(this.state.produk_record.harga_produk[0].nominal) : 0)} */}
 												{/* </h2> */}
 											</div>
@@ -342,9 +365,6 @@ class tampilProduk extends React.Component {
 												Harga Retail
 											</div> */}
 											
-											<div style={{marginTop:'8px'}}>
-												Jumlah Stok: {this.state.produk_record.stok ? this.state.produk_record.stok : '0'}
-											</div>
 											<div className="blog-divider"></div>
 											
 											{this.state.produk_record.varian_produk && this.state.produk_record.varian_produk.length > 0 &&
@@ -419,7 +439,7 @@ class tampilProduk extends React.Component {
                                             <div className="blog-cat-detail">
                                                 {this.state.produk_lain.rows.map((option)=>{
                                                     return (
-                                                        <CardProdukMini produk={option} pengguna={JSON.parse(localStorage.getItem('user'))} />
+                                                        <CardProdukMini produk={option} pengguna={localStorage.getItem('user') !== '' && localStorage.getItem('user') != null ? JSON.parse(localStorage.getItem('user')) : {}} />
                                                     )
                                                 })}
                                             </div>

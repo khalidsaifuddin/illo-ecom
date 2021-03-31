@@ -556,19 +556,22 @@ pre code {
 
 @media (min-width: 576px) {
   .container {
-    max-width: 540px;
+    max-width: 100%;
+    /* max-width: 540px; */
   }
 }
 
 @media (min-width: 768px) {
   .container {
-    max-width: 720px;
+    max-width: 100%;
+    /* max-width: 720px; */
   }
 }
 
 @media (min-width: 992px) {
   .container {
-    max-width: 960px;
+    max-width: 100%;
+    /* max-width: 960px; */
   }
 }
 
@@ -8979,3 +8982,141 @@ a.text-dark:hover, a.text-dark:focus {
   }
 }
 /*# sourceMappingURL=bootstrap.css.map */
+
+@import "~react-image-gallery/styles/css/image-gallery.css";
+
+.image-gallery-slides{
+  border-radius: 20px;
+  max-height: 380px;
+  /* margin-left: -200px;
+  margin-right: -100px; */
+}
+
+.image-gallery-content .image-gallery-slide .image-gallery-image {
+  max-height: calc(100vh - 0px);
+}
+
+@font-face {
+  font-family: 'Framework7 Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../fonts/Framework7Icons-Regular.eot);
+  src: url(../fonts/Framework7Icons-Regular.woff2) format("woff2"),
+       url(../fonts/Framework7Icons-Regular.woff) format("woff"),
+       url(../fonts/Framework7Icons-Regular.ttf) format("truetype");
+}
+
+.f7-icons, .framework7-icons {
+  font-family: 'Framework7 Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 18px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  -moz-font-feature-settings: "liga=1";
+  -moz-font-feature-settings: "liga";
+  font-feature-settings: "liga";
+  text-align: center;
+}
+
+.boxKeterangan p {
+  font-size: 10px;
+}
+
+.bannerAtas {
+  background-image: url('/assets/images/mons_80.png');
+  background-image: url('/assets/images/mons_80.png'), linear-gradient(45deg, #fcc5e4 0%, #fda34b 15%, #ff7882 35%, #c8699e 52%, #7046aa 100%);
+  /* background-image: url('/assets/images/mons_80.png'), linear-gradient(120deg, #f093fb 0%, #f5576c 100%); */
+  /* background-image: url('/assets/images/mons_80.png'), linear-gradient(to bottom, #1d976c, #93f9b9); */
+  background-attachment: fixed;
+  /* min-height: 200px; */
+  padding-bottom: 120px;
+}
+
+.produkRekomendasi {
+  margin-top: -80px; 
+  background-color: white;
+  padding-top: 16px;
+  background-image: url('/assets/images/mons222.png');
+  /* background-size:contain; */
+  /* background-attachment: fixed; */
+  background-position: bottom;
+  background-size: contain;
+}
+
+/* .card{
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+} */
+
+.card20 {
+  border-radius: 20px;
+  padding:8px;
+  padding-left: 16px;
+  padding-right: 16px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1);
+  margin-top: 8px;
+}
+
+/* .card20:hover{
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+} */
+
+.divAnggotaReseller {
+  width: 100%;
+  background: #283c86;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #45a247, #283c86);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #45a247, #283c86); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  color:white;
+  padding:8px;
+  border-radius: 20px;
+  padding-left: 16px;
+  padding-right: 16px;
+  margin-top: 8px;
+}
+
+.divAnggotaAgen {
+  width: 100%;
+  background: #8E2DE2;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #4A00E0, #8E2DE2);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #4A00E0, #8E2DE2); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  color:white;
+  padding:8px;
+  border-radius: 20px;
+  padding-left: 16px;
+  padding-right: 16px;
+  margin-top: 8px;
+}
+
+.divAnggotaDistributor {
+  width: 100%;
+  background: #8A2387;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #F27121, #E94057, #8A2387);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #F27121, #E94057, #8A2387); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  color:white;
+  padding:8px;
+  border-radius: 20px;
+  padding-left: 16px;
+  padding-right: 16px;
+  margin-top: 8px;
+}
+
+.divAnggotaPriv {
+  width: 100%;
+  background: #3C3B3F;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #605C3C, #3C3B3F);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #605C3C, #3C3B3F); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  color:white;
+  padding:8px;
+  border-radius: 20px;
+  padding-left: 16px;
+  padding-right: 16px;
+  margin-top: 8px;
+}

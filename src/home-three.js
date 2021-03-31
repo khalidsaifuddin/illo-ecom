@@ -212,7 +212,35 @@ class HomeThree extends React.Component {
 				<div className="container">
 					<div className="row">
 						<div className="col-md-3 col-sm-12" style={{paddingRight:'8px', paddingLeft:'8px'}}>
-							< a href="/profil" style={{color:'#434343'}}>
+							{parseInt(localStorage.getItem('sudah_login')) !== 1 &&
+							<a href="/login" style={{color:'#434343'}}>
+								<div className="card card20" style={{textAlign:'center'}}>
+									<div
+									style={{
+										width:'64px',
+										height:'64px',
+										background:'#434343',
+										backgroundImage: 'url(/assets/images/user_avatar.jpg)',
+										backgroundRepeat: 'no-repeat',
+										backgroundSize:'120%',
+										margin:'auto',
+										marginBottom:'16px',
+										marginTop:'16px',
+										borderRadius:'50%',
+										border:'1px solid #ccc'
+									}}
+									>&nbsp;</div>
+									<div>
+										Login/Daftar
+									</div>
+									<div className="card card20" style={{color:'white', fontSize:'15px', textAlign:'center', background:'linear-gradient(to right, #b8cbb8 0%, #b8cbb8 0%, #b465da 0%, #cf6cc9 33%, #ee609c 66%, #ee609c 100%)'}}>
+										Daftar/Login sekarang juga dan dapatkan penawaran spesial dari Illo!
+									</div>
+								</div>
+							</a>
+  							}
+							{localStorage.getItem('user') !== '' && localStorage.getItem('user') != null &&
+							<a href="/profil" style={{color:'#434343'}}>
 								<div className="card card20" style={{textAlign:'center'}}>
 									<div style={{
 										width:'50px', 
@@ -238,6 +266,8 @@ class HomeThree extends React.Component {
 									</div>
 								</div>
 							</a>
+							}
+							{localStorage.getItem('user') !== '' && localStorage.getItem('user') != null &&
 							<div className="card card20" style={{textAlign:'left'}}>
 								Alamat Pengiriman:<br/>
 								<div>
@@ -246,7 +276,7 @@ class HomeThree extends React.Component {
 										<b>{this.state.routeParams.alamat_pengguna[0].nama_penerima}</b>
 										<br/>
 										{this.state.routeParams.alamat_pengguna[0].alamat_jalan}<br/> 
-										{this.state.routeParams.alamat_pengguna[0].kode_wilayah_kecamatan}, {this.state.routeParams.alamat_pengguna[0].kode_wilayah_kabupaten}, {this.state.routeParams.alamat_pengguna[0].kode_wilayah_provinsi}
+										{this.state.routeParams.alamat_pengguna[0].kecamatan}, {this.state.routeParams.alamat_pengguna[0].kabupaten}, {this.state.routeParams.alamat_pengguna[0].provinsi}
 									</div>
 									}
 									<div style={{width:'100%', textAlign:'right', fontSize:'12px', paddingTop:'16px'}}>
@@ -256,6 +286,8 @@ class HomeThree extends React.Component {
 									</div>
 								</div>
 							</div>
+  							}
+							{localStorage.getItem('user') !== '' && localStorage.getItem('user') != null &&
 							<div className="card card20" style={{textAlign:'left'}}>
 								Mitra Terdekat:<br/>
 								<div style={{marginTop:'8px'}}>
@@ -276,20 +308,30 @@ class HomeThree extends React.Component {
 										<div style={{marginLeft:'8px'}}>
 											<b>{this.state.mitra_terdekat[0].jenis_mitra} Illo</b>
 											<br/>
-											wilayah&nbsp;
-											{parseInt(this.state.mitra_terdekat[0].jenis_mitra_id) === 3 && <span>{this.state.mitra_terdekat[0].kecamatan}</span>}
-											{parseInt(this.state.mitra_terdekat[0].jenis_mitra_id) === 4 && <span>{this.state.mitra_terdekat[0].kabupaten}</span>}
-											{parseInt(this.state.mitra_terdekat[0].jenis_mitra_id) === 5 && <span>{this.state.mitra_terdekat[0].provinsi}</span>}
+											{parseInt(this.state.mitra_terdekat[0].jenis_mitra_id) === 3 && <span>Wilayah {this.state.mitra_terdekat[0].kecamatan}</span>}
+											{parseInt(this.state.mitra_terdekat[0].jenis_mitra_id) === 4 && <span>Wilayah {this.state.mitra_terdekat[0].kabupaten}</span>}
+											{parseInt(this.state.mitra_terdekat[0].jenis_mitra_id) === 5 && <span>Wilayah {this.state.mitra_terdekat[0].provinsi}</span>}
+											{parseInt(this.state.mitra_terdekat[0].jenis_mitra_id) === 6 && <span>Indonesia</span>}
 										</div>
+									</div>
+									}
+									{this.state.mitra_terdekat.length > 0 &&
+									<div style={{marginTop:'16px'}}>
+										{parseInt(this.state.mitra_terdekat[0].jenis_mitra_id) === 6 &&
+										<div style={{fontSize:'10px'}}>
+											Belum ada distributor/agen/reseller di daerah Anda. Produk yang Anda beli akan langsung dikirimkan dari Illo Pusat
+										</div>
+										}
 									</div>
 									}
 								</div>
 							</div>
+  							}
 						</div>
 						<div className="col-md-9 col-sm-12" style={{paddingRight:'8px', paddingLeft:'8px'}}>
 							<div className="card card20">
 								<div className="row">
-									<div className="col-md-6 col-sm-6 col-text-center d-align-center" style={{borderBottom:'5px solid #ccc', paddingBottom:'0px', height:'45px'}}>
+									<div className="col-md-8 col-sm-12 col-text-center d-align-center" style={{borderBottom:'5px solid #ccc', paddingBottom:'0px', height:'45px'}}>
 										<h2 className="title">
 											<span style={{fontSize:'20px', color:'#434343'}}>Rekomendasi Untuk Anda</span>
 										</h2>
@@ -297,7 +339,7 @@ class HomeThree extends React.Component {
 									<div className="col-md-12 col-sm-12" style={{display:'inline-flex', overflow:'auto', marginTop:'8px', paddingBottom:'16px'}}>
 										{this.state.produk.rows.map((option)=>{
 											return (
-												<CardProduk produk={option} pengguna={JSON.parse(localStorage.getItem('user'))} />
+												<CardProduk produk={option} pengguna={localStorage.getItem('user') !== '' && localStorage.getItem('user') != null ? JSON.parse(localStorage.getItem('user')) : {}} />
 												// <div className="card" style={{
 												// 	minWidth:'256px', 
 												// 	height:'365px', 
@@ -333,7 +375,7 @@ class HomeThree extends React.Component {
 											)
 										})}
 									</div>
-									<div className="col-md-6 col-sm-12 col-text-center d-align-center" style={{borderBottom:'5px solid #ccc', paddingBottom:'0px', height:'45px', marginTop:'16px'}}>
+									<div className="col-md-8 col-sm-12 col-text-center d-align-center" style={{borderBottom:'5px solid #ccc', paddingBottom:'0px', height:'45px', marginTop:'16px'}}>
 										<h2 className="title">
 											<a href="/kategori"><span style={{fontSize:'20px', color:'#434343'}}>Kategori Produk</span></a>
 										</h2>
@@ -371,7 +413,7 @@ class HomeThree extends React.Component {
 											)
 										})}
 									</div>
-									<div className="col-md-6 col-sm-12 col-text-center d-align-center" style={{borderBottom:'5px solid #ccc', paddingBottom:'0px', height:'45px', marginTop:'16px'}}>
+									<div className="col-md-8 col-sm-12 col-text-center d-align-center" style={{borderBottom:'5px solid #ccc', paddingBottom:'0px', height:'45px', marginTop:'16px'}}>
 										<h2 className="title">
 											<span style={{fontSize:'20px', color:'#434343'}}>Produk Best Seller</span>
 										</h2>
@@ -379,7 +421,7 @@ class HomeThree extends React.Component {
 									<div className="col-md-12 col-sm-12" style={{display:'inline-flex', overflow:'auto', marginTop:'8px', paddingBottom:'16px'}}>
 										{this.state.produk_best_seller.rows.map((option)=>{
 											return (
-												<CardProduk produk={option} pengguna={JSON.parse(localStorage.getItem('user'))} />
+												<CardProduk produk={option} pengguna={localStorage.getItem('user') !== '' && localStorage.getItem('user') != null ? JSON.parse(localStorage.getItem('user')) : {}} />
 												// <div className="card" style={{
 												// 	minWidth:'256px', 
 												// 	height:'365px', 

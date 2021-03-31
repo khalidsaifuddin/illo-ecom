@@ -121,7 +121,7 @@ class produk extends React.Component {
                                     {this.state.produk.rows.map((option)=>{
                                         return (
                                             <div className="col-lg-4 col-md-6">
-                                                <CardProduk produk={option} pengguna={JSON.parse(localStorage.getItem('user'))} />
+                                                <CardProduk produk={option} pengguna={localStorage.getItem('user') !== '' && localStorage.getItem('user') != null ? JSON.parse(localStorage.getItem('user')) : {}} />
                                                 {/* <div className="card" style={{
                                                     minWidth:'256px', 
                                                     height:'365px', 

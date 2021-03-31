@@ -191,6 +191,14 @@ class profil extends React.Component {
         Alert('tes')
     }
 
+    keluar = () => {
+        localStorage.setItem('sudah_login', '0');
+        localStorage.setItem('user', '');
+        localStorage.setItem('token', '');
+
+        window.location.href="/";
+    }
+
 	render() {
 		return (
 			<div>
@@ -337,7 +345,7 @@ class profil extends React.Component {
                                                     Nama Penerima: <b>{this.state.routeParams.alamat_pengguna[0].nama_penerima}</b>
                                                     <br/>
                                                     {this.state.routeParams.alamat_pengguna[0].alamat_jalan}<br/> 
-                                                    {this.state.routeParams.alamat_pengguna[0].kode_wilayah_kecamatan}, {this.state.routeParams.alamat_pengguna[0].kode_wilayah_kabupaten}, {this.state.routeParams.alamat_pengguna[0].kode_wilayah_provinsi}
+                                                    {this.state.routeParams.alamat_pengguna[0].kecamatan}, {this.state.routeParams.alamat_pengguna[0].kabupaten}, {this.state.routeParams.alamat_pengguna[0].provinsi}
                                                 </div>
                                                 }
                                             </div>
@@ -377,7 +385,7 @@ class profil extends React.Component {
                                                         </a>
                                                     </li>
                                                     <li className="marg-15">
-                                                        <a href={"/Keluar"}>
+                                                        <a onClick={this.keluar} style={{cursor:'pointer'}}>
                                                             Keluar
                                                         </a>
                                                     </li>
