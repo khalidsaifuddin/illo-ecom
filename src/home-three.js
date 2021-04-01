@@ -192,6 +192,7 @@ class HomeThree extends React.Component {
 			{/* <section id="banner" style={{background:'linear-gradient(60deg, #96deda 0%, #50c9c3 100%)'}}> */}
 			{/* <section id="banner" style={{background:'linear-gradient(60deg, #96deda 0%, #50c9c3 100%)'}}> */}
 			{/* <section id="banner" style={{background:'linear-gradient(to top, #52c234, #061700)'}}> */}
+
 			<section id="banner" className="bannerAtas">
 				<div className="container" style={{paddingTop:'0px'}}>
 					<div className="row">
@@ -327,6 +328,40 @@ class HomeThree extends React.Component {
 								</div>
 							</div>
   							}
+							
+							<div className="card card20">
+								<h2 className="title" style={{marginBottom:'4px'}}>
+									<span style={{fontSize:'20px', color:'#434343'}}>Promo</span>
+								</h2>
+								<div 
+								className="card card20" 
+								style={{
+									height:'300px',
+									background:'black',
+									backgroundImage: 'url(/assets/contoh/ex_banner_2.jpg)',
+									backgroundSize: 'cover'
+								}}
+								>&nbsp;</div>
+								<div 
+								className="card card20" 
+								style={{
+									height:'300px',
+									background:'black',
+									backgroundImage: 'url(/assets/contoh/ex_banner_1.jpg)',
+									backgroundSize: 'cover'
+								}}
+								>&nbsp;</div>
+								<div 
+								className="card card20" 
+								style={{
+									height:'300px',
+									background:'black',
+									backgroundImage: 'url(/assets/contoh/ex_banner_3.jpg)',
+									backgroundSize: 'cover'
+								}}
+								>&nbsp;</div>
+							</div>
+
 						</div>
 						<div className="col-md-9 col-sm-12" style={{paddingRight:'8px', paddingLeft:'8px'}}>
 							<div className="card card20">
@@ -457,6 +492,29 @@ class HomeThree extends React.Component {
 											)
 										})}
 									</div>
+								</div>
+							</div>
+							<div className="col-md-12 col-sm-12" style={{
+								paddingRight:'0px', 
+								paddingLeft:'0px'
+							}}>
+								<div className="card card20" style={{
+									minHeight:'180px',
+									backgroundImage:'url(/assets/contoh/promo.png)',
+									backgroundSize:'cover',
+									backgroundRepeat:'no-repeat',
+									border:'none'
+								}}>
+									&nbsp;
+								</div>
+								<div className="card card20" style={{
+									minHeight:'180px',
+									backgroundImage:'url(/assets/contoh/promo2.png)',
+									backgroundSize:'cover',
+									backgroundRepeat:'no-repeat',
+									border:'none'
+								}}>
+									&nbsp;
 								</div>
 							</div>
 						</div>

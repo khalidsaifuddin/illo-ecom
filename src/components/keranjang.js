@@ -203,7 +203,8 @@ class keranjang extends React.Component {
     }
 
     checkout = () => {
-        alert('okte')
+        // alert('okte')
+        this.props.history.push('/checkout/'+JSON.parse(localStorage.getItem('user')).pengguna_id)
     }
 	
 	render() {

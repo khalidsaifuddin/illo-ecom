@@ -9120,3 +9120,7 @@ a.text-dark:hover, a.text-dark:focus {
   padding-right: 16px;
   margin-top: 8px;
 }
+
+.alamat_pengiriman{
+  border:0px solid #eee;
+}
