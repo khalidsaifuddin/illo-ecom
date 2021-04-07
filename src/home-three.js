@@ -131,12 +131,30 @@ class HomeThree extends React.Component {
 			})
 		})
 
-		if(parseInt(localStorage.getItem('sudah_login')) === 1){
+		if(parseInt(localStorage.getItem('sudah_login')) === 1 && JSON.parse(localStorage.getItem('user')).jenis_mitra_id !== 5){
 			this.props.getMitraTerdekat({
 				pengguna_id: JSON.parse(localStorage.getItem('user')).pengguna_id,
 				kode_wilayah_kecamatan: JSON.parse(localStorage.getItem('user')).alamat_pengguna[0].kode_wilayah_kecamatan,
 				kode_wilayah_kabupaten: JSON.parse(localStorage.getItem('user')).alamat_pengguna[0].kode_wilayah_kabupaten,
 				kode_wilayah_provinsi: JSON.parse(localStorage.getItem('user')).alamat_pengguna[0].kode_wilayah_provinsi,
+				jenis_mitra_id: JSON.parse(localStorage.getItem('user')).jenis_mitra_id
+			}).then((result)=>{
+				this.setState({
+					mitra_terdekat: result.payload
+				},()=>{
+
+					if(result.payload.length > 0){
+						localStorage.setItem('mitra_terdekat',JSON.stringify(result.payload[0]))
+					}
+
+				})
+			})
+		}else if(parseInt(localStorage.getItem('sudah_login')) === 1 && JSON.parse(localStorage.getItem('user')).jenis_mitra_id === 5){
+			this.props.getMitraTerdekat({
+				pengguna_id: JSON.parse(localStorage.getItem('user')).pengguna_id,
+				kode_wilayah_kecamatan: null,
+				kode_wilayah_kabupaten: null,
+				kode_wilayah_provinsi: null,
 				jenis_mitra_id: JSON.parse(localStorage.getItem('user')).jenis_mitra_id
 			}).then((result)=>{
 				this.setState({
@@ -161,6 +179,7 @@ class HomeThree extends React.Component {
 	document.body.classList.remove('home-style-two');
   	document.body.classList.add('home-style');
   	document.body.classList.add('three');
+	  
   	return (
   		<div>
   			{/* Navbar Component*/}
@@ -272,6 +291,11 @@ class HomeThree extends React.Component {
 							<div className="card card20" style={{textAlign:'left'}}>
 								Alamat Pengiriman:<br/>
 								<div>
+									{this.state.routeParams.alamat_pengguna && this.state.routeParams.alamat_pengguna.length < 1 &&
+									<div style={{fontSize:'10px'}}>
+										Belum ada alamat pengiriman yang disimpan
+									</div>
+									}
 									{this.state.routeParams.alamat_pengguna && this.state.routeParams.alamat_pengguna.length > 0 &&
 									<div style={{fontSize:'10px'}}>
 										<b>{this.state.routeParams.alamat_pengguna[0].nama_penerima}</b>
@@ -295,7 +319,7 @@ class HomeThree extends React.Component {
 									{this.state.mitra_terdekat.length > 0 &&
 									<div style={{display:'inline-flex'}}>
 										<div style={{
-											width:'45px', 
+											minWidth:'45px', 
 											height:'45px', 
 											borderRadius:'50%', 
 											background:'#434343',
@@ -325,6 +349,31 @@ class HomeThree extends React.Component {
 										}
 									</div>
 									}
+								</div>
+							</div>
+  							}
+
+							{localStorage.getItem('user') !== '' && localStorage.getItem('user') != null &&
+							<div className="card card20" style={{textAlign:'left'}}>
+								<b>Menu Pengguna</b>
+								<div className="blog-cat-detail">
+									<ul>
+										<li className="marg-15">
+											<a href={"/Pembelian"}>
+												<span>Pembelian</span>
+											</a>
+										</li>
+										<li className="marg-15">
+											<a href={"/Penjualan"}>
+												<span>Penjualan</span>
+											</a>
+										</li>
+										<li className="marg-15">
+											<a href={"/AlamatPengiriman"}>
+												<span>Alamat Pengiriman</span>
+											</a>
+										</li>
+									</ul>
 								</div>
 							</div>
   							}

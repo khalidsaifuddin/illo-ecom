@@ -380,6 +380,16 @@ class profil extends React.Component {
                                                         </a>
                                                     </li>
                                                     <li className="marg-15">
+                                                        <a href={"/Pembelian"}>
+                                                            Pembelian
+                                                        </a>
+                                                    </li>
+                                                    <li className="marg-15">
+                                                        <a href={"/Penjualan"}>
+                                                            Penjualan
+                                                        </a>
+                                                    </li>
+                                                    <li className="marg-15">
                                                         <a href={"/AlamatPengguna"}>
                                                             Alamat Pengiriman
                                                         </a>

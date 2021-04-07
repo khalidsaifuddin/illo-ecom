@@ -5,6 +5,8 @@ export const GET_PENGGUNA = '[PENGGUNA] GET_PENGGUNA';
 export const SIMPAN_PENGGUNA_BARU = '[PENGGUNA] SIMPAN_PENGGUNA_BARU';
 export const SIMPAN_PENGGUNA_MANUAL = '[PENGGUNA] SIMPAN_PENGGUNA_MANUAL';
 export const GET_WILAYAH = '[PENGGUNA] GET_WILAYAH';
+export const GET_ALAMAT_PENGGUNA = '[PENGGUNA] GET_ALAMAT_PENGGUNA';
+export const SIMPAN_ALAMAT_PENGGUNA = '[PENGGUNA] SIMPAN_ALAMAT_PENGGUNA';
 
 export function masuk(routeParams)
 {
@@ -80,6 +82,38 @@ export function getWilayah(routeParams)
         request.then((response) =>
             dispatch({
                 type   : GET_WILAYAH,
+                payload: response.data,
+                routeParams
+            })
+        );
+}
+
+export function getAlamatPengguna(routeParams)
+{
+    const request = axios.post(localStorage.getItem('api_base')+'/api/Pengguna/getAlamatPengguna', {
+        ...routeParams
+    });
+
+    return (dispatch) =>
+        request.then((response) =>
+            dispatch({
+                type   : GET_ALAMAT_PENGGUNA,
+                payload: response.data,
+                routeParams
+            })
+        );
+}
+
+export function simpanAlamatPengguna(routeParams)
+{
+    const request = axios.post(localStorage.getItem('api_base')+'/api/Pengguna/simpanAlamatPengguna', {
+        ...routeParams
+    });
+
+    return (dispatch) =>
+        request.then((response) =>
+            dispatch({
+                type   : SIMPAN_ALAMAT_PENGGUNA,
                 payload: response.data,
                 routeParams
             })

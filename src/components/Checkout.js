@@ -11,9 +11,13 @@ import Footer from './footer';
 import CardProdukMini from './CardProdukMini';
 import { Alert, Confirm } from 'react-st-modal';
 
+import Modal from 'react-modal';
+import BounceLoader from "react-spinners/BounceLoader";
+
 class Checkout extends React.Component {
 
 	state = {
+        loading: false,
 		routeParams: {
 			start: 0,
 			limit: 20,
@@ -24,7 +28,8 @@ class Checkout extends React.Component {
             total:0
         },
         barang_total: 0,
-        harga_total: 0
+        harga_total: 0,
+        ongkos_kirim: 10000
 	}
     
     formatAngka = (num) => {
@@ -200,10 +205,26 @@ class Checkout extends React.Component {
 
         if(konfirmasi){
             // alert('oke')
-            this.props.simpanTransaksi({
-                ...this.state.routeParams,
-                ...JSON.parse(localStorage.getItem('user')),
-                ...JSON.parse(localStorage.getItem('mitra_terdekat'))
+            this.setState({
+                loading: true
+            },()=>{
+                this.props.simpanTransaksi({
+                    ...this.state.routeParams,
+                    ...JSON.parse(localStorage.getItem('mitra_terdekat')),
+                    ...JSON.parse(localStorage.getItem('user')),
+                    ongkos_kirim: 10000,
+                    mitra_id_pembeli: parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)
+                }).then((result)=>{
+                    if(result.payload.sukses){
+                        //berhasil
+                        this.props.history.push('/pembayaran/'+result.payload.transaksi_id)
+                    }else{
+                        //gagal
+                        Alert('Ada kesalahan pada sistem. Mohon coba kembali dalam beberapa saat ke depan', 'Peringatan')
+                    }
+                }).catch(()=>{
+                    Alert('Ada kesalahan pada sistem. Mohon coba kembali dalam beberapa saat ke depan', 'Peringatan')
+                })
             })
         }else{
 
@@ -228,7 +249,7 @@ class Checkout extends React.Component {
 									<nav aria-label="breadcrumb" className="blog-bradcrumb ">
 										<ol className="breadcrumb bg-transparent mb-0">
 											<li className="breadcrumb-item"><a href="/">Beranda</a></li>
-											<li className="breadcrumb-item"><a href="/produk/semua">Keranjang</a></li>
+											<li className="breadcrumb-item"><a>Checkout</a></li>
 										</ol>
 									</nav>
 								</div>
@@ -237,12 +258,38 @@ class Checkout extends React.Component {
 					</div>
 					{/*breadcrumb end*/}
 
+                    <Modal
+                        isOpen={this.state.loading}
+                        contentLabel="Example Modal"
+                        style={{
+                            content : {
+                            top                   : '50%',
+                            left                  : '50%',
+                            right                 : 'auto',
+                            bottom                : 'auto',
+                            marginRight           : '-50%',
+                            transform             : 'translate(-50%, -50%)',
+                            minHeight             : '225px',
+                            minWidth              : '194px',
+                            borderRadius          : '20px',
+                            background            : 'rgb(255,255,255,0.8)',
+                            border                : '1px solid #eee',
+                            textAlign             : 'left'
+                            }
+                        }}
+                    >
+                        <BounceLoader color={"#47B161"} loading={true} size={150} />
+                        <div style={{marginTop:'170px', width:'100%', textAlign:'center', color:'#434343'}}>
+                            Memroses transaksi...
+                        </div>
+                    </Modal>
+
 					{/*blog Section start*/}
 					<section style={{marginTop:'-70px'}}>
 						<div className="container">
 							<div className="row">
 								<div className="col-md-12 col-lg-12 blog-sec">
-                                    <div className="card card20">
+                                    <div className="card card20" style={{border:(!JSON.parse(localStorage.getItem('user')).alamat_pengguna || JSON.parse(localStorage.getItem('user')).alamat_pengguna.length < 1 ? '1px solid red' : '1px solid #ccc')}}>
                                         <h3 style={{marginTop:'8px'}}>Alamat Pengiriman</h3>
                                         <div className="alamat_pengiriman">
                                             {JSON.parse(localStorage.getItem('user')).alamat_pengguna && JSON.parse(localStorage.getItem('user')).alamat_pengguna.length > 0 &&
@@ -253,9 +300,14 @@ class Checkout extends React.Component {
                                                 {JSON.parse(localStorage.getItem('user')).alamat_pengguna[0].kecamatan}, {JSON.parse(localStorage.getItem('user')).alamat_pengguna[0].kabupaten}, {JSON.parse(localStorage.getItem('user')).alamat_pengguna[0].provinsi}
                                             </div>
                                             }
+                                            {!JSON.parse(localStorage.getItem('user')).alamat_pengguna || JSON.parse(localStorage.getItem('user')).alamat_pengguna.length < 1 &&
+                                            <div style={{color:'red'}}>
+                                                Anda belum menyimpan alamat pengiriman. Mohon isi alamat pengiriman terlebih dahulu sebelum melanjutkan transaksi
+                                            </div>
+                                            }
                                             <div style={{width:'100%', textAlign:'right', fontSize:'12px', paddingTop:'16px'}}>
                                                 <a href="/AlamatPengguna" style={{display:'inline-flex', color:'#434343'}}>
-                                                    <i className="f7-icons">pencil</i>&nbsp;Ganti Alamat Pengiriman
+                                                    <i className="f7-icons">pencil</i>&nbsp;Kelola Alamat Pengiriman
                                                 </a>
                                             </div>
                                         </div>
@@ -267,7 +319,7 @@ class Checkout extends React.Component {
                                                 Pengiriman Standar
                                             </div>
                                             <div className="col-md-6 col-lg-6" style={{textAlign:'right'}}>
-                                                Rp 10.000
+                                                Rp {this.formatAngka(this.state.ongkos_kirim)}
                                             </div>
                                         </div>
                                     </div>
@@ -290,10 +342,10 @@ class Checkout extends React.Component {
                                             <div style={{marginLeft:'8px'}}>
                                                 <b>{JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra} Illo</b>
                                                 <br/>
-                                                wilayah&nbsp;
-                                                {parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 3 && <span>{JSON.parse(localStorage.getItem('mitra_terdekat')).kecamatan}</span>}
-                                                {parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 4 && <span>{JSON.parse(localStorage.getItem('mitra_terdekat')).kabupaten}</span>}
-                                                {parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 5 && <span>{JSON.parse(localStorage.getItem('mitra_terdekat')).provinsi}</span>}
+                                                {parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 3 && <span>wilayah&nbsp;{JSON.parse(localStorage.getItem('mitra_terdekat')).kecamatan}</span>}
+                                                {parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 4 && <span>wilayah&nbsp;{JSON.parse(localStorage.getItem('mitra_terdekat')).kabupaten}</span>}
+                                                {parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 5 && <span>wilayah&nbsp;{JSON.parse(localStorage.getItem('mitra_terdekat')).provinsi}</span>}
+                                                {parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 6 && <span>Indonesia</span>}
                                             </div>
                                         </div>
                                     </div>
@@ -489,7 +541,7 @@ class Checkout extends React.Component {
                                                         Ongkos Kirim
                                                     </div>
                                                     <div className="col-md-6 col-lg-6" style={{textAlign:'right', fontWeight:'normal'}}>
-                                                        Rp 10.000
+                                                        Rp {this.formatAngka(this.state.ongkos_kirim)}
                                                     </div>
                                                 </div>
                                             </div>

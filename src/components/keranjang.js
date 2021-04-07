@@ -225,7 +225,7 @@ class keranjang extends React.Component {
 									<nav aria-label="breadcrumb" className="blog-bradcrumb ">
 										<ol className="breadcrumb bg-transparent mb-0">
 											<li className="breadcrumb-item"><a href="/">Beranda</a></li>
-											<li className="breadcrumb-item"><a href="/produk/semua">Keranjang</a></li>
+											<li className="breadcrumb-item"><a>Keranjang</a></li>
 										</ol>
 									</nav>
 								</div>

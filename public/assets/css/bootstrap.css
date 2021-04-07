@@ -4109,7 +4109,8 @@ input[type="button"].btn-block {
   }
 }
 
-@media (max-width: 991.98px) {
+/* @media (max-width: 991.98px) { */
+@media (max-width: 948px) {
   .navbar-expand-lg > .container,
   .navbar-expand-lg > .container-fluid {
     padding-right: 0;
@@ -4117,7 +4118,7 @@ input[type="button"].btn-block {
   }
 }
 
-@media (min-width: 992px) {
+@media (min-width: 948px) {
   .navbar-expand-lg {
     -ms-flex-flow: row nowrap;
     flex-flow: row nowrap;
@@ -9039,6 +9040,7 @@ a.text-dark:hover, a.text-dark:focus {
   background-attachment: fixed;
   /* min-height: 200px; */
   padding-bottom: 120px;
+  padding-top: 120px;
 }
 
 .produkRekomendasi {

@@ -41,7 +41,9 @@ class tampilProduk extends React.Component {
         produk_record: {
 			harga_produk: []
 		},
-		gambar_utama: ''
+		gambar_utama: '',
+		stok_ready: 0,
+		stok_varian: {}
 	}
 
 	gradients = [
@@ -83,6 +85,24 @@ class tampilProduk extends React.Component {
 				produk: result.payload,
                 produk_record: result.payload.total > 0 ? result.payload.rows[0] : {}
 			},()=>{
+
+				if(this.state.produk_record.stok && this.state.produk_record.stok.length > 0){
+					//hitung stok
+					let stok_ready = 0
+					let stok_varian = {}
+
+					this.state.produk_record.stok.map((option)=>{
+						stok_ready = stok_ready+option.stok_ready
+						stok_varian[option.varian_produk_id] = option.stok_ready
+					})
+
+					this.setState({
+						stok_ready: stok_ready,
+						stok_varian: stok_varian
+					},()=>{
+						console.log(this.state.stok_ready)
+					})
+				}
 
 				if(this.state.produk_record.gambar_produk && this.state.produk_record.gambar_produk.length > 0){
 					this.state.produk_record.gambar_produk.map((option)=>{
@@ -339,7 +359,7 @@ class tampilProduk extends React.Component {
 													})}
 												</div>
 												<div style={{fontSize:'18px', fontWeight:'bold'}}>
-													{parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id) === 2 &&
+													{/* {parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id) === 2 && */}
 													<span>
 														{this.state.produk_record.harga_produk.map((option)=>{
 															if(parseInt(option.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
@@ -349,13 +369,14 @@ class tampilProduk extends React.Component {
 															}
 														})}
 													</span>
-													}
+													{/* } */}
 												</div>
 												<div style={{fontSize:'10px'}}>
 													Harga {JSON.parse(localStorage.getItem('user')).jenis_mitra}
 												</div>
 												<div style={{marginTop:'8px'}}>
-													Jumlah Stok: {this.state.produk_record.stok ? this.state.produk_record.stok : '0'}
+													{/* Jumlah Stok: {this.state.produk_record.stok ? this.state.produk_record.stok : '0'} */}
+													Stok Total: {this.state.stok_ready}
 												</div>
 													{/* Rp {(this.state.produk_record.harga_produk && this.state.produk_record.harga_produk.length > 0 ? this.formatAngka(this.state.produk_record.harga_produk[0].nominal) : 0)} */}
 												{/* </h2> */}
@@ -383,7 +404,7 @@ class tampilProduk extends React.Component {
 																className="card"
 																style={{
 																	minWidth:'100px',
-																	minHeight:'60px',
+																	minHeight:'75px',
 																	marginBottom:'16px',
 																	textAlign:'center',
 																	padding:'8px',
@@ -392,7 +413,9 @@ class tampilProduk extends React.Component {
 																	border:(this.state.routeParams.varian_produk_id === option.varian_produk_id ? '2px solid green' : '1px solid #ccc')
 																}}
 																>
-																	{option.nama}
+																	<b>{option.nama}</b>
+																	{/* <br/> */}
+																	Stok: {this.state.stok_varian[option.varian_produk_id]}
 																</div>
 															</a>
 														)
@@ -410,7 +433,7 @@ class tampilProduk extends React.Component {
 														onClick={()=>this.beli()} 
 														className="btn btn-custom btn-block theme-color" 
 														style={{borderRadius:'15px'}}
-														disabled={this.state.produk_record.stok > 0 ? false : true}
+														disabled={this.state.stok_ready > 0 ? false : true}
 													>
 														<i className="f7-icons" style={{fontWeight:'bold'}}>cart</i>&nbsp;
 														Tambah ke Keranjang
