@@ -369,13 +369,13 @@ class Checkout extends React.Component {
 
                                                 let harga = 0
 
-                                                if(parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id) === 2){
-                                                    option.harga_produk.map((option)=>{
-                                                        if(parseInt(option.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
-                                                            harga = option.nominal
-                                                        }
-                                                    })
-                                                }
+                                                // if(parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id) === 2){
+                                                option.harga_produk.map((option)=>{
+                                                    if(parseInt(option.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
+                                                        harga = option.nominal
+                                                    }
+                                                })
+                                                // }
 
                                                 let total = parseInt(option.jumlah) * parseFloat(harga)
 
@@ -447,7 +447,7 @@ class Checkout extends React.Component {
                                                                                     })}
                                                                                 </div>
                                                                                 <div style={{fontSize:'18px', fontWeight:'bold'}}>
-                                                                                    {parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id) === 2 &&
+                                                                                    {/* {parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id) === 2 && */}
                                                                                     <span>
                                                                                         {option.harga_produk.map((option)=>{
                                                                                             if(parseInt(option.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
@@ -457,7 +457,7 @@ class Checkout extends React.Component {
                                                                                             }
                                                                                         })}
                                                                                     </span>
-                                                                                    }
+                                                                                    {/* } */}
                                                                                 </div>
                                                                                 Harga {JSON.parse(localStorage.getItem('user')).jenis_mitra}
                                                                             </span>

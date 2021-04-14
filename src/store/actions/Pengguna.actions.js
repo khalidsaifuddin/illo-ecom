@@ -7,6 +7,23 @@ export const SIMPAN_PENGGUNA_MANUAL = '[PENGGUNA] SIMPAN_PENGGUNA_MANUAL';
 export const GET_WILAYAH = '[PENGGUNA] GET_WILAYAH';
 export const GET_ALAMAT_PENGGUNA = '[PENGGUNA] GET_ALAMAT_PENGGUNA';
 export const SIMPAN_ALAMAT_PENGGUNA = '[PENGGUNA] SIMPAN_ALAMAT_PENGGUNA';
+export const GENERATE_UUID = '[PENGGUNA] GENERATE_UUID';
+
+export function generateUUID(routeParams)
+{
+    const request = axios.post('https://be.diskuis.id/api/Kuis/generateUUID', {
+        ...routeParams
+    });
+
+    return (dispatch) =>
+        request.then((response) =>
+            dispatch({
+                type   : GENERATE_UUID,
+                payload: response.data,
+                routeParams
+            })
+        );
+}
 
 export function masuk(routeParams)
 {

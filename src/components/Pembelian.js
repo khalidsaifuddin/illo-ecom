@@ -320,7 +320,7 @@ class Pembelian extends React.Component {
                                                             {/* <div style={{fontSize:'10px'}}>{moment(option.create_date).format('DD') + ' ' + this.bulan[(moment(option.create_date).format('M')-1)] + ' ' + moment(option.create_date).format('YYYY') + ', ' + moment(option.create_date).format('HH') + ':' + moment(option.create_date).format('mm')}</div> */}
                                                         </div>
                                                         <div style={{textAlign:'right', width:'100%'}}>
-                                                            <div>
+                                                            {/* <div>
                                                                 {parseInt(option.status_pembayaran_id) === 0 &&
                                                                 <div>
                                                                     <span>Menunggu Pembayaran</span><br/>
@@ -337,12 +337,37 @@ class Pembelian extends React.Component {
                                                                 {parseInt(option.status_konfirmasi_id) === 1 &&
                                                                 <span>Diproses</span>
                                                                 }
+                                                            </div> */}
+                                                            <div style={{width:'100%', textAlign:'right', display:'inline-flex', border:'0px dashed #ccc', padding:'8px', justifyContent:'flex-end'}}>
+                                                                <div style={{textAlign:'center', marginRight:'8px'}}>
+                                                                    {parseInt(option.status_pembayaran_id) === 0 && <i className="f7-icons" style={{color:'gray'}}>circle</i>}
+                                                                    {parseInt(option.status_pembayaran_id) !== 0 && <i className="f7-icons" style={{color:'green'}}>checkmark_circle_fill</i>}
+                                                                    <div style={{fontSize:'10px'}}>Dibayar</div>
+                                                                </div>
+                                                                <div style={{textAlign:'center', marginRight:'8px'}}>
+                                                                    {parseInt(option.status_konfirmasi_id) === 0 && <i className="f7-icons" style={{color:'gray'}}>circle</i>}
+                                                                    {parseInt(option.status_konfirmasi_id) !== 0 && <i className="f7-icons" style={{color:'green'}}>checkmark_circle_fill</i>}
+                                                                    <div style={{fontSize:'10px'}}>Diverifikasi</div>
+                                                                </div>
+                                                                <div style={{textAlign:'center', marginRight:'8px'}}>
+                                                                    {parseInt(option.status_konfirmasi_id) !== 1 && <i className="f7-icons" style={{color:'gray'}}>circle</i>}
+                                                                    {parseInt(option.status_konfirmasi_id) === 1 && <i className="f7-icons" style={{color:'green'}}>checkmark_circle_fill</i>}
+                                                                    <div style={{fontSize:'10px'}}>Diproses</div>
+                                                                </div>
+                                                                <div style={{textAlign:'center', marginRight:'8px'}}>
+                                                                    {parseInt(option.status_pengiriman_id) !== 1 && <i className="f7-icons" style={{color:'gray'}}>circle</i>}
+                                                                    {parseInt(option.status_pengiriman_id) === 1 && <i className="f7-icons" style={{color:'green'}}>checkmark_circle_fill</i>}
+                                                                    <div style={{fontSize:'10px'}}>Dikirim</div>
+                                                                </div>
+                                                                <div style={{textAlign:'center', marginRight:'8px'}}>
+                                                                    {parseInt(option.status_diterima_id) !== 1 && <i className="f7-icons" style={{color:'gray'}}>circle</i>}
+                                                                    {parseInt(option.status_diterima_id) === 1 && <i className="f7-icons" style={{color:'green'}}>checkmark_circle_fill</i>}
+                                                                    <div style={{fontSize:'10px'}}>Diterima</div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div style={{fontSize:'12px', marginTop: '8px', marginLeft:'4px'}}>
-                                                        {/* {option.produk_transaksi.length} Produk */}
-                                                        <br/>
                                                         {option.produk_transaksi.length > 0 &&
                                                         <div className="produkPertama" style={{display:'inline-flex'}}>
                                                             <div style={{
@@ -372,7 +397,8 @@ class Pembelian extends React.Component {
                                                             Rp {this.formatAngka(parseInt(option.total_nominal)+parseInt(option.ongkos_kirim))}
                                                         </div>
                                                     </div>
-                                                        <div style={{width:'100%', textAlign:'right', fontSize:'12px', marginTop: '8px', marginLeft:'4px'}}>
+                                                    <div style={{width:'100%', textAlign:'right', fontSize:'12px', marginTop: '8px', marginLeft:'4px'}}>
+                                                        <div style={{width:'100%'}}>
                                                             {parseInt(option.status_pembayaran_id) === 0 &&
                                                             <button className="btn card20" style={{background:'green', color:'white'}} onClick={()=>this.props.history.push('/KonfirmasiPembayaran/'+option.transaksi_id)}>
                                                                 Konfirmasi Pembayaran
@@ -382,6 +408,7 @@ class Pembelian extends React.Component {
                                                                 Detail Transaksi
                                                             </button>
                                                         </div>
+                                                    </div>
                                                 </div>
                                             )
                                         })}

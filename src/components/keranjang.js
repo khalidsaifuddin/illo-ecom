@@ -253,12 +253,12 @@ class keranjang extends React.Component {
                                             // margin: 'auto'
                                         }}>&nbsp;</div>
                                         <div style={{marginLeft:'8px'}}>
-                                            <b>{JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra} Illo</b>
+                                            Toko <b>{JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra} Illo</b>
                                             <br/>
-                                            wilayah&nbsp;
-                                            {parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 3 && <span>{JSON.parse(localStorage.getItem('mitra_terdekat')).kecamatan}</span>}
-                                            {parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 4 && <span>{JSON.parse(localStorage.getItem('mitra_terdekat')).kabupaten}</span>}
-                                            {parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 5 && <span>{JSON.parse(localStorage.getItem('mitra_terdekat')).provinsi}</span>}
+                                            {parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 3 && <span>wilayah&nbsp;{JSON.parse(localStorage.getItem('mitra_terdekat')).kecamatan}</span>}
+                                            {parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 4 && <span>wilayah&nbsp;{JSON.parse(localStorage.getItem('mitra_terdekat')).kabupaten}</span>}
+                                            {parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 5 && <span>wilayah&nbsp;{JSON.parse(localStorage.getItem('mitra_terdekat')).provinsi}</span>}
+                                            {parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 6 && <span>Indonesia</span>}
                                         </div>
                                     </div>
                                     <div className="daftar_barang_di_keranjang">
@@ -296,11 +296,12 @@ class keranjang extends React.Component {
                                                                     }
                                                                 </div>
                                                                 <div className="keterangan_produk" style={{paddingLeft:'0px'}}>
-                                                                    <div style={{margin:'8px', marginTop:'0px', maxHeight:'30px', overflow:'hidden', textOverflow:'ellipsis', flexFlow:'nowrap', width:'100%'}}>
+                                                                    <div style={{margin:'8px', marginTop:'0px', maxHeight:'50px', overflow:'hidden', textOverflow:'ellipsis', flexFlow:'nowrap', width:'100%'}}>
                                                                         <a href={"/tampilProduk/"+option.produk_id}>
                                                                             <h3 className="title" style={{marginTop:'0px'}}>
-                                                                                {option.nama} {option.varian_produk_id ? <span> - {option.varian_produk}</span> : ''}
+                                                                                {option.nama}
                                                                             </h3>
+                                                                            {option.varian_produk_id ? <div style={{marginTop:'-10px', color:'#434343', fontSize:'12px'}}>{option.varian_produk}</div> : ''}
                                                                             {/* <h4>
                                                                                 {option.varian_produk}
                                                                             </h4> */}
@@ -349,7 +350,7 @@ class keranjang extends React.Component {
                                                                                 })}
                                                                             </div>
                                                                             <div style={{fontSize:'18px', fontWeight:'bold'}}>
-                                                                                {parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id) === 2 &&
+                                                                                {/* {parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id) === 2 && */}
                                                                                 <span>
                                                                                     {option.harga_produk.map((option)=>{
                                                                                         if(parseInt(option.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
@@ -359,7 +360,7 @@ class keranjang extends React.Component {
                                                                                         }
                                                                                     })}
                                                                                 </span>
-                                                                                }
+                                                                                {/* } */}
                                                                             </div>
                                                                             Harga {JSON.parse(localStorage.getItem('user')).jenis_mitra}
                                                                         </span>
