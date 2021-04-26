@@ -40,6 +40,7 @@ import Penjualan from './components/Penjualan';
 import KonfirmasiPembayaran from './components/KonfirmasiPembayaran';
 import AlamatPengguna from './components/AlamatPengguna';
 import FormAlamatPengguna from './components/FormAlamatPengguna';
+import verifikasi from './components/verifikasi';
 
 // localStorage.setItem('api_base','https://be.diskuis.id')
 localStorage.setItem('api_base','http://117.53.47.43:8085')
@@ -91,6 +92,7 @@ class Root extends React.Component {
 			  <Route path={`${process.env.PUBLIC_URL}/FormAlamatPengguna`} component={FormAlamatPengguna}/>
 			  <Route path={`${process.env.PUBLIC_URL}/FormAlamatPengguna/:alamat_pengguna_id`} component={FormAlamatPengguna}/>
 			  <Route path={`${process.env.PUBLIC_URL}/keranjang`} component={keranjang}/>
+			  <Route path={`${process.env.PUBLIC_URL}/verifikasi`} component={verifikasi}/>
 			  <Route path={`${process.env.PUBLIC_URL}/tentang`} component={tentang}/>
 			  <Route path={`${process.env.PUBLIC_URL}/kategori`} component={kategori}/>
 			  <Route path={`${process.env.PUBLIC_URL}/checkout/:pengguna_id`} component={Checkout}/>

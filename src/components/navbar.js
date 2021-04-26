@@ -36,9 +36,9 @@ class Navbar extends React.Component {
 		return (
 			<nav className="navbar navbar-expand-lg navbar-light theme-nav fixed-top">
 				<div id="navbar-main" className="container">
-					{parseInt(localStorage.getItem('inframe')) !== 1 &&
+					{/* {parseInt(localStorage.getItem('inframe')) !== 1 && */}
 					<a className="navbar-brand" href={`${process.env.PUBLIC_URL}/`}><img src="/assets/images/illo-logo.png" alt="logo" style={{width:'100px'}} /></a>
-					}
+					{/* } */}
 					<button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" style={{marginTop:'8px', marginBottom:'8px'}}>
 						<span className="navbar-toggler-icon"></span>
 					</button>
@@ -67,6 +67,9 @@ class Navbar extends React.Component {
 							</li>
 							<li className="nav-item">
 								<a className="nav-link" href="/blog">Blog</a>
+							</li>
+							<li className="nav-item">
+								<a className="nav-link" href="/verifikasi">Verifikasi</a>
 							</li>
 							<li className="nav-item">
 								<a className="nav-link" href="/keranjang">
