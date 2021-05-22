@@ -32,7 +32,8 @@ class CardProdukMini extends React.Component {
                             style={{
                                 width:'100%',
                                 height:'160px',
-                                backgroundImage: 'url('+localStorage.getItem('api_base')+this.props.produk.gambar_produk[0].nama_file+')',
+                                // backgroundImage: 'url('+localStorage.getItem('api_base')+this.props.produk.gambar_produk[0].nama_file+')',
+                                backgroundImage: 'url('+localStorage.getItem('api_base_gambar')+this.props.produk.gambar_produk[0].nama_file+')',
                                 backgroundRepeat:'no-repeat',
                                 backgroundSize: 'cover',
                                 backgroundPosition:'center',

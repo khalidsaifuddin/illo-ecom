@@ -8,6 +8,8 @@ export const GET_WILAYAH = '[PENGGUNA] GET_WILAYAH';
 export const GET_ALAMAT_PENGGUNA = '[PENGGUNA] GET_ALAMAT_PENGGUNA';
 export const SIMPAN_ALAMAT_PENGGUNA = '[PENGGUNA] SIMPAN_ALAMAT_PENGGUNA';
 export const GENERATE_UUID = '[PENGGUNA] GENERATE_UUID';
+export const GET_PROVINCE = '[PENGGUNA] GET_PROVINCE';
+export const GET_CITY = '[PENGGUNA] GET_CITY';
 
 export function generateUUID(routeParams)
 {
@@ -131,6 +133,39 @@ export function simpanAlamatPengguna(routeParams)
         request.then((response) =>
             dispatch({
                 type   : SIMPAN_ALAMAT_PENGGUNA,
+                payload: response.data,
+                routeParams
+            })
+        );
+}
+
+
+export function getProvince(routeParams)
+{
+    const request = axios.post(localStorage.getItem('api_base')+'/api/app/getProvince', {
+        ...routeParams
+    });
+
+    return (dispatch) =>
+        request.then((response) =>
+            dispatch({
+                type   : GET_PROVINCE,
+                payload: response.data,
+                routeParams
+            })
+        );
+}
+
+export function getCity(routeParams)
+{
+    const request = axios.post(localStorage.getItem('api_base')+'/api/app/getCity', {
+        ...routeParams
+    });
+
+    return (dispatch) =>
+        request.then((response) =>
+            dispatch({
+                type   : GET_CITY,
                 payload: response.data,
                 routeParams
             })

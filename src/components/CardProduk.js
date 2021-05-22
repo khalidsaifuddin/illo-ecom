@@ -16,6 +16,7 @@ class CardProduk extends React.Component {
         return (
             <div className="card" style={{
                 minWidth:'256px', 
+                maxWidth:'256px', 
                 height:'416px', 
                 marginRight:'16px', 
                 borderRadius:'20px',
@@ -30,7 +31,8 @@ class CardProduk extends React.Component {
                     style={{
                         width:'100%',
                         height:'240px',
-                        backgroundImage: 'url('+localStorage.getItem('api_base')+this.props.produk.gambar_produk[0].nama_file+')',
+                        // backgroundImage: 'url('+localStorage.getItem('api_base')+this.props.produk.gambar_produk[0].nama_file+')',
+                        backgroundImage: 'url('+localStorage.getItem('api_base_gambar')+this.props.produk.gambar_produk[0].nama_file+')',
                         backgroundRepeat:'no-repeat',
                         backgroundSize: 'cover',
                         backgroundPosition:'center',

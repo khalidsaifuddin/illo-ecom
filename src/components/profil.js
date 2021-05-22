@@ -12,7 +12,7 @@ import moment from 'moment';
 import Footer from './footer';
 import CardProduk from './CardProduk';
 import CardProdukMini from './CardProdukMini';
-import { Alert, Confirm } from 'react-st-modal';
+
 
 import DatePicker from 'react-date-picker';
 
@@ -30,7 +30,10 @@ class profil extends React.Component {
             ...JSON.parse(localStorage.getItem('user'))
 		},
 		pengguna: JSON.parse(localStorage.getItem('user')),
-        date_value: new Date()
+        date_value: new Date(),
+        teks_alert: '',
+        tampil_alert: false,
+        warna_alert: 'green'
 	}
 
 	gradients = [
@@ -103,31 +106,31 @@ class profil extends React.Component {
 		})
 	}
 
-	ubahJumlah = (e) => {
-		// console.log(e.currentTarget.value)
-		if(e.currentTarget.value < 0){
-			// alert('Jumlah tidak bisa kurang dari 0!')
-			const result = Alert('Jumlah pembelian tidak bisa kurang dari 0!', 'Peringatan');
+	// ubahJumlah = (e) => {
+	// 	// console.log(e.currentTarget.value)
+	// 	if(e.currentTarget.value < 0){
+	// 		// alert('Jumlah tidak bisa kurang dari 0!')
+	// 		const result = Alert('Jumlah pembelian tidak bisa kurang dari 0!', 'Peringatan');
 			
-			this.setState({
-				routeParams: {
-					...this.state.routeParams,
-					jumlah: 0
-				}
-			},()=>{
-				return true
-			})
-		}else{
+	// 		this.setState({
+	// 			routeParams: {
+	// 				...this.state.routeParams,
+	// 				jumlah: 0
+	// 			}
+	// 		},()=>{
+	// 			return true
+	// 		})
+	// 	}else{
 
-			this.setState({
-				routeParams: {
-					...this.state.routeParams,
-					jumlah: e.currentTarget.value
-				}
-			})
-		}
+	// 		this.setState({
+	// 			routeParams: {
+	// 				...this.state.routeParams,
+	// 				jumlah: e.currentTarget.value
+	// 			}
+	// 		})
+	// 	}
 
-	}
+	// }
 
 	beli = () => {
 		// alert(produk_id)
@@ -180,7 +183,14 @@ class profil extends React.Component {
                 this.setState({
                     loading: false
                 },()=>{
-                    Alert('Berhasil menyimpan data', 'Berhasil')
+                    // Alert('Berhasil menyimpan data', 'Berhasil')
+                    this.setState({
+                        loading: false,
+                        tampil_alert: true,
+                        warna_alert: 'green',
+                        teks_alert: 'Berhasil menyimpan data'
+                     })
+
                     localStorage.setItem('user', JSON.stringify(result.payload.rows[0]))
                 })
             })
@@ -188,7 +198,7 @@ class profil extends React.Component {
     }
 
     onChange = () => {
-        Alert('tes')
+        // Alert('tes')
     }
 
     keluar = () => {
@@ -336,6 +346,19 @@ class profil extends React.Component {
                                                     </button>
                                                 </div>
 
+                                                {this.state.tampil_alert &&
+                                                <div className="card card20" style={{padding:'16px', marginBottom:'16px', background:(this.state.warna_alert === 'green' ? '#81c784' : 'red'), color:'white'}}>
+                                                    <div className="row">
+                                                        <div className="col-md-8 col-lg-8 blog-sec">
+                                                            {this.state.teks_alert}
+                                                        </div>
+                                                        <div className="col-md-4 col-lg-4 blog-sec" style={{textAlign:'right'}}>
+                                                            <button className="btn" style={{background:'transparent', color:'white'}} onClick={()=>this.setState({tampil_alert:false})}>Tutup</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                }
+
                                             </div>
                                             <div className="or-saparator" style={{marginTop:'16px'}}><span>Alamat Pengiriman</span></div>
                                             <br/>
@@ -392,6 +415,11 @@ class profil extends React.Component {
                                                     <li className="marg-15">
                                                         <a href={"/AlamatPengguna"}>
                                                             Alamat Pengiriman
+                                                        </a>
+                                                    </li>
+                                                    <li className="marg-15">
+                                                        <a href={"/GantiMitra"}>
+                                                            Ganti Mitra
                                                         </a>
                                                     </li>
                                                     <li className="marg-15">

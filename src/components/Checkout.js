@@ -9,7 +9,7 @@ import * as Actions from '../store/actions';
 import moment from 'moment';
 import Footer from './footer';
 import CardProdukMini from './CardProdukMini';
-import { Alert, Confirm } from 'react-st-modal';
+
 
 import Modal from 'react-modal';
 import BounceLoader from "react-spinners/BounceLoader";
@@ -29,7 +29,10 @@ class Checkout extends React.Component {
         },
         barang_total: 0,
         harga_total: 0,
-        ongkos_kirim: 10000
+        ongkos_kirim: 10000,
+        teks_alert: '',
+        tampil_alert: false,
+        warna_alert: 'green'
 	}
     
     formatAngka = (num) => {
@@ -201,9 +204,9 @@ class Checkout extends React.Component {
 
     lanjutPembayaran = async () => {
         // alert('okte')
-        const konfirmasi = await Confirm('Apakah Anda telah yakin ingin melanjutkan pembayaran? Mohon pastikan alamat pengiriman telah sesuai sebelum melanjutkan ke pembayaran', 'Konfirmasi')
+        // const konfirmasi = await Confirm('Apakah Anda telah yakin ingin melanjutkan pembayaran? Mohon pastikan alamat pengiriman telah sesuai sebelum melanjutkan ke pembayaran', 'Konfirmasi')
 
-        if(konfirmasi){
+        // if(konfirmasi){
             // alert('oke')
             this.setState({
                 loading: true
@@ -220,15 +223,27 @@ class Checkout extends React.Component {
                         this.props.history.push('/pembayaran/'+result.payload.transaksi_id)
                     }else{
                         //gagal
-                        Alert('Ada kesalahan pada sistem. Mohon coba kembali dalam beberapa saat ke depan', 'Peringatan')
+                        // Alert('Ada kesalahan pada sistem. Mohon coba kembali dalam beberapa saat ke depan', 'Peringatan')
+                        this.setState({
+                            loading: false,
+                            tampil_alert: true,
+                            warna_alert: 'red',
+                            teks_alert: 'Ada kesalahan pada sistem. Mohon coba kembali dalam beberapa saat ke depan'
+                        })
                     }
                 }).catch(()=>{
-                    Alert('Ada kesalahan pada sistem. Mohon coba kembali dalam beberapa saat ke depan', 'Peringatan')
+                    // Alert('Ada kesalahan pada sistem. Mohon coba kembali dalam beberapa saat ke depan', 'Peringatan')
+                    this.setState({
+                        loading: false,
+                        tampil_alert: true,
+                        warna_alert: 'red',
+                        teks_alert: 'Ada kesalahan pada sistem. Mohon coba kembali dalam beberapa saat ke depan'
+                    })
                 })
             })
-        }else{
+        // }else{
 
-        }
+        // }
     }
 	
 	render() {
@@ -393,7 +408,8 @@ class Checkout extends React.Component {
                                                                             style={{
                                                                                 width:'100px',
                                                                                 height:'100px',
-                                                                                backgroundImage: 'url('+localStorage.getItem('api_base')+option.gambar_produk[0].nama_file+')',
+                                                                                // backgroundImage: 'url('+localStorage.getItem('api_base')+option.gambar_produk[0].nama_file+')',
+                                                                                backgroundImage: 'url('+localStorage.getItem('api_base_gambar')+option.gambar_produk[0].nama_file+')',
                                                                                 backgroundRepeat:'no-repeat',
                                                                                 backgroundSize: 'cover',
                                                                                 backgroundPosition:'center',
@@ -565,6 +581,18 @@ class Checkout extends React.Component {
                                             <i className="f7-icons">arrow_right</i>&nbsp;
                                             Lanjutkan ke Pembayaran
                                         </button>
+                                    </div>
+                                    }
+                                    {this.state.tampil_alert &&
+                                    <div className="card card20" style={{padding:'16px', marginBottom:'16px', background:(this.state.warna_alert === 'green' ? '#81c784' : 'red'), color:'white'}}>
+                                        <div className="row">
+                                            <div className="col-md-8 col-lg-8 blog-sec">
+                                                {this.state.teks_alert}
+                                            </div>
+                                            <div className="col-md-4 col-lg-4 blog-sec" style={{textAlign:'right'}}>
+                                                <button className="btn" style={{background:'transparent', color:'white'}} onClick={()=>this.setState({tampil_alert:false})}>Tutup</button>
+                                            </div>
+                                        </div>
                                     </div>
                                     }
 								</div>

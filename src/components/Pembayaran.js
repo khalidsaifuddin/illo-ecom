@@ -9,7 +9,7 @@ import * as Actions from '../store/actions';
 import moment from 'moment';
 import Footer from './footer';
 import CardProdukMini from './CardProdukMini';
-import { Alert, Confirm } from 'react-st-modal';
+
 
 class Pembayaran extends React.Component {
 
@@ -144,7 +144,7 @@ class Pembayaran extends React.Component {
                                             <div style={{marginTop:'32px'}}>
                                                 Setelah melakukan pembayaran, mohon lakukan konfirmasi pembayaran menggunakan tombol di bawah ini. Proses verifikasi pembayaran akan membutuhkan waktu maksimal 3 x 24 jam
                                                 <br/>
-                                                <button style={{marginTop:'16px'}} className="btn btn-custom theme-color">
+                                                <button style={{marginTop:'16px'}} className="btn btn-custom theme-color" onClick={()=>this.props.history.push('/KonfirmasiPembayaran/'+this.props.match.params.transaksi_id)}>
                                                     Konfirmasi Pembayaran
                                                 </button>
                                             </div>

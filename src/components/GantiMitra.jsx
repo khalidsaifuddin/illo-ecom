@@ -14,8 +14,10 @@ import CardProdukMini from './CardProdukMini';
 import Modal from 'react-modal';
 import BounceLoader from "react-spinners/BounceLoader";
 
+// import Framework7 from 'framework7'
+// import { f7ready } from 'framework7-react';
 
-class AlamatPengguna extends React.Component {
+class GantiMitra extends React.Component {
 
 	state = {
         loading: false,
@@ -24,30 +26,11 @@ class AlamatPengguna extends React.Component {
 			limit: 20,
             pengguna_id: (parseInt(localStorage.getItem('sudah_login')) === 1 ? JSON.parse(localStorage.getItem('user')).pengguna_id : null)
 		},
-		kategori_produk: {
-			rows: [],
-			total: 0
-		},
-        produk_lain: {
-            rows: [],
-			total: 0
-        },
-        keranjang: {
-            rows: [],
-			total: 0
-        },
-        barang_total: 0,
-        harga_total: 0,
-        transaksi: {
-            rows: [],
-			total: 0
-        },
-        transaksi_record: {},
-        alamat_pengguna: {
+        anggota_mitra: {
             rows: [],
             total: 0
-        }
-
+        },
+        mitra_terdekat: JSON.parse(localStorage.getItem('mitra_terdekat'))
 	}
     
     formatAngka = (num) => {
@@ -87,9 +70,9 @@ class AlamatPengguna extends React.Component {
             return true
         }
 
-        this.props.getAlamatPengguna(this.state.routeParams).then((result)=>{
+        this.props.getAnggotaMitra({...this.state.routeParams, pengguna_id: null}).then((result)=>{
             this.setState({
-                alamat_pengguna: result.payload
+                anggota_mitra: result.payload
             })
         })
 
@@ -98,112 +81,77 @@ class AlamatPengguna extends React.Component {
 		}, 2000);
 	}
 
-    setValue = (tipe) => (e) => {
-        this.setState({
-           routeParams: {
-              ...this.state.routeParams,
-              [tipe]: e.currentTarget.value
-           }
-        },()=>{
-           console.log(this.state.routeParams)
+    gantiMitraAktif = (option) => {
+
+        this.props.simpanMitraAktif({
+            pengguna_id: JSON.parse(localStorage.getItem('user')).pengguna_id,
+            mitra_id: option.mitra_id
+        }).then((result)=>{
+            this.props.history.push('/')
+        }).catch(()=>{
+            
         })
-     }
 
-    //  simpanKonfirmasi = () => {
-    //     //  alert('tes')
+        // console.log(option)
 
-    //     if(
-    //         !this.state.routeParams.bank_pengirim ||
-    //         !this.state.routeParams.no_rekening_pengirim ||
-    //         !this.state.routeParams.nama_pengirim ||
-    //         !this.state.routeParams.jumlah_transfer
-    //     ){
-    //         Alert('Mohon lengkapi semua isian sebelum melanjukan prosesnya!', 'Peringatan')
-    //         return true
-    //     }
+        // console.log(JSON.stringify(option))
 
-    //     this.setState({
-    //         loading: true
-    //     },()=>{
+        // localStorage.setItem('mitra_terdekat', JSON.stringify(option))
+        // // this.props.history.push('/')
 
-    //         this.props.simpanKonfirmasi(this.state.routeParams).then((result)=>{
+        // console.log(localStorage.getItem('mitra_terdekat'))
 
-    //             this.setState({
-    //                 loading: false
-    //             },async ()=>{
-    //                 if(result.payload.sukses){
-    //                     //berhasil
-    //                     const berhasil = await Confirm('Konfirmasi Pembayaran berhasil disimpan!', 'Berhasil')
+        // setTimeout(() => {
+        //     this.props.history.push('/')
+        // }, 1000);
+    }
 
-    //                     if(berhasil){
-    //                         this.props.history.push('/pembelian')
-    //                     }else{
-
-    //                     }
-    //                 }else{
-    //                     //gagal
-    //                     const berhasil = await Confirm('Terdapat kesalahan teknis. Mohon dicoba kembali dalam beberapa saat ke depan!', 'Peringatan')
-    //                 }
-
-    //             })
-
-    //         }).catch(()=>{
-    //             //gagal teknis
-    //             this.setState({
-    //                 loading: false
-    //             },async ()=>{
-    //                 const berhasil = await Confirm('Terdapat kesalahan teknis. Mohon dicoba kembali dalam beberapa saat ke depan!', 'Peringatan')
-    //             })
-    //         })
-    //     })
-
-    //  }
-	
-	render() {
+    render() {
 
 		return (
 			<div>
 				<Navbar />
                 <Modal
-                isOpen={this.state.loading}
-                contentLabel="Example Modal"
-                style={{
-                    content : {
-                        top                   : '50%',
-                        left                  : '50%',
-                        right                 : 'auto',
-                        bottom                : 'auto',
-                        marginRight           : '-50%',
-                        transform             : 'translate(-50%, -50%)',
-                        minHeight             : '225px',
-                        minWidth              : '194px',
-                        borderRadius          : '20px',
-                        background            : 'rgb(255,255,255,0.8)',
-                        border                : '1px solid #eee',
-                        textAlign             : 'left'
-                    }
-                }}
+                    isOpen={this.state.loading}
+                    contentLabel="Example Modal"
+                    style={{
+                        content : {
+                            top                   : '50%',
+                            left                  : '50%',
+                            right                 : 'auto',
+                            bottom                : 'auto',
+                            marginRight           : '-50%',
+                            transform             : 'translate(-50%, -50%)',
+                            minHeight             : '225px',
+                            minWidth              : '194px',
+                            borderRadius          : '20px',
+                            background            : 'rgb(255,255,255,0.8)',
+                            border                : '1px solid #eee',
+                            textAlign             : 'left'
+                        }
+                    }}
                 >
-                <BounceLoader color={"#47B161"} loading={true} size={150} />
-                <div style={{marginTop:'170px', width:'100%', textAlign:'center', color:'#434343'}}>
-                    Menyimpan...
-                </div>
+                    <BounceLoader color={"#47B161"} loading={true} size={150} />
+                    <div style={{marginTop:'170px', width:'100%', textAlign:'center', color:'#434343'}}>
+                        Menyimpan...
+                    </div>
                 </Modal>
 				{/*blog right Section start*/}
-				<div className="page-margin">
+                <div className="page-margin">
 					{/*breadcrumb start*/}
+                    
 					<div className="breadcrumb-bg">
 						<div className="container">
 							<div className="row">
 								<div className="col-md-6 col-sm-6 col-text-center d-align-center">
-									<h2 className="title"><span>Alamat Pengiriman</span></h2>
+									<h2 className="title"><span>Ganti Mitra</span></h2>
 								</div>
 								<div className="col-md-6 col-sm-6 col-text-center">
 									<nav aria-label="breadcrumb" className="blog-bradcrumb ">
 										<ol className="breadcrumb bg-transparent mb-0">
 											<li className="breadcrumb-item"><a href="/">Beranda</a></li>
 											<li className="breadcrumb-item"><a href="/profil">Profil</a></li>
-											<li className="breadcrumb-item"><a>Alamat Pengiriman</a></li>
+											<li className="breadcrumb-item"><a>Ganti Mitra</a></li>
 										</ol>
 									</nav>
 								</div>
@@ -217,33 +165,55 @@ class AlamatPengguna extends React.Component {
 						<div className="container">
                             <div className="row">
 								<div className="col-md-8 col-lg-9 blog-sec">
-                                    <button onClick={()=>this.props.history.push('/FormAlamatPengguna')} className="btn card20" style={{color:'white', display:'inline-flex'}}>
-                                        <i className="f7-icons" style={{fontSize:'20px'}}>plus</i>&nbsp;
-                                        Tambah Alamat
-                                    </button>
-                                    <div>
-                                        {this.state.alamat_pengguna.total < 1 &&
-                                        <div style={{marginTop:'16px', marginBottom:'16px', borderRadius:'20px', border:'2px dashed #ccc', padding:'16px'}}>
-                                            Belum ada alamat pengiriman
-                                        </div>
-                                        }
-                                        {this.state.alamat_pengguna.total > 0 &&
+                                    
+                                    <div className="card card20" style={{width:'100%'}}>
+                                        Toko Mitra aktif saat ini:
                                         <div>
-                                            {this.state.alamat_pengguna.rows.map((option)=>{
-                                                return (
-                                                    <div style={{marginTop:'16px', fontSize:'10px', borderRadius:'20px', border:'2px dashed #ccc', padding:'16px'}}>
-                                                        <b>{option.nama_penerima}</b>
-                                                        <br/>
-                                                        {option.alamat_jalan}<br/> 
-                                                        {option.kecamatan}, {option.kabupaten}, {option.provinsi}
-                                                        <br/>
-                                                        <a href={"/FormAlamatPengguna/"+option.alamat_pengguna_id}>Edit</a>
-                                                    </div>
-                                                )
-                                            })}
+                                            <b style={{fontSize:'18px'}}>{this.state.mitra_terdekat.pengguna}</b>
+                                            <br/>
+                                            {this.state.mitra_terdekat.jenis_mitra}&nbsp;-&nbsp;
+                                            {this.state.mitra_terdekat.jenis_mitra_id === 6 && 'Indonesia'} 
+                                            {this.state.mitra_terdekat.jenis_mitra_id === 5 && this.state.mitra_terdekat.provinsi} 
+                                            {this.state.mitra_terdekat.jenis_mitra_id === 4 && this.state.mitra_terdekat.kabupaten} 
+                                            {this.state.mitra_terdekat.jenis_mitra_id === 3 && this.state.mitra_terdekat.kecamatan}
                                         </div>
-                                        }
                                     </div>
+                                    <div style={{marginTop:'16px', marginLeft:'16px'}}>
+                                        <h4 className="blog-title">
+                                            Mitra lain yang tersedia
+                                        </h4>
+                                    </div>
+                                    {/* isinya ganti mitra */}
+                                    {this.state.anggota_mitra.rows.map((option)=>{
+                                        return (
+                                            <div className="card card20" style={{width:'100%'}}>
+                                                <div className="row">
+                                                    <div className="col-md-8 col-sm-8">        
+                                                        <div>
+                                                            <b>{option.nama_pengguna}</b>
+                                                        </div>
+                                                        <div>
+                                                            {option.jenis_mitra}&nbsp;-&nbsp;
+                                                            {option.jenis_mitra_id === 6 && 'Indonesia'} 
+                                                            {option.jenis_mitra_id === 5 && option.provinsi} 
+                                                            {option.jenis_mitra_id === 4 && option.kabupaten} 
+                                                            {option.jenis_mitra_id === 3 && option.kecamatan}
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-md-4 col-sm-4" style={{textAlign:'right'}}>
+                                                        <button 
+                                                            onClick={()=>this.gantiMitraAktif(option)} 
+                                                            className="btn btn-custom theme-color" 
+                                                            style={{borderRadius:'15px'}}
+                                                        >
+                                                            Pilih Toko
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
+
                                 </div>
                                 <div className="col-md-4 col-lg-3 order-md-last list-sidebar">
 									<div className="sidebar">
@@ -302,9 +272,7 @@ class AlamatPengguna extends React.Component {
 					</section>
 					
                     <Footer />
-					{/*Footer Section End*/}
 				</div>
-				{/*blog right Section end*/}
 			</div>
 		);
 	}
@@ -313,8 +281,9 @@ class AlamatPengguna extends React.Component {
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
 		getArtikel: Actions.getArtikel,
-        getAlamatPengguna: Actions.getAlamatPengguna
+        getAnggotaMitra: Actions.getAnggotaMitra,
+        simpanMitraAktif: Actions.simpanMitraAktif
     }, dispatch);
 }
 
-export default (connect(null, mapDispatchToProps)(AlamatPengguna));
+export default (connect(null, mapDispatchToProps)(GantiMitra));

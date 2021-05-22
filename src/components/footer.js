@@ -31,7 +31,7 @@ class Footer extends React.Component {
                               <div className="col-sm-6">
                                  <h3 style={{color:'#434343'}}>Support</h3>
                                  <ul style={{paddingLeft:'0px', color:'#434343'}}>
-                                    <li>Petunjuk</li>
+                                    <li><a href="/faq" style={{fontWeight:'bold', color:'#434343'}}>FAQ</a></li>
                                     <li>Pusat Bantuan</li>
                                     <li>Syarat dan Ketentuan</li>
                                     <li><a href="/tentang/" style={{color:'#434343'}}>Tentang Illo</a></li>
@@ -41,13 +41,13 @@ class Footer extends React.Component {
                                  {/* Footer column 2 */}
                               {/* </div> */}
                               <div className="col-sm-6" style={{textAlign:'right'}}>
-                                 <h3 style={{color:'#434343'}}>PT. Illo Indonesia</h3>
+                                 <h3 style={{color:'#434343'}}>Illo Natural Skincare</h3>
                                  <p style={{color:'#434343'}}>
-                                    Komplek Pertantoran Jalan Jenderal Sudirman
+                                    Jl. Layar no. 10
                                     <br/>
-                                    Jakarta Selatan, DKI Jakarta, 17320
+                                    Kota Bandung Jawa Barat - 40293
                                     <br/>
-                                    021-0809977 / 021-0809998
+                                    <a href="mailto:info@illoskincare.com">info@illoskincare.com</a>
                                  </p>
                                  <div style={{fontSize:'10px'}}>
                                     Metode Pembayaran

@@ -9,7 +9,7 @@ import * as Actions from '../store/actions';
 import moment from 'moment';
 import Footer from './footer';
 import CardProdukMini from './CardProdukMini';
-import { Alert, Confirm } from 'react-st-modal';
+
 
 class Penjualan extends React.Component {
 

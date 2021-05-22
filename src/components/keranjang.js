@@ -286,7 +286,8 @@ class keranjang extends React.Component {
                                                                         style={{
                                                                             width:'100px',
                                                                             height:'100px',
-                                                                            backgroundImage: 'url('+localStorage.getItem('api_base')+option.gambar_produk[0].nama_file+')',
+                                                                            // backgroundImage: 'url('+localStorage.getItem('api_base')+option.gambar_produk[0].nama_file+')',
+                                                                            backgroundImage: 'url('+localStorage.getItem('api_base_gambar')+option.gambar_produk[0].nama_file+')',
                                                                             backgroundRepeat:'no-repeat',
                                                                             backgroundSize: 'cover',
                                                                             backgroundPosition:'center',

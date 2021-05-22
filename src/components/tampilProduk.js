@@ -12,7 +12,7 @@ import moment from 'moment';
 import Footer from './footer';
 import CardProduk from './CardProduk';
 import CardProdukMini from './CardProdukMini';
-import { Alert, Confirm } from 'react-st-modal';
+
 
 
 class tampilProduk extends React.Component {
@@ -22,7 +22,7 @@ class tampilProduk extends React.Component {
 			limit: 20,
             produk_id: (this.props.match.params.produk_id ? this.props.match.params.produk_id : null),
 			varian_produk_id: null,
-			mitra_id: JSON.parse(localStorage.getItem('mitra_terdekat')).mitra_id,
+			mitra_id: localStorage.getItem('mitra_terdekat') && localStorage.getItem('mitra_terdekat') !== '' ? JSON.parse(localStorage.getItem('mitra_terdekat')).mitra_id : null,
 			pengguna_id: (parseInt(localStorage.getItem('sudah_login')) === 1 ? JSON.parse(localStorage.getItem('user')).pengguna_id : null),
 			jumlah: 1
 		},
@@ -43,7 +43,10 @@ class tampilProduk extends React.Component {
 		},
 		gambar_utama: '',
 		stok_ready: 0,
-		stok_varian: {}
+		stok_varian: {},
+		teks_alert: '',
+		tampil_alert: false,
+		warna_alert: 'green'
 	}
 
 	gradients = [
@@ -134,6 +137,44 @@ class tampilProduk extends React.Component {
             })
 		})
 
+		if(parseInt(localStorage.getItem('sudah_login')) === 1 && JSON.parse(localStorage.getItem('user')).jenis_mitra_id !== 5){
+			this.props.getMitraTerdekat({
+				pengguna_id: JSON.parse(localStorage.getItem('user')).pengguna_id,
+				kode_wilayah_kecamatan: JSON.parse(localStorage.getItem('user')).alamat_pengguna && JSON.parse(localStorage.getItem('user')).alamat_pengguna.length > 0 ? JSON.parse(localStorage.getItem('user')).alamat_pengguna[0].kode_wilayah_kecamatan : null,
+				kode_wilayah_kabupaten: JSON.parse(localStorage.getItem('user')).alamat_pengguna && JSON.parse(localStorage.getItem('user')).alamat_pengguna.length > 0 ? JSON.parse(localStorage.getItem('user')).alamat_pengguna[0].kode_wilayah_kabupaten : null,
+				kode_wilayah_provinsi: JSON.parse(localStorage.getItem('user')).alamat_pengguna && JSON.parse(localStorage.getItem('user')).alamat_pengguna.length > 0 ? JSON.parse(localStorage.getItem('user')).alamat_pengguna[0].kode_wilayah_provinsi : null,
+				jenis_mitra_id: JSON.parse(localStorage.getItem('user')).jenis_mitra_id
+			}).then((result)=>{
+				this.setState({
+					mitra_terdekat: result.payload
+				},()=>{
+
+					if(result.payload.length > 0){
+						localStorage.setItem('mitra_terdekat',JSON.stringify(result.payload[0]))
+					}
+
+				})
+			})
+		}else if(parseInt(localStorage.getItem('sudah_login')) === 1 && JSON.parse(localStorage.getItem('user')).jenis_mitra_id === 5){
+			this.props.getMitraTerdekat({
+				pengguna_id: JSON.parse(localStorage.getItem('user')).pengguna_id,
+				kode_wilayah_kecamatan: null,
+				kode_wilayah_kabupaten: null,
+				kode_wilayah_provinsi: null,
+				jenis_mitra_id: JSON.parse(localStorage.getItem('user')).jenis_mitra_id
+			}).then((result)=>{
+				this.setState({
+					mitra_terdekat: result.payload
+				},()=>{
+
+					if(result.payload.length > 0){
+						localStorage.setItem('mitra_terdekat',JSON.stringify(result.payload[0]))
+					}
+
+				})
+			})
+		}
+
 		setTimeout(function () {
 			document.querySelector(".loader-wrapper").style = "display: none";
 		}, 2000);
@@ -158,16 +199,24 @@ class tampilProduk extends React.Component {
 		// console.log(e.currentTarget.value)
 		if(e.currentTarget.value < 0){
 			// alert('Jumlah tidak bisa kurang dari 0!')
-			const result = Alert('Jumlah pembelian tidak bisa kurang dari 0!', 'Peringatan');
-			
+			// const result = Alert('Jumlah pembelian tidak bisa kurang dari 0!', 'Peringatan');
 			this.setState({
-				routeParams: {
-					...this.state.routeParams,
-					jumlah: 0
-				}
-			},()=>{
-				return true
-			})
+				tampil_alert: true,
+				warna_alert: 'red',
+				teks_alert: 'Jumlah pembelian tidak bisa kurang dari 0!'
+			 },()=>{
+
+				 this.setState({
+					 routeParams: {
+						 ...this.state.routeParams,
+						 jumlah: 0
+					 }
+				 },()=>{
+					 return true
+				 })
+
+			 })
+			
 		}else{
 
 			this.setState({
@@ -186,7 +235,14 @@ class tampilProduk extends React.Component {
 			//sudah login
 			// alert('sudah login')
 			if(this.state.produk_record.varian_produk.length > 0 && !this.state.routeParams.varian_produk_id){
-				Alert('Mohon pilih varian terlebih dahulu!', 'Peringatan')
+				// Alert('Mohon pilih varian terlebih dahulu!', 'Peringatan')
+				this.setState({
+					tampil_alert: true,
+					warna_alert: 'red',
+					teks_alert: 'Mohon pilih varian terlebih dahulu!'
+				 },()=>{
+				 
+				})
 				return true
 			}
 
@@ -195,15 +251,37 @@ class tampilProduk extends React.Component {
 			}).then((result)=>{
 				if(result.payload.sukses){
 					//berhasil
-					Alert('Produk berhasil ditambahkan ke keranjang', ()=>{
-						this.props.history.push('/keranjang')
+					// Alert('Produk berhasil ditambahkan ke keranjang', ()=>{
+					// 	this.props.history.push('/keranjang')
+					// })
+					this.setState({
+						tampil_alert: true,
+						warna_alert: 'green',
+						teks_alert: (<div><span>Produk berhasil ditambahkan ke keranjang</span><br/><a href="/keranjang" style={{color:'white', fontWeight:'bold'}}>Lihat Keranjang</a></div>)
+					 },()=>{
+					 
 					})
+					
 				}else{
 					//gagal
-					Alert('Ada yang salah pada sistem Kami. Mohon coba kembali dalam beberapa saat ke depan')
+					// Alert('Ada yang salah pada sistem Kami. Mohon coba kembali dalam beberapa saat ke depan')
+					this.setState({
+						tampil_alert: true,
+						warna_alert: 'red',
+						teks_alert: (<div><span>Ada yang salah pada sistem Kami. Mohon coba kembali dalam beberapa saat ke depan</span></div>)
+					 },()=>{
+					 
+					})
 				}
 			}).catch(()=>{
-				Alert('Ada yang salah pada sistem Kami. Mohon coba kembali dalam beberapa saat ke depan')
+				// Alert('Ada yang salah pada sistem Kami. Mohon coba kembali dalam beberapa saat ke depan')
+				this.setState({
+					tampil_alert: true,
+					warna_alert: 'red',
+					teks_alert: (<div><span>Ada yang salah pada sistem Kami. Mohon coba kembali dalam beberapa saat ke depan</span></div>)
+				 },()=>{
+				 
+				})
 			})
 
 			// Alert(this.state.routeParams.varian_produk_id)
@@ -268,7 +346,8 @@ class tampilProduk extends React.Component {
 													height:'400px',
 													border:'1px solid #eee',
 													background:'#4f4f4f',
-													backgroundImage: 'url('+localStorage.getItem('api_base')+this.state.gambar_utama+')',
+													// backgroundImage: 'url('+localStorage.getItem('api_base')+this.state.gambar_utama+')',
+													backgroundImage: 'url('+localStorage.getItem('api_base_gambar')+this.state.gambar_utama+')',
 													backgroundSize:'cover',
 													backgroundPosition:'center',
 													backgroundRepeat:'no-repeat'
@@ -290,7 +369,8 @@ class tampilProduk extends React.Component {
 																background:'#434343',
 																marginBottom:'16px',
 																border:'1px solid #eee',
-																backgroundImage: 'url('+localStorage.getItem('api_base')+option.nama_file+')',
+																// backgroundImage: 'url('+localStorage.getItem('api_base')+option.nama_file+')',
+																backgroundImage: 'url('+localStorage.getItem('api_base_gambar')+option.nama_file+')',
 																backgroundSize:'cover',
 																backgroundPosition:'center',
 																backgroundRepeat:'no-repeat'
@@ -319,7 +399,7 @@ class tampilProduk extends React.Component {
 													Harga Retail
 												</div>
 												<div className="card card20" style={{borderRadius:'0px', color:'white', fontSize:'15px', textAlign:'left', background:'linear-gradient(to right, #b8cbb8 0%, #b8cbb8 0%, #b465da 0%, #cf6cc9 33%, #ee609c 66%, #ee609c 100%)'}}>
-													Daftar/Login sekarang dan dapatkan produk ini penawaran spesial!
+													Daftar/Login sekarang dan dapatkan produk ini dengan penawaran spesial!
 												</div>
 											</div>
 											}
@@ -339,13 +419,17 @@ class tampilProduk extends React.Component {
 														// margin: 'auto'
 													}}>&nbsp;</div>
 													<div style={{marginLeft:'8px'}}>
-														<b>{JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra} Illo</b>
+														<b>{JSON.parse(localStorage.getItem('mitra_terdekat')).pengguna}</b>
 														<br/>
+														<span>{JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra}</span>&nbsp;-&nbsp;
 														{/* wilayah&nbsp; */}
-														{parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 3 && <span>Wilayah {JSON.parse(localStorage.getItem('mitra_terdekat')).kecamatan}</span>}
-														{parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 4 && <span>Wilayah {JSON.parse(localStorage.getItem('mitra_terdekat')).kabupaten}</span>}
-														{parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 5 && <span>Wilayah {JSON.parse(localStorage.getItem('mitra_terdekat')).provinsi}</span>}
+														{parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 3 && <span>{JSON.parse(localStorage.getItem('mitra_terdekat')).kecamatan}</span>}
+														{parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 4 && <span>{JSON.parse(localStorage.getItem('mitra_terdekat')).kabupaten}</span>}
+														{parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 5 && <span>{JSON.parse(localStorage.getItem('mitra_terdekat')).provinsi}</span>}
 														{parseInt(JSON.parse(localStorage.getItem('mitra_terdekat')).jenis_mitra_id) === 6 && <span>Indonesia</span>}
+														<div style={{fontSize:'12px'}}>
+															<a href={"/GantiMitra?redirect="+this.props.location.pathname} style={{color:'#434343'}}><i className="f7-icons" style={{fontSize:'15px'}}>pencil</i>Ganti Toko</a>
+														</div>
 													</div>
 												</div>
 												{/* <h2 style={{fontWeight:'500', marginBottom:'8px'}}> */}
@@ -367,16 +451,25 @@ class tampilProduk extends React.Component {
 																	<span style={{fontSize:'25px'}}>Rp {this.formatAngka(option.nominal)}</span>
 																)
 															}
+
+															if(!JSON.parse(localStorage.getItem('user')).jenis_mitra_id){
+																if(parseInt(option.jenis_harga_id) === 1){
+																	return (
+																		// <span style={{fontSize:'25px'}}>Rp {this.formatAngka(option.nominal)}</span>
+																		<span style={{fontSize:'25px'}}>Rp {this.formatAngka(option.nominal)}</span>
+																	)
+																}
+															}
 														})}
 													</span>
 													{/* } */}
 												</div>
 												<div style={{fontSize:'10px'}}>
-													Harga {JSON.parse(localStorage.getItem('user')).jenis_mitra}
+													Harga {JSON.parse(localStorage.getItem('user')).jenis_mitra ? JSON.parse(localStorage.getItem('user')).jenis_mitra : 'Privileged Customer'}
 												</div>
 												<div style={{marginTop:'8px'}}>
 													{/* Jumlah Stok: {this.state.produk_record.stok ? this.state.produk_record.stok : '0'} */}
-													Stok Total: {this.state.stok_ready}
+													Stok Total di Toko: <b>{this.state.stok_ready}</b>
 												</div>
 													{/* Rp {(this.state.produk_record.harga_produk && this.state.produk_record.harga_produk.length > 0 ? this.formatAngka(this.state.produk_record.harga_produk[0].nominal) : 0)} */}
 												{/* </h2> */}
@@ -433,12 +526,31 @@ class tampilProduk extends React.Component {
 														onClick={()=>this.beli()} 
 														className="btn btn-custom btn-block theme-color" 
 														style={{borderRadius:'15px'}}
-														disabled={this.state.stok_ready > 0 ? false : true}
+														// disabled={this.state.stok_ready > 0 ? false : true}
+														disabled={(parseInt(localStorage.getItem('sudah_login')) !== 1 ? false : (this.state.stok_ready > 0 ? false : true))}
 													>
 														<i className="f7-icons" style={{fontWeight:'bold'}}>cart</i>&nbsp;
 														Tambah ke Keranjang
 													</button>
 												</div>
+												{parseInt(localStorage.getItem('sudah_login')) === 1 && parseInt(this.state.stok_ready) < 1 &&
+												<div className="card card20" style={{background:'#FFCDD2', fontSize:'12px'}}>
+													Anda tidak dapat membeli produk dari toko ini karena stok sedang kosong. Silakan ganti toko aktif untuk mengecek ketersediaan di toko mitra yang lain
+												</div>
+												}
+												<div></div>
+												{this.state.tampil_alert &&
+												<div className="card card20" style={{padding:'16px', marginBottom:'16px', background:(this.state.warna_alert === 'green' ? '#81c784' : 'red'), color:'white'}}>
+													<div className="row">
+														<div className="col-md-8 col-lg-8 blog-sec">
+															{this.state.teks_alert}
+														</div>
+														<div className="col-md-4 col-lg-4 blog-sec" style={{textAlign:'right'}}>
+															<button className="btn" style={{background:'transparent', color:'white'}} onClick={()=>this.setState({tampil_alert:false})}>Tutup</button>
+														</div>
+													</div>
+												</div>
+												}
 											</div>
 											<div className="blog-divider"></div>
 											<div>
@@ -509,7 +621,8 @@ function mapDispatchToProps(dispatch) {
 		getArtikel: Actions.getArtikel,
 		getProduk: Actions.getProduk,
         getKategoriProduk: Actions.getKategoriProduk,
-		simpanKeranjang: Actions.simpanKeranjang
+		simpanKeranjang: Actions.simpanKeranjang,
+		getMitraTerdekat: Actions.getMitraTerdekat
     }, dispatch);
 }
 

@@ -18,7 +18,7 @@ import ForgetPassword from './pages/forget-pwd';
 import ThankYou from './pages/thank-you';
 import Review from './pages/review';
 import PageNotFound from './pages/404';
-import Faq from './pages/faq';
+import Faq from './components/Faq';
 import Download from './pages/download';
 import ComingSoon from './pages/coming-soon';
 import registerServiceWorker from './registerServiceWorker';
@@ -41,10 +41,15 @@ import KonfirmasiPembayaran from './components/KonfirmasiPembayaran';
 import AlamatPengguna from './components/AlamatPengguna';
 import FormAlamatPengguna from './components/FormAlamatPengguna';
 import verifikasi from './components/verifikasi';
+import HasilVerifikasi from './components/HasilVerifikasi';
+import GantiMitra from './components/GantiMitra';
+import Mitra from './components/Mitra';
 
 // localStorage.setItem('api_base','https://be.diskuis.id')
 localStorage.setItem('api_base','http://117.53.47.43:8085')
 localStorage.setItem('api_base','http://illobackend:8888')
+
+localStorage.setItem('api_base_gambar','http://117.53.47.43:8085')
 
 class Root extends React.Component {
 
@@ -59,6 +64,7 @@ class Root extends React.Component {
 
 	componentDidMount = () => {
 		let pengguna_id = this.getParameterByName('loginRedirect', window.location.href)
+		let inframe = this.getParameterByName('inframe', window.location.href)
 		let user = this.getParameterByName('user', window.location.href)
 
 		if(pengguna_id && parseInt(localStorage.getItem('sudah_login')) !== 1){
@@ -67,9 +73,17 @@ class Root extends React.Component {
 
 			localStorage.setItem('user', user)
 			localStorage.setItem('sudah_login', 1)
-			localStorage.setItem('inframe', 1)
+			// localStorage.setItem('inframe', 1)
 
 			window.location.reload()
+		}else{
+			// localStorage.setItem('inframe', 0)
+		}
+
+		if(parseInt(inframe) === 1){
+			localStorage.setItem('inframe', 1)
+		}else{
+			localStorage.setItem('inframe', 0)
 		}
 
 		// console.log()
@@ -88,12 +102,16 @@ class Root extends React.Component {
 			  <Route path={`${process.env.PUBLIC_URL}/login`} component={SignIn}/>
 			  <Route path={`${process.env.PUBLIC_URL}/daftar`} component={SignUp}/>
 			  <Route path={`${process.env.PUBLIC_URL}/profil`} component={profil}/>
+			  <Route path={`${process.env.PUBLIC_URL}/hasilVerifikasi/:kode_validasi_pengguna_id`} component={HasilVerifikasi}/>
 			  <Route path={`${process.env.PUBLIC_URL}/AlamatPengguna`} component={AlamatPengguna}/>
+			  <Route path={`${process.env.PUBLIC_URL}/GantiMitra`} component={GantiMitra}/>
 			  <Route path={`${process.env.PUBLIC_URL}/FormAlamatPengguna`} component={FormAlamatPengguna}/>
 			  <Route path={`${process.env.PUBLIC_URL}/FormAlamatPengguna/:alamat_pengguna_id`} component={FormAlamatPengguna}/>
 			  <Route path={`${process.env.PUBLIC_URL}/keranjang`} component={keranjang}/>
 			  <Route path={`${process.env.PUBLIC_URL}/verifikasi`} component={verifikasi}/>
 			  <Route path={`${process.env.PUBLIC_URL}/tentang`} component={tentang}/>
+			  <Route path={`${process.env.PUBLIC_URL}/mitra`} component={Mitra}/>
+			  <Route path={`${process.env.PUBLIC_URL}/faq`} component={Faq}/>
 			  <Route path={`${process.env.PUBLIC_URL}/kategori`} component={kategori}/>
 			  <Route path={`${process.env.PUBLIC_URL}/checkout/:pengguna_id`} component={Checkout}/>
 			  <Route path={`${process.env.PUBLIC_URL}/pembayaran/:transaksi_id`} component={Pembayaran}/>

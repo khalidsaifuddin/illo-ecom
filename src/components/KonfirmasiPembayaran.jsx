@@ -9,7 +9,7 @@ import * as Actions from '../store/actions';
 import moment from 'moment';
 import Footer from './footer';
 import CardProdukMini from './CardProdukMini';
-import { Alert, Confirm } from 'react-st-modal';
+
 
 import Modal from 'react-modal';
 import BounceLoader from "react-spinners/BounceLoader";
@@ -60,7 +60,10 @@ class KonfirmasiPembayaran extends React.Component {
         },
         transaksi_record: {},
         file_bukti_pembayaran: '',
-        bukti_pembayaran: ''
+        bukti_pembayaran: '',
+        teks_alert: '',
+        tampil_alert: false,
+        warna_alert: 'green'
 
 	}
     
@@ -135,7 +138,14 @@ class KonfirmasiPembayaran extends React.Component {
             !this.state.routeParams.bukti_pembayaran ||
             !this.state.routeParams.tanggal_pembayaran
         ){
-            Alert('Mohon lengkapi semua isian sebelum melanjukan prosesnya!', 'Peringatan')
+            // Alert('Mohon lengkapi semua isian sebelum melanjukan prosesnya!', 'Peringatan')
+            this.setState({
+                loading: false,
+                tampil_alert: true,
+                warna_alert: 'red',
+                teks_alert: 'Mohon lengkapi semua isian sebelum melanjukan prosesnya!'
+            })
+
             return true
         }
 
@@ -150,16 +160,31 @@ class KonfirmasiPembayaran extends React.Component {
                 },async ()=>{
                     if(result.payload.sukses){
                         //berhasil
-                        const berhasil = await Confirm('Konfirmasi Pembayaran berhasil disimpan!', 'Berhasil')
+                        this.setState({
+                            tampil_alert: true,
+                            warna_alert: 'green',
+                            teks_alert: (<div><span>Konfirmasi Pembayaran berhasil disimpan!</span><br/><a href="/pembelian" style={{color:'white', fontWeight:'bold'}}>Lihat Daftar Pembelian</a></div>)
+                         },()=>{
+                         
+                        })
 
-                        if(berhasil){
-                            this.props.history.push('/pembelian')
-                        }else{
+                        // const berhasil = await Confirm('Konfirmasi Pembayaran berhasil disimpan!', 'Berhasil')
 
-                        }
+                        // if(berhasil){
+                        //     this.props.history.push('/pembelian')
+                        // }else{
+
+                        // }
                     }else{
                         //gagal
-                        const berhasil = await Confirm('Terdapat kesalahan teknis. Mohon dicoba kembali dalam beberapa saat ke depan!', 'Peringatan')
+                        // const berhasil = await Confirm('Terdapat kesalahan teknis. Mohon dicoba kembali dalam beberapa saat ke depan!', 'Peringatan')
+                        this.setState({
+                            tampil_alert: true,
+                            warna_alert: 'red',
+                            teks_alert: (<div><span>Terdapat kesalahan teknis. Mohon dicoba kembali dalam beberapa saat ke depan!</span></div>)
+                        },()=>{
+                         
+                        })
                     }
 
                 })
@@ -169,7 +194,14 @@ class KonfirmasiPembayaran extends React.Component {
                 this.setState({
                     loading: false
                 },async ()=>{
-                    const berhasil = await Confirm('Terdapat kesalahan teknis. Mohon dicoba kembali dalam beberapa saat ke depan!', 'Peringatan')
+                    // const berhasil = await Confirm('Terdapat kesalahan teknis. Mohon dicoba kembali dalam beberapa saat ke depan!', 'Peringatan')
+                    this.setState({
+                        tampil_alert: true,
+                        warna_alert: 'red',
+                        teks_alert: (<div><span>Terdapat kesalahan teknis. Mohon dicoba kembali dalam beberapa saat ke depan!</span></div>)
+                    },()=>{
+                     
+                    })
                 })
             })
         })
@@ -221,7 +253,14 @@ class KonfirmasiPembayaran extends React.Component {
     acceptedFile = (file) => {
         if(file[0].size >= 5500000){ //2Mb
             // this.$f7.dialog.close()
-            Alert('Ukuran gambar tidak boleh melebihi 5MB! Silakan perkecil ukuran gambar Anda atau gunakan gambar lain', 'Peringatan');
+            // Alert('Ukuran gambar tidak boleh melebihi 5MB! Silakan perkecil ukuran gambar Anda atau gunakan gambar lain', 'Peringatan');
+            this.setState({
+                tampil_alert: true,
+                warna_alert: 'red',
+                teks_alert: (<div><span>Ukuran gambar tidak boleh melebihi 5MB! Silakan perkecil ukuran gambar Anda atau gunakan gambar lain!</span></div>)
+            },()=>{
+             
+            })
             
             return true;
         }
@@ -272,7 +311,14 @@ class KonfirmasiPembayaran extends React.Component {
 
             }else{
                 // this.$f7.dialog.close()
-                Alert('Hanya dapat mengupload file gambar dengan format .jpg atau .png!', 'Peringatan');
+                // Alert('Hanya dapat mengupload file gambar dengan format .jpg atau .png!', 'Peringatan');
+                this.setState({
+                    tampil_alert: true,
+                    warna_alert: 'red',
+                    teks_alert: (<div><span>Hanya dapat mengupload file gambar dengan format .jpg atau .png!</span></div>)
+                },()=>{
+                 
+                })
                 return true;
             }
 
@@ -303,7 +349,14 @@ class KonfirmasiPembayaran extends React.Component {
     }
 
     uploadGagal = (xhr) => {
-        Alert('Ada kesalahan pada sistem atau jaringan Anda, mohon cek kembali sebelum melakukan upload ulang', 'Mohon maaf');
+        // Alert('Ada kesalahan pada sistem atau jaringan Anda, mohon cek kembali sebelum melakukan upload ulang', 'Mohon maaf');
+        this.setState({
+            tampil_alert: true,
+            warna_alert: 'red',
+            teks_alert: (<div><span>Ada kesalahan pada sistem atau jaringan Anda, mohon cek kembali sebelum melakukan upload ulang</span></div>)
+        },()=>{
+         
+        })
     }
 	
 	render() {
@@ -381,7 +434,7 @@ class KonfirmasiPembayaran extends React.Component {
                                 </div>
                                 <div className="form-group" style={{marginTop:'8px'}}>
                                     <label className="custom-control-label" style={{marginBottom:'4px', marginLeft:'20px'}}>Rekening Atas Nama Pengirim</label>
-                                    <input onChange={this.setValue('nama_pengirim')} type="text" className="form-control" placeholder="No Rekening Pengirim" required="required" value={this.state.routeParams.nama_pengirim} />
+                                    <input onChange={this.setValue('nama_pengirim')} type="text" className="form-control" placeholder="Rekening Atas Nama Pengirim" required="required" value={this.state.routeParams.nama_pengirim} />
                                 </div>
                                 <div className="form-group" style={{marginTop:'8px'}}>
                                     <label className="custom-control-label" style={{marginBottom:'4px', marginLeft:'20px'}}>Jumlah yang ditransfer</label>
@@ -484,6 +537,18 @@ class KonfirmasiPembayaran extends React.Component {
                                 </button>
                             </div>
                         </div>
+                        {this.state.tampil_alert &&
+                        <div className="card card20" style={{padding:'16px', marginBottom:'16px', background:(this.state.warna_alert === 'green' ? '#81c784' : 'red'), color:'white'}}>
+                            <div className="row">
+                                <div className="col-md-8 col-lg-8 blog-sec">
+                                    {this.state.teks_alert}
+                                </div>
+                                <div className="col-md-4 col-lg-4 blog-sec" style={{textAlign:'right'}}>
+                                    <button className="btn" style={{background:'transparent', color:'white'}} onClick={()=>this.setState({tampil_alert:false})}>Tutup</button>
+                                </div>
+                            </div>
+                        </div>
+                        }
 					</section>
 					
                     <Footer />

@@ -9,7 +9,7 @@ import * as Actions from '../store/actions';
 import moment from 'moment';
 import Footer from './footer';
 import CardProdukMini from './CardProdukMini';
-import { Alert, Confirm } from 'react-st-modal';
+
 
 import Modal from 'react-modal';
 import BounceLoader from "react-spinners/BounceLoader";
@@ -305,6 +305,16 @@ class Pembelian extends React.Component {
                                         </div>
 
                                         <h3>Daftar Transaksi ({this.state.routeParams.status_transaksi_teks})</h3>
+
+                                        {this.state.transaksi.total < 1 &&
+                                        <div className="card card20" style={{paddingLeft:'8px', textAlign:'center', paddingBottom:'32px', paddingTop:'32px'}}>
+                                            <img src="./assets/images/keranjang.jpg" style={{width:'120px', margin:'auto'}} />
+                                            <br/>
+                                            <div style={{color:'#434343'}}>
+                                                Anda Belum memiliki riwayat transaksi
+                                            </div>
+                                        </div>
+                                        }
                                         
                                         {this.state.transaksi.rows.map((option)=>{
                                             return (
@@ -365,9 +375,15 @@ class Pembelian extends React.Component {
                                                                     <div style={{fontSize:'10px'}}>Diterima</div>
                                                                 </div>
                                                             </div>
+                                                            <div style={{fontSize:'10px', marginTop: '8px', marginLeft:'4px'}}>
+                                                                Total Belanja
+                                                            </div>
+                                                            <div style={{fontSize:'20px', marginTop: '0px', marginLeft:'4px', fontWeight:'bold'}}>
+                                                                Rp {this.formatAngka(parseInt(option.total_nominal)+parseInt(option.ongkos_kirim))}
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <div style={{fontSize:'12px', marginTop: '8px', marginLeft:'4px'}}>
+                                                    <div style={{fontSize:'12px', marginTop: '-48px', marginLeft:'4px'}}>
                                                         {option.produk_transaksi.length > 0 &&
                                                         <div className="produkPertama" style={{display:'inline-flex'}}>
                                                             <div style={{
@@ -375,7 +391,8 @@ class Pembelian extends React.Component {
                                                                 height:'40px',
                                                                 border:'1px solid #eee',
                                                                 background:'#4f4f4f',
-                                                                backgroundImage: 'url('+localStorage.getItem('api_base')+option.produk_transaksi[0].gambar_produk+')',
+                                                                // backgroundImage: 'url('+localStorage.getItem('api_base')+option.produk_transaksi[0].gambar_produk+')',
+                                                                backgroundImage: 'url('+localStorage.getItem('api_base_gambar')+option.produk_transaksi[0].gambar_produk+')',
                                                                 backgroundSize:'cover',
                                                                 backgroundPosition:'center',
                                                                 backgroundRepeat:'no-repeat'
@@ -390,12 +407,12 @@ class Pembelian extends React.Component {
                                                             </div>
                                                         </div>
                                                         }
-                                                        <div style={{fontSize:'10px', marginTop: '8px', marginLeft:'4px'}}>
+                                                        {/* <div style={{fontSize:'10px', marginTop: '8px', marginLeft:'4px'}}>
                                                             Total Belanja
                                                         </div>
                                                         <div style={{fontSize:'20px', marginTop: '0px', marginLeft:'4px', fontWeight:'bold'}}>
                                                             Rp {this.formatAngka(parseInt(option.total_nominal)+parseInt(option.ongkos_kirim))}
-                                                        </div>
+                                                        </div> */}
                                                     </div>
                                                     <div style={{width:'100%', textAlign:'right', fontSize:'12px', marginTop: '8px', marginLeft:'4px'}}>
                                                         <div style={{width:'100%'}}>

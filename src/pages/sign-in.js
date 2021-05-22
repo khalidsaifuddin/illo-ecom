@@ -3,7 +3,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as Actions from '../store/actions';
-import { Alert, Confirm } from 'react-st-modal';
+
 import DatePicker from 'react-datepicker';
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -20,7 +20,10 @@ class SignIn extends React.Component {
    state = {
       redirect_produk: false,
       routeParams: {},
-      loading: false
+      loading: false,
+      teks_alert: '',
+      tampil_alert: false,
+      warna_alert: 'green'
    }
 
    getParameterByName = (name, url = this.props.location.search) => {
@@ -67,7 +70,12 @@ class SignIn extends React.Component {
          !this.state.routeParams.username ||
          !this.state.routeParams.password
       ){
-         Alert('Mohon lengkapi username dan password sebelum login!', 'Peringatan')
+         // Alert('Mohon lengkapi username dan password sebelum login!', 'Peringatan')
+         this.setState({
+            tampil_alert: true,
+            warna_alert: 'red',
+            teks_alert: 'Mohon lengkapi username dan password sebelum login!'
+         })
          return true
       }
       // alert('tes')
@@ -76,24 +84,46 @@ class SignIn extends React.Component {
       },()=>{
          this.props.masuk(this.state.routeParams).then((result)=>{
             this.setState({
-               loading: false
+               loading: true
             },()=>{
                if(!result.payload.error){
                   //berhasil login
                   this.props.getPengguna({pengguna_id: result.payload.user.pengguna_id}).then((resultPengguna)=>{
                      
-                     Alert('Selamat Datang!', 'Berhasil Login')
+                     // Alert('Selamat Datang!', 'Berhasil Login')
+
+                     this.setState({
+                        loading: false,
+                        tampil_alert: true,
+                        warna_alert: 'green',
+                        teks_alert: 'Berhasil Login. Selamat Datang!'
+                     })
+                     
                      setTimeout(() => {
                         localStorage.setItem('sudah_login',1)
                         localStorage.setItem('user',JSON.stringify(resultPengguna.payload.rows[0]))
    
-                        this.props.history.push('/')
-                     }, 1000)
+                        setTimeout(() => {
+                           if(this.getParameterByName('redirect')){
+                              this.props.history.push(this.getParameterByName('redirect'))
+                           }else{
+                              this.props.history.push('/')
+                           }
+                        }, 2000);
+
+                        // this.props.history.push('/')
+                     }, 1500)
 
                   })
 
                }else{
-                  Alert(result.payload.error, 'Peringatan')
+                  // Alert(result.payload.error, 'Peringatan')
+                  this.setState({
+                     loading: false,
+                     tampil_alert: true,
+                     warna_alert: 'red',
+                     teks_alert: result.payload.error
+                  })
                   return true
                }
             })
@@ -138,12 +168,24 @@ class SignIn extends React.Component {
                <div style={{width:'100%', textAlign:'center', marginBottom:'8px'}}>
                   <a className="navbar-brand" href={`${process.env.PUBLIC_URL}/`}><img src="/assets/images/illo-logo.png" alt="logo" style={{width:'100px'}} /></a>
                </div>
-               <h2 className="title text-center"><span> Login Pengguna</span></h2>
+               <h2 className="title text-center"><span>Selamat Datang!</span></h2>
                {this.state.redirect_produk &&
                <p className="text-center">Silakan Login sebelum melanjutkan pembelian Anda, atau <a style={{color:'#434343', fontWeight:'bold'}} href={"/daftar"+(this.state.redirect_produk ? this.props.location.search : '')}>daftar</a> bila Anda belum memiliki akun</p>
                }
                {!this.state.redirect_produk &&
                <p className="text-center">Silakan Login menggunakan akun Anda, atau <a style={{color:'#434343', fontWeight:'bold'}} href="/daftar">daftar</a> bila Anda belum memiliki akun</p>
+               }
+               {this.state.tampil_alert &&
+               <div className="card card20" style={{padding:'16px', marginBottom:'16px', background:(this.state.warna_alert === 'green' ? '#81c784' : 'red'), color:'white'}}>
+                  <div className="row">
+                     <div className="col-md-8 col-lg-8 blog-sec">
+                           {this.state.teks_alert}
+                     </div>
+                     <div className="col-md-4 col-lg-4 blog-sec" style={{textAlign:'right'}}>
+                           <button className="btn" style={{background:'transparent', color:'white'}} onClick={()=>this.setState({tampil_alert:false})}>Tutup</button>
+                     </div>
+                  </div>
+               </div>
                }
                <div className="card">
                   <div className="theme-form">
@@ -166,13 +208,23 @@ class SignIn extends React.Component {
                      <div className="form-button text-center">
                         <button onClick={this.login} className="btn btn-custom btn-lg theme-color">Login</button>
                      </div>
+                     <br/>
+                     <div style={{width:'100%', textAlign:'center'}}>
+                        <div className="or-saparator"><span>atau</span></div>
+                        <a className="btn btn-custom" href={"/daftar"+(this.getParameterByName('redirect') ? '?redirect='+this.getParameterByName('redirect') : '')} style={{color:'#ffffff'}}>Daftar</a>
+                        {/* <br/> */}
+                        <div className="or-saparator"><span>&nbsp;</span></div>
+                        
+                        <a href="/" style={{color:'#434343'}}>Kembali ke Beranda</a>
+                     </div>
                      {/* <div className="or-saparator"><span>atau</span></div>
                      <h6 className="text-center mt-0 mb-3">Login dengan:</h6>
                      <div className="form-button text-center social-btns">
-                        <button type="submit" className="btn btn-custom ggl">Google</button>
-                     </div> */}
+                     <button type="submit" className="btn btn-custom ggl">Google</button>
+                  </div> */}
                   </div>
                </div>
+               
             </div>
          </section>
       );

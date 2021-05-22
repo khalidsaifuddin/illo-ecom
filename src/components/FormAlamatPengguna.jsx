@@ -9,11 +9,13 @@ import * as Actions from '../store/actions';
 import moment from 'moment';
 import Footer from './footer';
 import CardProdukMini from './CardProdukMini';
-import { Alert, Confirm } from 'react-st-modal';
+
 
 import Modal from 'react-modal';
 import BounceLoader from "react-spinners/BounceLoader";
 
+// import Framework7 from 'framework7'
+// import { f7ready } from 'framework7-react';
 
 class FormAlamatPengguna extends React.Component {
 
@@ -51,7 +53,9 @@ class FormAlamatPengguna extends React.Component {
         },
         provinsi: [],
         kabupaten: [],
-        kecamatan: []
+        kecamatan: [],
+        teks_alert: '',
+        tampil_alert: false
 
 	}
     
@@ -87,6 +91,13 @@ class FormAlamatPengguna extends React.Component {
 	
 	componentDidMount() {
 
+        // console.log(Framework7.dialog)
+        // var app = new Framework7({});
+        // console.log(f7ready)
+        // f7ready((f7) => {
+        //     f7.dialog.alert('Component mounted');
+        // })
+
         if(parseInt(localStorage.getItem('sudah_login')) !== 1){
             this.props.history.push('/login?redirect='+this.props.location.pathname)
             return true
@@ -105,9 +116,15 @@ class FormAlamatPengguna extends React.Component {
             }
         })
 
-        this.props.getWilayah({id_level_wilayah: 1}).then((result)=>{
+        // this.props.getWilayah({id_level_wilayah: 1}).then((result)=>{
+        //     this.setState({
+        //         provinsi: result.payload.rows
+        //     })
+        // })
+        
+        this.props.getProvince({id_level_wilayah: 1}).then((result)=>{
             this.setState({
-                provinsi: result.payload.rows
+                provinsi: result.payload.rajaongkir.results
             })
         })
 
@@ -125,14 +142,24 @@ class FormAlamatPengguna extends React.Component {
         },()=>{
            console.log(this.state.routeParams)
 
-           if(tipe === 'kode_wilayah_provinsi'){
-                this.props.getWilayah({id_level_wilayah: 2, mst_kode_wilayah: this.state.routeParams.kode_wilayah_provinsi}).then((result)=>{
+        //    if(tipe === 'kode_wilayah_provinsi'){
+           if(tipe === 'province_id'){
+                // this.props.getWilayah({id_level_wilayah: 2, mst_kode_wilayah: this.state.routeParams.kode_wilayah_provinsi}).then((result)=>{
+                //     this.setState({
+                //         kabupaten: result.payload.rows
+                //     })
+                // })
+                
+                this.props.getCity({province: this.state.routeParams.province_id}).then((result)=>{
                     this.setState({
-                        kabupaten: result.payload.rows
+                        kabupaten: result.payload.rajaongkir.results
                     })
                 })
-           }else if(tipe === 'kode_wilayah_kabupaten'){
-                this.props.getWilayah({id_level_wilayah: 3, mst_kode_wilayah: this.state.routeParams.kode_wilayah_kabupaten}).then((result)=>{
+
+        //    }else if(tipe === 'kode_wilayah_kabupaten'){
+           }else if(tipe === 'city_id'){
+                // this.props.getWilayah({id_level_wilayah: 3, mst_kode_wilayah: this.state.routeParams.kode_wilayah_kabupaten}).then((result)=>{
+                this.props.getWilayah({id_level_wilayah: 3}).then((result)=>{
                     this.setState({
                         kecamatan: result.payload.rows
                     })
@@ -151,7 +178,7 @@ class FormAlamatPengguna extends React.Component {
             !this.state.routeParams.kode_wilayah_kabupaten ||
             !this.state.routeParams.kode_wilayah_provinsi
         ){
-            Alert('Mohon lengkapi semua isian sebelum melanjukan prosesnya!', 'Peringatan')
+            // Alert('Mohon lengkapi semua isian sebelum melanjukan prosesnya!', 'Peringatan')
             return true
         }
 
@@ -163,30 +190,50 @@ class FormAlamatPengguna extends React.Component {
 
                 this.setState({
                     loading: false
-                },async ()=>{
+                },()=>{
                     if(result.payload.sukses){
-                        //berhasil
-                        const berhasil = await Confirm('Alamat Pengiriman berhasil disimpan!', 'Berhasil')
-
-                        if(berhasil){
-                            this.props.history.push('/AlamatPengguna')
-                        }else{
-
-                        }
+                        this.setState({
+                            tampil_alert: true,
+                            teks_alert: 'Alamat Pengiriman Berhasil Disimpan!'
+                        })
                     }else{
-                        //gagal
-                        const berhasil = await Confirm('Terdapat kesalahan teknis. Mohon dicoba kembali dalam beberapa saat ke depan!', 'Peringatan')
-                    }
 
+                    }
                 })
 
+                // this.setState({
+                //     loading: false
+                // },async ()=>{
+                //     if(result.payload.sukses){
+                //         //berhasil
+                //         const berhasil = await Confirm('Alamat Pengiriman berhasil disimpan!', 'Berhasil')
+
+                //         if(berhasil){
+                //             this.props.history.push('/AlamatPengguna')
+                //         }else{
+
+                //         }
+                //     }else{
+                //         //gagal
+                //         const berhasil = await Confirm('Terdapat kesalahan teknis. Mohon dicoba kembali dalam beberapa saat ke depan!', 'Peringatan')
+                //     }
+
+                // })
+
             }).catch(()=>{
+
                 //gagal teknis
                 this.setState({
                     loading: false
-                },async ()=>{
-                    const berhasil = await Confirm('Terdapat kesalahan teknis. Mohon dicoba kembali dalam beberapa saat ke depan!', 'Peringatan')
+                },()=>{
+
                 })
+                
+                // this.setState({
+                //     loading: false
+                // },async ()=>{
+                //     const berhasil = await Confirm('Terdapat kesalahan teknis. Mohon dicoba kembali dalam beberapa saat ke depan!', 'Peringatan')
+                // })
             })
         })
 
@@ -198,38 +245,39 @@ class FormAlamatPengguna extends React.Component {
 			<div>
 				<Navbar />
                 <Modal
-                isOpen={this.state.loading}
-                contentLabel="Example Modal"
-                style={{
-                    content : {
-                        top                   : '50%',
-                        left                  : '50%',
-                        right                 : 'auto',
-                        bottom                : 'auto',
-                        marginRight           : '-50%',
-                        transform             : 'translate(-50%, -50%)',
-                        minHeight             : '225px',
-                        minWidth              : '194px',
-                        borderRadius          : '20px',
-                        background            : 'rgb(255,255,255,0.8)',
-                        border                : '1px solid #eee',
-                        textAlign             : 'left'
-                    }
-                }}
+                    isOpen={this.state.loading}
+                    contentLabel="Example Modal"
+                    style={{
+                        content : {
+                            top                   : '50%',
+                            left                  : '50%',
+                            right                 : 'auto',
+                            bottom                : 'auto',
+                            marginRight           : '-50%',
+                            transform             : 'translate(-50%, -50%)',
+                            minHeight             : '225px',
+                            minWidth              : '194px',
+                            borderRadius          : '20px',
+                            background            : 'rgb(255,255,255,0.8)',
+                            border                : '1px solid #eee',
+                            textAlign             : 'left'
+                        }
+                    }}
                 >
-                <BounceLoader color={"#47B161"} loading={true} size={150} />
-                <div style={{marginTop:'170px', width:'100%', textAlign:'center', color:'#434343'}}>
-                    Menyimpan...
-                </div>
+                    <BounceLoader color={"#47B161"} loading={true} size={150} />
+                    <div style={{marginTop:'170px', width:'100%', textAlign:'center', color:'#434343'}}>
+                        Menyimpan...
+                    </div>
                 </Modal>
 				{/*blog right Section start*/}
-				<div className="page-margin">
+                <div className="page-margin">
 					{/*breadcrumb start*/}
+                    
 					<div className="breadcrumb-bg">
 						<div className="container">
 							<div className="row">
 								<div className="col-md-6 col-sm-6 col-text-center d-align-center">
-									<h2 className="title"><span>Tambah Alamat Pengiriman</span></h2>
+									<h2 className="title"><span>{this.state.routeParams.alamat_pengguna_id ? 'Edit' : 'Tambah'} Alamat Pengiriman</span></h2>
 								</div>
 								<div className="col-md-6 col-sm-6 col-text-center">
 									<nav aria-label="breadcrumb" className="blog-bradcrumb ">
@@ -271,22 +319,26 @@ class FormAlamatPengguna extends React.Component {
                                         </div>
                                         <div className="form-group" style={{marginTop:'8px'}}>
                                             <label className="custom-control-label" style={{marginBottom:'4px', marginLeft:'20px'}}>Provinsi</label>
-                                            <select className="form-control" placeholder="Provinsi" required="required" style={{height:'54px'}} onChange={this.setValue('kode_wilayah_provinsi')}>
+                                            {/* <select className="form-control" placeholder="Provinsi" required="required" style={{height:'54px'}} onChange={this.setValue('kode_wilayah_provinsi')}> */}
+                                            <select className="form-control" placeholder="Provinsi" required="required" style={{height:'54px'}} onChange={this.setValue('province_id')}>
                                                 <option value="-">-</option>
                                                 {this.state.provinsi.map((option)=>{
                                                     return (
-                                                        <option value={option.kode_wilayah}>{option.nama}</option>
+                                                        // <option value={option.kode_wilayah}>{option.nama}</option>
+                                                        <option value={option.province_id}>{option.province}</option>
                                                     )
                                                 })}
                                             </select>
                                         </div>
                                         <div className="form-group" style={{marginTop:'8px'}}>
                                             <label className="custom-control-label" style={{marginBottom:'4px', marginLeft:'20px'}}>Kota/Kabupaten</label>
-                                            <select className="form-control" placeholder="Kota/Kabupaten" required="required" style={{height:'54px'}} onChange={this.setValue('kode_wilayah_kabupaten')}>
+                                            {/* <select className="form-control" placeholder="Kota/Kabupaten" required="required" style={{height:'54px'}} onChange={this.setValue('kode_wilayah_kabupaten')}> */}
+                                            <select className="form-control" placeholder="Kota/Kabupaten" required="required" style={{height:'54px'}} onChange={this.setValue('city_id')}>
                                                 <option value="-">-</option>
                                                 {this.state.kabupaten.map((option)=>{
                                                     return (
-                                                        <option value={option.kode_wilayah}>{option.nama}</option>
+                                                        // <option value={option.kode_wilayah}>{option.nama}</option>
+                                                        <option value={option.city_id}>{option.type} {option.city_name}</option>
                                                     )
                                                 })}
                                             </select>
@@ -314,6 +366,19 @@ class FormAlamatPengguna extends React.Component {
                                             <i className="f7-icons">floppy_disk</i>&nbsp;
                                             Simpan Alamat
                                         </button>
+                                        {this.state.tampil_alert &&
+                                        <div className="card card20" style={{marginBottom:'16px', background:'#81c784', color:'white'}}>
+                                            <div className="row">
+                                                <div className="col-md-8 col-lg-8 blog-sec">
+                                                    {this.state.teks_alert}
+                                                </div>
+                                                <div className="col-md-4 col-lg-4 blog-sec" style={{textAlign:'right'}}>
+                                                    <button className="btn" style={{background:'transparent', color:'white'}} onClick={()=>this.setState({tampil_alert:false})}>Tutup</button>
+                                                    <button className="btn" style={{background:'transparent', color:'white'}} onClick={()=>this.props.history.push('/AlamatPengguna')}>Kembali ke Daftar Alamat</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        }
                                     </div>
                                 </div>
                                 <div className="col-md-4 col-lg-3 order-md-last list-sidebar">
@@ -381,7 +446,9 @@ function mapDispatchToProps(dispatch) {
 		getArtikel: Actions.getArtikel,
         getAlamatPengguna: Actions.getAlamatPengguna,
         simpanAlamatPengguna: Actions.simpanAlamatPengguna,
-        getWilayah: Actions.getWilayah
+        getWilayah: Actions.getWilayah,
+        getProvince: Actions.getProvince,
+        getCity: Actions.getCity
     }, dispatch);
 }
 
