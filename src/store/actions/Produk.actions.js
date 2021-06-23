@@ -1,6 +1,7 @@
 import axios from 'axios/index';
 
 export const GET_PRODUK = '[PRODUK] GET_PRODUK';
+export const GET_DISKON_PRODUK = '[PRODUK] GET_DISKON_PRODUK';
 export const GET_KATEGORI = '[PRODUK] GET_KATEGORI';
 export const VERIFIKASI = '[PRODUK] VERIFIKASI';
 export const SIMPAN_VERIFIKASI = '[PRODUK] SIMPAN_VERIFIKASI';
@@ -80,6 +81,22 @@ export function getVerifikasiPengguna(routeParams)
         request.then((response) =>
             dispatch({
                 type   : GET_VERIFIKASI_PENGGUNA,
+                payload: response.data,
+                routeParams
+            })
+        );
+}
+
+export function getDiskonProduk(routeParams)
+{
+    const request = axios.post(localStorage.getItem('api_base')+'/api/Produk/getDiskonProduk', {
+        ...routeParams
+    });
+
+    return (dispatch) =>
+        request.then((response) =>
+            dispatch({
+                type   : GET_DISKON_PRODUK,
                 payload: response.data,
                 routeParams
             })

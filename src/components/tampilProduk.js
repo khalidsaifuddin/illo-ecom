@@ -433,37 +433,81 @@ class tampilProduk extends React.Component {
 													</div>
 												</div>
 												{/* <h2 style={{fontWeight:'500', marginBottom:'8px'}}> */}
+												{!this.state.produk_record.diskon_produk_id &&
 												<div>
-													{this.state.produk_record.harga_produk.map((option)=>{
-														if(parseInt(option.jenis_harga_id) === 1){
-															return (
-																<span style={{textDecoration:'line-through'}}>Rp {this.formatAngka(option.nominal)}</span>
-															)
-														}
-													})}
-												</div>
-												<div style={{fontSize:'18px', fontWeight:'bold'}}>
-													{/* {parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id) === 2 && */}
-													<span>
+													<div>
 														{this.state.produk_record.harga_produk.map((option)=>{
-															if(parseInt(option.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
+															if(parseInt(option.jenis_harga_id) === 1){
 																return (
-																	<span style={{fontSize:'25px'}}>Rp {this.formatAngka(option.nominal)}</span>
+																	<span style={{textDecoration:'line-through'}}>Rp {this.formatAngka(option.nominal)}</span>
 																)
 															}
-
-															if(!JSON.parse(localStorage.getItem('user')).jenis_mitra_id){
-																if(parseInt(option.jenis_harga_id) === 1){
+														})}
+													</div>
+													<div style={{fontSize:'18px', fontWeight:'bold'}}>
+														{/* {parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id) === 2 && */}
+														<span>
+															{this.state.produk_record.harga_produk.map((option)=>{
+																if(parseInt(option.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
 																	return (
-																		// <span style={{fontSize:'25px'}}>Rp {this.formatAngka(option.nominal)}</span>
 																		<span style={{fontSize:'25px'}}>Rp {this.formatAngka(option.nominal)}</span>
 																	)
 																}
-															}
-														})}
-													</span>
-													{/* } */}
+
+																if(!JSON.parse(localStorage.getItem('user')).jenis_mitra_id){
+																	if(parseInt(option.jenis_harga_id) === 1){
+																		return (
+																			// <span style={{fontSize:'25px'}}>Rp {this.formatAngka(option.nominal)}</span>
+																			<span style={{fontSize:'25px'}}>Rp {this.formatAngka(option.nominal)}</span>
+																		)
+																	}
+																}
+															})}
+														</span>
+														{/* } */}
+													</div>
 												</div>
+												}
+												{this.state.produk_record.diskon_produk_id &&
+												<div>
+													<div>
+														<span>
+															{this.state.produk_record.harga_produk.map((option)=>{
+																if(parseInt(option.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
+																	return (
+																		<span style={{textDecoration:'line-through'}}>Rp {this.formatAngka(option.nominal)}</span>
+																	)
+																}
+
+																if(!JSON.parse(localStorage.getItem('user')).jenis_mitra_id){
+																	if(parseInt(option.jenis_harga_id) === 1){
+																		return (
+																			<span style={{textDecoration:'line-through'}}>Rp {this.formatAngka(option.nominal)}</span>
+																		)
+																	}
+																}
+															})}
+														</span>
+													</div>
+													{this.state.produk_record.jenis_hitung_diskon_id === 1 &&
+													<div>
+														<div style={{fontSize:'12px'}}>Diskon {this.state.produk_record.persen_diskon}% ({moment(this.state.produk_record.waktu_mulai).format('DD')} {moment(this.state.produk_record.waktu_mulai).format('M') !== moment(this.state.produk_record.waktu_selesai).format('M') ? moment(this.state.produk_record.waktu_mulai).format('M') : ''} - {moment(this.state.produk_record.waktu_selesai).format('DD')} {this.bulan[moment(this.state.produk_record.waktu_selesai).format('M')-1]} {moment(this.state.produk_record.waktu_selesai).format('YYYY')})</div>
+														<div style={{fontSize:'18px'}}>
+															<span>
+																{this.state.produk_record.harga_produk.map((option)=>{
+																	if(parseInt(option.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
+																		return (
+																			// <span>Rp {this.formatAngka(parseFloat(option.nominal)-(parseFloat(option.nominal)*parseFloat(option.persen_diskon)/100))}</span>
+																			<span style={{fontSize:'25px'}}>Rp {this.formatAngka(parseFloat(option.nominal)-(parseFloat(option.nominal)*parseFloat(this.state.produk_record.persen_diskon)/100))}</span>
+																		)
+																	}
+																})}
+															</span>
+														</div>
+													</div>
+													}
+												</div>
+												}
 												<div style={{fontSize:'10px'}}>
 													Harga {JSON.parse(localStorage.getItem('user')).jenis_mitra ? JSON.parse(localStorage.getItem('user')).jenis_mitra : 'Privileged Customer'}
 												</div>
@@ -622,7 +666,8 @@ function mapDispatchToProps(dispatch) {
 		getProduk: Actions.getProduk,
         getKategoriProduk: Actions.getKategoriProduk,
 		simpanKeranjang: Actions.simpanKeranjang,
-		getMitraTerdekat: Actions.getMitraTerdekat
+		getMitraTerdekat: Actions.getMitraTerdekat,
+		getDiskonProduk: Actions.getDiskonProduk
     }, dispatch);
 }
 

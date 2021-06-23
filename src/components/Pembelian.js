@@ -13,11 +13,12 @@ import CardProdukMini from './CardProdukMini';
 
 import Modal from 'react-modal';
 import BounceLoader from "react-spinners/BounceLoader";
+import Modals from "./Modal_tmp";
 
 class Pembelian extends React.Component {
 
 	state = {
-        loading: false,
+        loading: true,
 		routeParams: {
 			start: 0,
 			limit: 20,
@@ -72,8 +73,13 @@ class Pembelian extends React.Component {
 
         this.props.getTransaksi(this.state.routeParams).then((result)=>{
             this.setState({
+                loading: false,
                 transaksi: result.payload,
                 transaksi_record: result.payload.total > 0 ? result.payload.rows[0] : {}
+            })
+        }).catch(()=>{
+            this.setState({
+                loading: false
             })
         })
 
@@ -88,7 +94,8 @@ class Pembelian extends React.Component {
             routeParams: {
                 ...this.state.routeParams,
                 status_transaksi: tipe,
-                status_transaksi_teks: teks
+                status_transaksi_teks: teks,
+                status: (tipe !== 'dibatalkan' ? 'aktif' : 'batal')
             }
         },()=>{
             this.props.getTransaksi(this.state.routeParams).then((result)=>{
@@ -106,7 +113,7 @@ class Pembelian extends React.Component {
 		return (
 			<div>
 				<Navbar />
-                <Modal
+                {/* <Modal
                 isOpen={this.state.loading}
                 contentLabel="Example Modal"
                 style={{
@@ -130,7 +137,9 @@ class Pembelian extends React.Component {
                 <div style={{marginTop:'170px', width:'100%', textAlign:'center', color:'#434343'}}>
                     Memuat...
                 </div>
-                </Modal>
+                </Modal> */}
+
+                <Modals loading={this.state.loading} />
 				{/*blog right Section start*/}
 				<div className="page-margin">
 					{/*breadcrumb start*/}
@@ -302,6 +311,23 @@ class Pembelian extends React.Component {
                                                     Dikomplain
                                                 </div>
                                             </a>
+                                            <a style={{width:'100px',marginRight:'24px', cursor:'pointer'}} onClick={()=>this.gantiStatus('dibatalkan', 'Dibatalkan')}>
+                                                <div
+                                                className="card"
+                                                style={{
+                                                    minWidth:'120px',
+                                                    minHeight:'60px',
+                                                    marginBottom:'16px',
+                                                    textAlign:'center',
+                                                    padding:'8px',
+                                                    fontSize:'12px',
+                                                    background: (this.state.routeParams.status_transaksi === 'dibatalkan' ? '#eeffd8' : 'white'),
+                                                    border: (this.state.routeParams.status_transaksi === 'dibatalkan' ? '1px solid green' : '1px solid #ccc')
+                                                }}
+                                                >
+                                                    Dibatalkan
+                                                </div>
+                                            </a>
                                         </div>
 
                                         <h3>Daftar Transaksi ({this.state.routeParams.status_transaksi_teks})</h3>
@@ -374,12 +400,18 @@ class Pembelian extends React.Component {
                                                                     {parseInt(option.status_diterima_id) === 1 && <i className="f7-icons" style={{color:'green'}}>checkmark_circle_fill</i>}
                                                                     <div style={{fontSize:'10px'}}>Diterima</div>
                                                                 </div>
+                                                                <div style={{textAlign:'center', marginRight:'8px'}}>
+                                                                    {parseInt(option.status_selesai_id) !== 1 && <i className="f7-icons" style={{color:'gray'}}>circle</i>}
+                                                                    {parseInt(option.status_selesai_id) === 1 && <i className="f7-icons" style={{color:'green'}}>checkmark_circle_fill</i>}
+                                                                    <div style={{fontSize:'10px'}}>Selesai</div>
+                                                                </div>
                                                             </div>
                                                             <div style={{fontSize:'10px', marginTop: '8px', marginLeft:'4px'}}>
                                                                 Total Belanja
                                                             </div>
                                                             <div style={{fontSize:'20px', marginTop: '0px', marginLeft:'4px', fontWeight:'bold'}}>
-                                                                Rp {this.formatAngka(parseInt(option.total_nominal)+parseInt(option.ongkos_kirim))}
+                                                                {/* Rp {this.formatAngka(parseInt(option.total_nominal)+parseInt(option.ongkos_kirim))} */}
+                                                                Rp {option.harga_final ? this.formatAngka(option.harga_final) : 0}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -414,6 +446,12 @@ class Pembelian extends React.Component {
                                                             Rp {this.formatAngka(parseInt(option.total_nominal)+parseInt(option.ongkos_kirim))}
                                                         </div> */}
                                                     </div>
+                                                    {parseInt(option.status_pembatalan_id) === 1 &&
+                                                    <div style={{paddingTop:'16px', paddingBottom:'16px', textAlign: 'right', color: 'red'}}>
+                                                        Transaksi Dibatalkan    
+                                                    </div>
+                                                    }
+                                                    {parseInt(option.status_pembatalan_id) !== 1 &&
                                                     <div style={{width:'100%', textAlign:'right', fontSize:'12px', marginTop: '8px', marginLeft:'4px'}}>
                                                         <div style={{width:'100%'}}>
                                                             {parseInt(option.status_pembayaran_id) === 0 &&
@@ -421,11 +459,24 @@ class Pembelian extends React.Component {
                                                                 Konfirmasi Pembayaran
                                                             </button>
                                                             }
+                                                            {parseInt(option.status_pembayaran_id) === 0 &&
                                                             <button className="btn card20" style={{marginLeft:'4px', background:'#039be5', color:'white'}} onClick={()=>this.props.history.push('/Pembayaran/'+option.transaksi_id)}>
-                                                                Detail Transaksi
+                                                                Cara Pembayaran
                                                             </button>
+                                                            }
+                                                            {parseInt(option.status_pembayaran_id) === 0 &&
+                                                            <button className="btn card20" style={{marginLeft:'4px', background:'red', color:'white'}} onClick={()=>this.props.history.push('/batalTransaksi/'+option.transaksi_id)}>
+                                                                Batalkan Transaksi
+                                                            </button>
+                                                            }
+                                                            {parseInt(option.status_diterima_id) === 1 && parseInt(option.status_selesai_id) !== 1 &&
+                                                            <button className="btn card20" style={{marginLeft:'4px', background:'green', color:'white'}} onClick={()=>this.props.history.push('/KonfirmasiDiterima/'+option.transaksi_id)}>
+                                                                Konfirmasi Diterima
+                                                            </button>
+                                                            }
                                                         </div>
                                                     </div>
+                                                    }
                                                 </div>
                                             )
                                         })}

@@ -258,6 +258,11 @@ class GantiMitra extends React.Component {
                                                         </a>
                                                     </li>
                                                     <li className="marg-15">
+                                                        <a href={"/VoucherDiskon"}>
+                                                            Voucher Diskon
+                                                        </a>
+                                                    </li>
+                                                    <li className="marg-15">
                                                         <a onClick={this.keluar} style={{cursor:'pointer'}}>
                                                             Keluar
                                                         </a>

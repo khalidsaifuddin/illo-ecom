@@ -369,6 +369,7 @@ class profil extends React.Component {
                                                     <br/>
                                                     {this.state.routeParams.alamat_pengguna[0].alamat_jalan}<br/> 
                                                     {this.state.routeParams.alamat_pengguna[0].kecamatan}, {this.state.routeParams.alamat_pengguna[0].kabupaten}, {this.state.routeParams.alamat_pengguna[0].provinsi}
+                                                    {/* {this.state.routeParams.alamat_pengguna[0].kecamatan}, {this.state.routeParams.alamat_pengguna[0].kabupaten}, {this.state.routeParams.alamat_pengguna[0].provinsi} */}
                                                 </div>
                                                 }
                                             </div>
@@ -420,6 +421,11 @@ class profil extends React.Component {
                                                     <li className="marg-15">
                                                         <a href={"/GantiMitra"}>
                                                             Ganti Mitra
+                                                        </a>
+                                                    </li>
+                                                    <li className="marg-15">
+                                                        <a href={"/VoucherDiskon"}>
+                                                            Voucher Diskon
                                                         </a>
                                                     </li>
                                                     <li className="marg-15">

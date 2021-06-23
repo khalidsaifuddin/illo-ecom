@@ -26,7 +26,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import {Provider} from 'react-redux';
 import store from './store';
-import tentang from './components/tentang';
+import tentang from './components/TentangApp';
 import kategori from './components/kategori';
 import login from './components/login';
 import produk from './components/produk';
@@ -44,10 +44,15 @@ import verifikasi from './components/verifikasi';
 import HasilVerifikasi from './components/HasilVerifikasi';
 import GantiMitra from './components/GantiMitra';
 import Mitra from './components/Mitra';
+import batalTransaksi from './components/batalTransaksi';
+import PetunjukTransaksi from './components/PetunjukTransaksi';
+import SyaratKetentuan from './components/SyaratKetentuan';
+import PengajuanMitra from './components/PengajuanMitra';
+import KonfirmasiDiterima from './components/KonfirmasiDiterima';
 
 // localStorage.setItem('api_base','https://be.diskuis.id')
 localStorage.setItem('api_base','http://117.53.47.43:8085')
-localStorage.setItem('api_base','http://illobackend:8888')
+// localStorage.setItem('api_base','http://illobackend:8888')
 
 localStorage.setItem('api_base_gambar','http://117.53.47.43:8085')
 
@@ -111,9 +116,14 @@ class Root extends React.Component {
 			  <Route path={`${process.env.PUBLIC_URL}/verifikasi`} component={verifikasi}/>
 			  <Route path={`${process.env.PUBLIC_URL}/tentang`} component={tentang}/>
 			  <Route path={`${process.env.PUBLIC_URL}/mitra`} component={Mitra}/>
+			  <Route path={`${process.env.PUBLIC_URL}/pengajuan-mitra`} component={PengajuanMitra}/>
+			  <Route path={`${process.env.PUBLIC_URL}/petunjuk-transaksi`} component={PetunjukTransaksi}/>
+			  <Route path={`${process.env.PUBLIC_URL}/syarat-ketentuan`} component={SyaratKetentuan}/>
 			  <Route path={`${process.env.PUBLIC_URL}/faq`} component={Faq}/>
 			  <Route path={`${process.env.PUBLIC_URL}/kategori`} component={kategori}/>
 			  <Route path={`${process.env.PUBLIC_URL}/checkout/:pengguna_id`} component={Checkout}/>
+			  <Route path={`${process.env.PUBLIC_URL}/batalTransaksi/:transaksi_id`} component={batalTransaksi}/>
+			  <Route path={`${process.env.PUBLIC_URL}/KonfirmasiDiterima/:transaksi_id`} component={KonfirmasiDiterima}/>
 			  <Route path={`${process.env.PUBLIC_URL}/pembayaran/:transaksi_id`} component={Pembayaran}/>
 			  <Route path={`${process.env.PUBLIC_URL}/KonfirmasiPembayaran/:transaksi_id`} component={KonfirmasiPembayaran}/>
 			  <Route path={`${process.env.PUBLIC_URL}/pembelian`} component={Pembelian}/>

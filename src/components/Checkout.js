@@ -27,12 +27,23 @@ class Checkout extends React.Component {
             rows:[],
             total:0
         },
+        diskon_aktif: localStorage.getItem('diskon_aktif') ? JSON.parse(localStorage.getItem('diskon_aktif')) : null,
         barang_total: 0,
         harga_total: 0,
         ongkos_kirim: 10000,
         teks_alert: '',
         tampil_alert: false,
-        warna_alert: 'green'
+        warna_alert: 'green',
+        kurir_aktif: {
+            costs: [{
+                service: '-'
+            },{
+                service: '-',
+                cost: [{
+                    value: 0
+                }]
+            }]
+        }
 	}
     
     formatAngka = (num) => {
@@ -92,7 +103,16 @@ class Checkout extends React.Component {
 
                                     option.harga_produk.map((optionHarga)=>{
                                         if(parseInt(optionHarga.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
-                                            harga = parseFloat(optionHarga.nominal)
+                                            // harga = parseFloat(optionHarga.nominal)
+                                            if(!option.diskon_produk_id){
+                                                harga = parseFloat(optionHarga.nominal)
+                                            }else{
+                                                if(option.jenis_hitung_diskon_id === 1){
+                                                    harga = parseFloat(optionHarga.nominal)-(parseFloat(optionHarga.nominal)*option.persen_diskon/100)
+                                                }else{
+                                                    harga = 0
+                                                }
+                                            }
                                         }
                                     })
 
@@ -103,6 +123,27 @@ class Checkout extends React.Component {
                                 this.setState({
                                     barang_total: barang_total,
                                     harga_total: harga_total
+                                },()=>{
+
+                                    console.log(JSON.parse(localStorage.getItem('user')).alamat_pengguna[0].city_id)
+                                    // console.log(JSON.parse(localStorage.getItem('mitra_terdekat')).city_id)
+
+                                    this.props.cekOngkir({
+                                        origin: JSON.parse(localStorage.getItem('mitra_terdekat')).city_id,
+                                        destination: JSON.parse(localStorage.getItem('user')).alamat_pengguna[0].city_id,
+                                        weight: 1000,
+                                        courier: 'jne'
+                                    }).then((result)=>{
+                                        // console.log(result.payload.rajaongkir.results)
+
+                                        this.setState({
+                                            kurir_aktif: result.payload.rajaongkir.results[0],
+                                            ongkos_kirim: result.payload.rajaongkir.results[0].costs[1].cost[0].value
+                                        },()=>{
+                                            console.log(this.state.kurir_aktif)
+                                        })
+
+                                    })
                                 })
                             })
                         })
@@ -215,11 +256,13 @@ class Checkout extends React.Component {
                     ...this.state.routeParams,
                     ...JSON.parse(localStorage.getItem('mitra_terdekat')),
                     ...JSON.parse(localStorage.getItem('user')),
-                    ongkos_kirim: 10000,
+                    ongkos_kirim: this.state.ongkos_kirim,
+                    harga_final: (parseInt(this.state.harga_total)+this.state.ongkos_kirim - (this.state.diskon_aktif ? (this.state.diskon_aktif.jenis_hitung_diskon_id === 1 ? ( this.state.harga_total * this.state.diskon_aktif.persen_diskon / 100 ) : this.state.diskon_aktif.nominal_diskon ) : 0 ) ),
                     mitra_id_pembeli: parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)
                 }).then((result)=>{
                     if(result.payload.sukses){
                         //berhasil
+                        localStorage.removeItem('diskon_aktif')
                         this.props.history.push('/pembayaran/'+result.payload.transaksi_id)
                     }else{
                         //gagal
@@ -245,6 +288,50 @@ class Checkout extends React.Component {
 
         // }
     }
+
+    setDiskon = (tipe) => (e) => {
+        this.setState({
+            routeParams: {
+                pengguna_id: JSON.parse(localStorage.getItem('user')).pengguna_id,
+                kode_diskon: e.currentTarget.value
+            }
+        },()=>{
+            console.log(this.state.routeParams)
+        })
+    }
+
+    cekDiskon = () => {
+        this.props.cekDiskon(this.state.routeParams).then((result)=>{
+            if(result.payload.total > 0){
+
+                if(parseInt(result.payload.rows[0].aktif) !== 1){
+                    //tidak aktif
+                }else{
+                    //aktif
+
+                    this.setState({
+                        diskon_aktif: result.payload.rows[0]
+                    },()=>{
+                        localStorage.setItem('diskon_aktif', JSON.stringify(result.payload.rows[0]))
+                    })
+
+                }
+
+            }else{
+                //kode tidak ditemukan
+            }
+        })
+    }
+
+    hapusDiskon = () => {
+
+        this.setState({
+            diskon_aktif: null
+        },()=>{
+            localStorage.removeItem('diskon_aktif')
+        })
+
+    }
 	
 	render() {
 
@@ -264,6 +351,7 @@ class Checkout extends React.Component {
 									<nav aria-label="breadcrumb" className="blog-bradcrumb ">
 										<ol className="breadcrumb bg-transparent mb-0">
 											<li className="breadcrumb-item"><a href="/">Beranda</a></li>
+											<li className="breadcrumb-item"><a href="/keranjang">Keranjang</a></li>
 											<li className="breadcrumb-item"><a>Checkout</a></li>
 										</ol>
 									</nav>
@@ -331,10 +419,16 @@ class Checkout extends React.Component {
                                         <h3 style={{marginTop:'8px'}}>Ongkos Kirim</h3>
                                         <div className="row">
                                             <div className="col-md-6 col-lg-6">
-                                                Pengiriman Standar
+                                                {/* Pengiriman Standar */}
+                                                {this.state.kurir_aktif.name}
+                                                <br/>
+                                                {this.state.kurir_aktif.costs[1].service} - {this.state.kurir_aktif.costs[1].description}
                                             </div>
                                             <div className="col-md-6 col-lg-6" style={{textAlign:'right'}}>
-                                                Rp {this.formatAngka(this.state.ongkos_kirim)}
+                                                {/* Rp {this.formatAngka(this.state.ongkos_kirim)} */}
+                                                Rp {this.formatAngka(this.state.kurir_aktif.costs[1].cost[0].value)}
+                                                <br/>
+                                                <span style={{fontSize:'10px'}}>Estimasi {this.state.kurir_aktif.costs[1].cost[0].etd} hari</span>
                                             </div>
                                         </div>
                                     </div>
@@ -385,12 +479,22 @@ class Checkout extends React.Component {
                                                 let harga = 0
 
                                                 // if(parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id) === 2){
-                                                option.harga_produk.map((option)=>{
-                                                    if(parseInt(option.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
-                                                        harga = option.nominal
+                                                option.harga_produk.map((optionHarga)=>{
+                                                    if(parseInt(optionHarga.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
+                                                        if(!option.diskon_produk_id){
+                                                            harga = optionHarga.nominal
+                                                        }else{
+                                                            if(option.jenis_hitung_diskon_id === 1){
+                                                                harga = parseFloat(optionHarga.nominal)-(parseFloat(optionHarga.nominal)*option.persen_diskon/100)
+                                                            }else{
+                                                                harga = 0
+                                                            }
+                                                        }
                                                     }
                                                 })
                                                 // }
+
+                                                // console.log(parseInt(optionHarga.nominal))
 
                                                 let total = parseInt(option.jumlah) * parseFloat(harga)
 
@@ -419,9 +523,9 @@ class Checkout extends React.Component {
                                                                         }
                                                                     </div>
                                                                     <div className="keterangan_produk" style={{paddingLeft:'0px'}}>
-                                                                        <div style={{margin:'8px', marginTop:'0px', maxHeight:'30px', overflow:'hidden', textOverflow:'ellipsis', flexFlow:'nowrap', width:'100%'}}>
+                                                                        <div style={{margin:'8px', marginTop:'0px', marginBottom: '0px', maxHeight:'30px', overflow:'hidden', textOverflow:'ellipsis', flexFlow:'nowrap', width:'100%'}}>
                                                                             <a href={"/tampilProduk/"+option.produk_id}>
-                                                                                <h3 className="title" style={{marginTop:'0px'}}>
+                                                                                <h3 className="title" style={{marginTop:'0px', marginBottom:'0px'}}>
                                                                                     {option.nama} {option.varian_produk_id ? <span> - {option.varian_produk}</span> : ''}
                                                                                 </h3>
                                                                             </a>
@@ -453,28 +557,65 @@ class Checkout extends React.Component {
                                                                             }
                                                                             {parseInt(localStorage.getItem('sudah_login')) === 1 &&
                                                                             <span>
+                                                                                {option.diskon_produk_id &&
                                                                                 <div>
-                                                                                    {option.harga_produk.map((option)=>{
-                                                                                        if(parseInt(option.jenis_harga_id) === 1){
-                                                                                            return (
-                                                                                                <span style={{textDecoration:'line-through'}}>Rp {this.formatAngka(option.nominal)}</span>
-                                                                                            )
+                                                                                    <div>
+                                                                                        <span>
+                                                                                            {option.harga_produk.map((option)=>{
+                                                                                                if(parseInt(option.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
+                                                                                                    return (
+                                                                                                        <span style={{textDecoration:'line-through'}}>Rp {this.formatAngka(option.nominal)}</span>
+                                                                                                    )
+                                                                                                }
+                                                                                            })}
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        {option.jenis_hitung_diskon_id === 1 &&
+                                                                                        <div>Diskon {option.persen_diskon}% ({moment(option.waktu_mulai).format('DD')} {moment(option.waktu_mulai).format('M') !== moment(option.waktu_selesai).format('M') ? moment(option.waktu_mulai).format('M') : ''} - {moment(option.waktu_selesai).format('DD')} {this.bulan[moment(option.waktu_selesai).format('M')-1]} {moment(option.waktu_selesai).format('YYYY')})</div>
                                                                                         }
-                                                                                    })}
+                                                                                        <div style={{fontSize:'18px', fontWeight:'bold'}}>
+                                                                                            <span>
+                                                                                                {option.harga_produk.map((optionHarga)=>{
+                                                                                                    if(parseInt(optionHarga.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
+                                                                                                        return (
+                                                                                                            // <span>Rp {this.formatAngka(parseFloat(option.nominal)-(parseFloat(option.nominal)*parseFloat(option.persen_diskon)/100))}</span>
+                                                                                                            <span>Rp {this.formatAngka(parseFloat(optionHarga.nominal)-(parseFloat(optionHarga.nominal)*parseFloat(option.persen_diskon)/100))}</span>
+                                                                                                        )
+                                                                                                    }
+                                                                                                })}
+                                                                                            </span>
+                                                                                        </div>
+                                                                                    </div>
                                                                                 </div>
-                                                                                <div style={{fontSize:'18px', fontWeight:'bold'}}>
-                                                                                    {/* {parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id) === 2 && */}
-                                                                                    <span>
+                                                                                }
+                                                                                {!option.diskon_produk_id &&
+                                                                                <div>
+                                                                                    <div>
                                                                                         {option.harga_produk.map((option)=>{
-                                                                                            if(parseInt(option.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
+                                                                                            if(parseInt(option.jenis_harga_id) === 1){
                                                                                                 return (
-                                                                                                    <span>Rp {this.formatAngka(option.nominal)}</span>
+                                                                                                    <span style={{textDecoration:'line-through'}}>Rp {this.formatAngka(option.nominal)}</span>
                                                                                                 )
                                                                                             }
                                                                                         })}
-                                                                                    </span>
-                                                                                    {/* } */}
+                                                                                    </div>
+                                                                                    <div style={{fontSize:'18px', fontWeight:'bold'}}>
+                                                                                        {/* {parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id) === 2 && */}
+                                                                                        <span>
+                                                                                            {option.harga_produk.map((option)=>{
+                                                                                                if(parseInt(option.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
+                                                                                                    return (
+                                                                                                        <span>Rp {this.formatAngka(option.nominal)}</span>
+                                                                                                    )
+                                                                                                }
+                                                                                            })}
+                                                                                        </span>
+                                                                                        {/* } */}
+                                                                                    </div>
                                                                                 </div>
+                                                                                }
+                                                                                
                                                                                 Harga {JSON.parse(localStorage.getItem('user')).jenis_mitra}
                                                                             </span>
                                                                             }
@@ -486,8 +627,8 @@ class Checkout extends React.Component {
                                                             <div className="col-md-4 col-lg-4" style={{textAlign:'right'}}>
                                                                 Jumlah: {option.jumlah} 
                                                                 <br/>
-                                                                Total:<br/>
-                                                                <div style={{fontSize:'15px', fontWeight:'bold'}}>
+                                                                {/* Total:<br/> */}
+                                                                <div style={{fontSize:'18px', fontWeight:'bold'}}>
                                                                     Rp {total > 0 ? this.formatAngka(total) : '0'}
                                                                 </div>
                                                                 {/* <input 
@@ -528,6 +669,49 @@ class Checkout extends React.Component {
                                             }
                                         </div>
                                     </div>
+
+                                    <div className="card card20">
+                                        <h3 style={{marginTop:'8px'}}>Diskon</h3>
+                                        <input 
+                                            onChange={this.setDiskon('kode_diskon')} 
+                                            type="text" 
+                                            className="form-control" 
+                                            placeholder="Diskon" 
+                                            value={this.state.routeParams.kode_diskon} 
+                                        />
+                                        <button onClick={this.cekDiskon} style={{marginTop:'16px', width:'180px'}} className="btn btn-custom theme-color" >
+                                            <i className="f7-icons">search</i>&nbsp;
+                                            Cek Diskon
+                                        </button>
+                                        {this.state.diskon_aktif &&
+                                        <div className="card card20" style={{border:'2px dashed #7f7f7f'}}>
+                                            <div className="row">
+                                                <div className="col-md-6 col-lg-6">
+                                                    <div style={{fontSize:'10px'}}>{this.state.diskon_aktif.keterangan}</div>
+                                                    <div>{this.state.diskon_aktif.kode_diskon}</div>
+                                                </div>
+                                                <div className="col-md-6 col-lg-6" style={{textAlign: 'right'}}>
+                                                    <div>
+                                                        {this.state.diskon_aktif.jenis_hitung_diskon_id === 1 && 
+                                                        <div style={{fontWeight:'bold'}}>
+                                                            Potongan {this.state.diskon_aktif.persen_diskon}%
+                                                        </div>
+                                                        }
+                                                        {this.state.diskon_aktif.jenis_hitung_diskon_id === 2 && 
+                                                        <div style={{fontWeight:'bold'}}>
+                                                            Potongan Rp {this.formatAngka(this.state.diskon_aktif.nominal_diskon)}
+                                                        </div>
+                                                        }
+                                                        <div>
+                                                            <a style={{color:'#434343', fontSize:'10px', cursor: 'pointer'}} onClick={this.hapusDiskon}>Hapus</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        }
+                                    </div>
+
                                     {this.state.keranjang.total > 0 &&
                                     <div className="card card20">
                                         <div className="row">
@@ -561,6 +745,18 @@ class Checkout extends React.Component {
                                                     </div>
                                                 </div>
                                             </div>
+                                            {this.state.diskon_aktif &&
+                                            <div className="col-md-12 col-lg-12">
+                                                <div className="row">
+                                                    <div className="col-md-6 col-lg-6" style={{color:'#11940F'}}>
+                                                        Diskon {this.state.diskon_aktif.jenis_hitung_diskon_id === 1 && <span>{this.state.diskon_aktif.persen_diskon}%</span>}
+                                                    </div>
+                                                    <div className="col-md-6 col-lg-6" style={{textAlign:'right', fontWeight:'normal', color:'#11940F'}}>
+                                                        - Rp {this.state.diskon_aktif.jenis_hitung_diskon_id === 1 ? this.formatAngka( ( this.state.harga_total * this.state.diskon_aktif.persen_diskon / 100 ) ) : this.formatAngka(this.state.diskon_aktif.nominal_diskon)}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            }
                                             <div className="col-md-12 col-lg-12">
                                                 <br/>
                                                 <div className="row">
@@ -568,7 +764,7 @@ class Checkout extends React.Component {
                                                         Total
                                                     </div>
                                                     <div className="col-sm-6 col-md-6 col-lg-6 blog-sec" style={{textAlign:'right', fontWeight:'bold'}}>
-                                                        Rp {this.formatAngka(parseInt(this.state.harga_total)+10000)}
+                                                        Rp {this.formatAngka( (parseInt(this.state.harga_total)+this.state.ongkos_kirim - (this.state.diskon_aktif ? (this.state.diskon_aktif.jenis_hitung_diskon_id === 1 ? ( this.state.harga_total * this.state.diskon_aktif.persen_diskon / 100 ) : this.state.diskon_aktif.nominal_diskon ) : 0 ) ) )}
                                                     </div>
                                                 </div>
                                             </div>
@@ -617,7 +813,9 @@ function mapDispatchToProps(dispatch) {
         getKategoriProduk: Actions.getKategoriProduk,
         getKeranjang: Actions.getKeranjang,
         simpanKeranjang: Actions.simpanKeranjang,
-        simpanTransaksi: Actions.simpanTransaksi
+        simpanTransaksi: Actions.simpanTransaksi,
+        cekDiskon: Actions.cekDiskon,
+        cekOngkir: Actions.cekOngkir
     }, dispatch);
 }
 

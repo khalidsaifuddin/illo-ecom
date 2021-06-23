@@ -55,9 +55,9 @@ class CardProdukMini extends React.Component {
                             <div className="boxKeterangan" style={{marginTop:'0px', fontSize:'10px'}} dangerouslySetInnerHTML={{ __html: this.props.produk.keterangan.replace(/noreferrer/g, 'noreferrer" class="link external"').replace('<p class=""><br></p>','').replace(/(<([^>]+)>)/gi, "").substring(0,50) }} />
                             }
                         </div>
-                        <div style={{paddingLeft:'8px', fontSize:'12px', color:'#9b9b9b'}}>
+                        {/* <div style={{paddingLeft:'8px', fontSize:'12px', color:'#9b9b9b'}}>
                             {this.props.produk.kategori_produk}
-                        </div>
+                        </div> */}
                         <div style={{paddingLeft:'8px', fontSize:'18px', fontWeight:'500'}}>
                             {/* Rp 100.000 */}
                             {parseInt(localStorage.getItem('sudah_login')) !== 1 &&

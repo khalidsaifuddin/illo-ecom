@@ -3,6 +3,7 @@ import axios from 'axios/index';
 export const GET_MITRA_TERDEKAT = '[BLOG] GET_MITRA_TERDEKAT';
 export const GET_ANGGOTA_MITRA = '[BLOG] GET_ANGGOTA_MITRA';
 export const SIMPAN_MITRA_AKTIF = '[BLOG] SIMPAN_MITRA_AKTIF';
+export const SIMPAN_PENGAJUAN_MITRA = '[BLOG] SIMPAN_PENGAJUAN_MITRA';
 
 export function getMitraTerdekat(routeParams)
 {
@@ -46,6 +47,22 @@ export function simpanMitraAktif(routeParams)
         request.then((response) =>
             dispatch({
                 type   : SIMPAN_MITRA_AKTIF,
+                payload: response.data,
+                routeParams
+            })
+        );
+}
+
+export function simpanPengajuanMitra(routeParams)
+{
+    const request = axios.post(localStorage.getItem('api_base')+'/api/Mitra/simpanPengajuanMitra', {
+        ...routeParams
+    });
+
+    return (dispatch) =>
+        request.then((response) =>
+            dispatch({
+                type   : SIMPAN_PENGAJUAN_MITRA,
                 payload: response.data,
                 routeParams
             })

@@ -123,7 +123,8 @@ class Pembayaran extends React.Component {
                                             <div style={{marginTop:'32px'}}>
                                                 Berikut ini adalah nominal pembayaran Anda
                                                 <div className="card card20" style={{color:'#4f4f4f', textAlign:'center', fontSize:'20px', fontWeight:'bold', marginTop:'16px', marginBottom:'16px'}}>
-                                                    Rp {this.state.transaksi_record.total_nominal ? this.formatAngka(parseFloat(this.state.transaksi_record.total_nominal)+parseFloat(this.state.transaksi_record.ongkos_kirim)) : '0'}
+                                                    {/* Rp {this.state.transaksi_record.total_nominal ? this.formatAngka(parseFloat(this.state.transaksi_record.total_nominal)+parseFloat(this.state.transaksi_record.ongkos_kirim)) : '0'} */}
+                                                    Rp {this.state.transaksi_record.harga_final ? this.formatAngka(this.state.transaksi_record.harga_final) : 0}
                                                 </div>
                                                 <div>
                                                     Mohon lakukan pembayaran sebelum tanggal

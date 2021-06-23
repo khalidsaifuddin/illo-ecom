@@ -31,10 +31,11 @@ class Footer extends React.Component {
                               <div className="col-sm-6">
                                  <h3 style={{color:'#434343'}}>Support</h3>
                                  <ul style={{paddingLeft:'0px', color:'#434343'}}>
-                                    <li><a href="/faq" style={{fontWeight:'bold', color:'#434343'}}>FAQ</a></li>
-                                    <li>Pusat Bantuan</li>
-                                    <li>Syarat dan Ketentuan</li>
-                                    <li><a href="/tentang/" style={{color:'#434343'}}>Tentang Illo</a></li>
+                                    <li><a href="/faq" style={{fontWeight:'normal', color:'#434343'}}>FAQ</a></li>
+                                    <li><a href="/mitra" style={{fontWeight:'normal', color:'#434343'}}>Mitra Illo</a></li>
+                                    <li><a href="/petunjuk-transaksi" style={{fontWeight:'normal', color:'#434343'}}>Petunjuk Transaksi</a></li>
+                                    <li><a href="/syarat-ketentuan" style={{fontWeight:'normal', color:'#434343'}}>Syarat dan Ketentuan</a></li>
+                                    <li><a href="/tentang/" style={{fontWeight:'normal', color:'#434343'}}>Tentang Illo</a></li>
                                  </ul>
                               </div>
                               {/* <div className="col-sm-4"> */}

@@ -9,13 +9,13 @@ import * as Actions from '../store/actions';
 import moment from 'moment';
 import Footer from './footer';
 
-class Mitra extends React.Component {
+class PetunjukTransaksi extends React.Component {
 
 	state = {
 		routeParams: {
 			start: 0,
 			limit: 20,
-			jenis_artikel_id: 2
+			jenis_artikel_id: 3
 		},
 		mitra: {
 			rows: [],
@@ -63,13 +63,13 @@ class Mitra extends React.Component {
 						<div className="container">
 							<div className="row">
                                 <div className="col-md-6 col-sm-6 col-text-center d-align-center">
-									<h2 className="title"><span> Mitra Illo</span></h2>
+									<h2 className="title"><span> Petunjuk Transaksi</span></h2>
 								</div>
 								<div className="col-md-6 col-sm-6 col-text-center">
 									<nav aria-label="breadcrumb" className="blog-bradcrumb ">
 										<ol className="breadcrumb bg-transparent mb-0">
 											<li className="breadcrumb-item"><a href="/">Beranda</a></li>
-											<li className="breadcrumb-item"><a href="/Mitra">Mitra</a></li>
+											<li className="breadcrumb-item"><a href="/petunjuk-transaksi">Petunjuk Transaksi</a></li>
 										</ol>
 									</nav>
 								</div>
@@ -87,11 +87,6 @@ class Mitra extends React.Component {
 												<div style={{marginTop:'-8px', width:'100%', overflowX:'hidden'}}>
                                                     {/* {this.state.record_artikel.konten} */}
 													<div dangerouslySetInnerHTML={{ __html: (this.state.record_artikel.konten ? this.state.record_artikel.konten.replace(/noreferrer/g, 'noreferrer" class="link external') : "<p></p>")}} />
-												</div>
-												<div>
-													<button style={{marginTop:'16px'}} className="btn btn-custom theme-color" onClick={()=>this.props.history.push('/pengajuan-mitra')}>
-														Bergabung menjadi mitra Illo
-													</button>
 												</div>
 											</div>
 										</div>
@@ -115,4 +110,4 @@ function mapDispatchToProps(dispatch) {
     }, dispatch);
 }
 
-export default (connect(null, mapDispatchToProps)(Mitra));
+export default (connect(null, mapDispatchToProps)(PetunjukTransaksi));

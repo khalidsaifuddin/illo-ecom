@@ -10,6 +10,7 @@ export const SIMPAN_ALAMAT_PENGGUNA = '[PENGGUNA] SIMPAN_ALAMAT_PENGGUNA';
 export const GENERATE_UUID = '[PENGGUNA] GENERATE_UUID';
 export const GET_PROVINCE = '[PENGGUNA] GET_PROVINCE';
 export const GET_CITY = '[PENGGUNA] GET_CITY';
+export const CEK_ONGKIR = '[PENGGUNA] CEK_ONGKIR';
 
 export function generateUUID(routeParams)
 {
@@ -166,6 +167,22 @@ export function getCity(routeParams)
         request.then((response) =>
             dispatch({
                 type   : GET_CITY,
+                payload: response.data,
+                routeParams
+            })
+        );
+}
+
+export function cekOngkir(routeParams)
+{
+    const request = axios.post(localStorage.getItem('api_base')+'/api/app/cekOngkir', {
+        ...routeParams
+    });
+
+    return (dispatch) =>
+        request.then((response) =>
+            dispatch({
+                type   : CEK_ONGKIR,
                 payload: response.data,
                 routeParams
             })

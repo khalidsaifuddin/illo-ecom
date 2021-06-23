@@ -54,9 +54,12 @@ class SignUp extends React.Component {
          !this.state.routeParams.no_hp ||
          !this.state.routeParams.email ||
          !this.state.routeParams.password ||
-         !this.state.routeParams.kode_wilayah_provinsi ||
-         !this.state.routeParams.kode_wilayah_kabupaten ||
-         !this.state.routeParams.kode_wilayah_kecamatan ||
+         !this.state.routeParams.province_id ||
+         !this.state.routeParams.city_id ||
+         !this.state.routeParams.kecamatan ||
+         // !this.state.routeParams.kode_wilayah_provinsi ||
+         // !this.state.routeParams.kode_wilayah_kabupaten ||
+         // !this.state.routeParams.kode_wilayah_kecamatan ||
          !this.state.routeParams.alamat
       ){
          // Alert('Mohon lengkapi semua isian sebelum mendaftar!', 'Peringatan')
@@ -138,6 +141,12 @@ class SignUp extends React.Component {
          })
       })
 
+      this.props.getProvince(this.state.routeParams).then((result)=>{
+         this.setState({
+             provinsi: result.payload.rajaongkir.results
+         })
+      })
+
       setTimeout(function () {
          document.querySelector(".loader-wrapper").style = "display: none";
       }, 2000);
@@ -156,6 +165,16 @@ class SignUp extends React.Component {
          console.log(this.state.routeParams)
 
          switch (tipe) {
+            case 'province_id':
+               this.props.getCity({
+                  province_id: this.state.routeParams.province_id, 
+                  province: this.state.routeParams.province_id
+               }).then((result)=>{
+                   this.setState({
+                       kabupaten: result.payload.rajaongkir.results
+                   })
+               })
+               break
             case 'kode_wilayah_provinsi':
                this.props.getWilayah({
                   ...this.state.routeParams, 
@@ -275,34 +294,39 @@ class SignUp extends React.Component {
                      </div>
                      <div className="or-saparator"><span>Alamat Pengiriman</span></div>
                      <div className="form-group">
-                        <select onChange={this.gantiSelect('kode_wilayah_provinsi')} name="kode_wilayah_provinsi" id="kode_wilayah_provinsi" className="form-control" style={{minHeight:'45px'}}>
+                        <select onChange={this.gantiSelect('province_id')} name="kode_wilayah_provinsi" id="kode_wilayah_provinsi" className="form-control" style={{minHeight:'45px'}}>
                            <option value="" disabled selected>Provinsi</option>
                            {this.state.provinsi.map((option)=>{
                               return (
-                                 <option value={option.kode_wilayah}>{option.nama}</option>
+                                 <option value={option.province_id}>{option.province}</option>
+                                 // <option value={option.kode_wilayah}>{option.nama}</option>
                               )
                            })}
                         </select>
                      </div>
                      <div className="form-group">
-                        <select onChange={this.gantiSelect('kode_wilayah_kabupaten')} name="kode_wilayah_kabupaten" id="kode_wilayah_kabupaten" className="form-control" style={{minHeight:'45px'}}>
+                        <select onChange={this.gantiSelect('city_id')} name="kode_wilayah_kabupaten" id="kode_wilayah_kabupaten" className="form-control" style={{minHeight:'45px'}}>
                            <option value="" disabled selected>Kabupaten/Kota</option>
                            {this.state.kabupaten.map((option)=>{
                               return (
-                                 <option value={option.kode_wilayah}>{option.nama}</option>
+                                 <option value={option.city_id}>{option.type} {option.city_name}</option>
+                                 // <option value={option.kode_wilayah}>{option.nama}</option>
                               )
                            })}
                         </select>
                      </div>
                      <div className="form-group">
-                        <select onChange={this.gantiSelect('kode_wilayah_kecamatan')} name="kode_wilayah_kecamatan" id="kode_wilayah_kecamatan" className="form-control" style={{minHeight:'45px'}}>
+                        {/* <select onChange={this.gantiSelect('kode_wilayah_kecamatan')} name="kode_wilayah_kecamatan" id="kode_wilayah_kecamatan" className="form-control" style={{minHeight:'45px'}}>
                            <option value="" disabled selected>Kecamatan</option>
                            {this.state.kecamatan.map((option)=>{
                               return (
                                  <option value={option.kode_wilayah}>{option.nama}</option>
                               )
                            })}
-                        </select>
+                        </select> */}
+                        <div className="md-fgrup-margin">
+                           <input onChange={this.setValue('kecamatan')} type="text" id="kecamatan" name="kecamatan" className="form-control" placeholder="Kecamatan" />
+                        </div>
                      </div>
                      <div className="form-group">
                         <textarea onChange={this.setValue('alamat')} id="alamat" name="alamat" rows="4" cols="50" className="form-control" placeholder="Alamat Pengiriman">
@@ -360,7 +384,9 @@ function mapDispatchToProps(dispatch) {
    return bindActionCreators({
      getArtikel: Actions.getArtikel,
      getWilayah: Actions.getWilayah,
-     simpanPenggunaBaru: Actions.simpanPenggunaBaru
+     simpanPenggunaBaru: Actions.simpanPenggunaBaru,
+     getProvince: Actions.getProvince,
+     getCity: Actions.getCity
    }, dispatch);
 }
 

@@ -57,6 +57,8 @@ class HomeThree extends React.Component {
 		mitra_terdekat: [],
 		images_samping: [],
 		images_bawah: [],
+		provinsi: {},
+		kabupaten: {},
 		images: [
 			// {
 			//   original: 'https://images.unsplash.com/photo-1531895861208-8504b98fe814?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1650&q=80',
@@ -128,6 +130,25 @@ class HomeThree extends React.Component {
 					//sudah login
 					localStorage.setItem('user', JSON.stringify(result.payload.rows[0]))
 					// console.log(localStorage.getItem('user'))
+
+					if(result.payload.rows[0].alamat_pengguna.length > 0){
+						//ada alamatnya
+						this.props.getProvince({id: result.payload.rows[0].alamat_pengguna[0].province_id}).then((resultProvince)=>{
+							this.setState({
+								provinsi: resultProvince.payload.rajaongkir.results
+							},()=>{
+								this.props.getCity({id: result.payload.rows[0].alamat_pengguna[0].city_id}).then((resultCity)=>{
+									this.setState({
+										kabupaten: resultCity.payload.rajaongkir.results
+									})
+								})
+							})
+						})
+
+					}else{
+						//tidak ada alamatnya
+					}
+
 				}
 			})
 		}else{
@@ -205,7 +226,7 @@ class HomeThree extends React.Component {
 				})
 		
 				if(parseInt(localStorage.getItem('sudah_login')) === 1 && JSON.parse(localStorage.getItem('user')).jenis_mitra_id !== 5){
-					this.props.getMitraTerdekat({
+					this.props.getMitraTerdekat({	
 						pengguna_id: JSON.parse(localStorage.getItem('user')).pengguna_id,
 						kode_wilayah_kecamatan: JSON.parse(localStorage.getItem('user')).alamat_pengguna && JSON.parse(localStorage.getItem('user')).alamat_pengguna.length > 0 ? JSON.parse(localStorage.getItem('user')).alamat_pengguna[0].kode_wilayah_kecamatan : null,
 						kode_wilayah_kabupaten: JSON.parse(localStorage.getItem('user')).alamat_pengguna && JSON.parse(localStorage.getItem('user')).alamat_pengguna.length > 0 ? JSON.parse(localStorage.getItem('user')).alamat_pengguna[0].kode_wilayah_kabupaten : null,
@@ -379,7 +400,8 @@ class HomeThree extends React.Component {
 											<b>{this.state.routeParams.alamat_pengguna[0].nama_penerima}</b>
 											<br/>
 											{this.state.routeParams.alamat_pengguna[0].alamat_jalan}<br/> 
-											{this.state.routeParams.alamat_pengguna[0].kecamatan}, {this.state.routeParams.alamat_pengguna[0].kabupaten}, {this.state.routeParams.alamat_pengguna[0].provinsi}
+											{this.state.routeParams.alamat_pengguna[0].kecamatan}, {this.state.kabupaten.type} {this.state.kabupaten.city_name}, {this.state.provinsi.province}
+											{/* {this.state.routeParams.alamat_pengguna[0].kecamatan}, {this.state.routeParams.alamat_pengguna[0].kabupaten}, {this.state.routeParams.alamat_pengguna[0].provinsi} */}
 										</div>
 										}
 										<div style={{width:'100%', textAlign:'right', fontSize:'12px', paddingTop:'16px'}}>
@@ -749,7 +771,9 @@ function mapDispatchToProps(dispatch) {
 		getProduk: Actions.getProduk,
 		getKategoriProduk: Actions.getKategoriProduk,
 		getMitraTerdekat: Actions.getMitraTerdekat,
-		getBanner: Actions.getBanner
+		getBanner: Actions.getBanner,
+		getProvince: Actions.getProvince,
+		getCity: Actions.getCity
     }, dispatch);
 }
 

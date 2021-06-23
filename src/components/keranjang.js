@@ -92,7 +92,17 @@ class keranjang extends React.Component {
 
                                     option.harga_produk.map((optionHarga)=>{
                                         if(parseInt(optionHarga.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
-                                            harga = parseFloat(optionHarga.nominal)
+                                            
+                                            if(!option.diskon_produk_id){
+                                                harga = parseFloat(optionHarga.nominal)
+                                            }else{
+                                                if(option.jenis_hitung_diskon_id === 1){
+                                                    harga = parseFloat(optionHarga.nominal)-(parseFloat(optionHarga.nominal)*option.persen_diskon/100)
+                                                }else{
+                                                    harga = 0
+                                                }
+                                            }
+                                            
                                         }
                                     })
 
@@ -142,7 +152,18 @@ class keranjang extends React.Component {
             
                                     option.harga_produk.map((optionHarga)=>{
                                         if(parseInt(optionHarga.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
-                                            harga = parseFloat(optionHarga.nominal)
+                                            // harga = parseFloat(optionHarga.nominal)
+                                            if(!option.diskon_produk_id){
+                                                harga = parseFloat(optionHarga.nominal)
+                                            }else{
+
+                                                if(option.jenis_hitung_diskon_id === 1){
+                                                    harga = parseFloat(optionHarga.nominal)-(parseFloat(optionHarga.nominal)*option.persen_diskon/100)
+                                                }else{
+                                                    harga = 0
+                                                }
+
+                                            }
                                         }
                                     })
             
@@ -309,6 +330,13 @@ class keranjang extends React.Component {
                                                                         </a>
                                                                     </div>
                                                                     
+                                                                    {/* <div style={{paddingLeft:'8px', fontSize:'10px', fontWeight:'500', color:'#9b9b9b'}}>
+                                                                        {parseInt(localStorage.getItem('sudah_login')) !== 1 &&
+                                                                        <span>
+                                                                            Harga retail
+                                                                        </span>
+                                                                        }
+                                                                    </div> */}
                                                                     <div style={{paddingLeft:'8px', fontSize:'18px', fontWeight:'500'}}>
                                                                         {/* Rp 100.000 */}
                                                                         {parseInt(localStorage.getItem('sudah_login')) !== 1 &&
@@ -317,13 +345,6 @@ class keranjang extends React.Component {
                                                                         </span>
                                                                         }
                                                                     </div>
-                                                                    {/* <div style={{paddingLeft:'8px', fontSize:'10px', fontWeight:'500', color:'#9b9b9b'}}>
-                                                                        {parseInt(localStorage.getItem('sudah_login')) !== 1 &&
-                                                                        <span>
-                                                                            Harga retail
-                                                                        </span>
-                                                                        }
-                                                                    </div> */}
                                                                     <div style={{paddingLeft:'8px', paddingRight:'16px', fontSize:'8px', fontWeight:'500', color:'#9b9b9b'}}>
                                                                         {parseInt(localStorage.getItem('sudah_login')) !== 1 &&
                                                                         <span>
@@ -341,28 +362,64 @@ class keranjang extends React.Component {
                                                                         }
                                                                         {parseInt(localStorage.getItem('sudah_login')) === 1 &&
                                                                         <span>
+                                                                            {!option.diskon_produk_id &&
                                                                             <div>
-                                                                                {option.harga_produk.map((option)=>{
-                                                                                    if(parseInt(option.jenis_harga_id) === 1){
-                                                                                        return (
-                                                                                            <span style={{textDecoration:'line-through'}}>Rp {this.formatAngka(option.nominal)}</span>
-                                                                                        )
-                                                                                    }
-                                                                                })}
-                                                                            </div>
-                                                                            <div style={{fontSize:'18px', fontWeight:'bold'}}>
-                                                                                {/* {parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id) === 2 && */}
-                                                                                <span>
+                                                                                <div>
                                                                                     {option.harga_produk.map((option)=>{
-                                                                                        if(parseInt(option.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
+                                                                                        if(parseInt(option.jenis_harga_id) === 1){
                                                                                             return (
-                                                                                                <span>Rp {this.formatAngka(option.nominal)}</span>
+                                                                                                <span style={{textDecoration:'line-through'}}>Rp {this.formatAngka(option.nominal)}</span>
                                                                                             )
                                                                                         }
                                                                                     })}
-                                                                                </span>
-                                                                                {/* } */}
+                                                                                </div>
+                                                                                <div style={{fontSize:'18px', fontWeight:'bold'}}>
+                                                                                    {/* {parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id) === 2 && */}
+                                                                                    <span>
+                                                                                        {option.harga_produk.map((option)=>{
+                                                                                            if(parseInt(option.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
+                                                                                                return (
+                                                                                                    <span>Rp {this.formatAngka(option.nominal)}</span>
+                                                                                                )
+                                                                                            }
+                                                                                        })}
+                                                                                    </span>
+                                                                                    {/* } */}
+                                                                                </div>
                                                                             </div>
+                                                                            }
+                                                                            {option.diskon_produk_id &&
+                                                                            <div>
+                                                                                <div>
+                                                                                    <span>
+                                                                                        {option.harga_produk.map((option)=>{
+                                                                                            if(parseInt(option.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
+                                                                                                return (
+                                                                                                    <span style={{textDecoration:'line-through'}}>Rp {this.formatAngka(option.nominal)}</span>
+                                                                                                )
+                                                                                            }
+                                                                                        })}
+                                                                                    </span>
+                                                                                </div>
+                                                                                <div>
+                                                                                    {option.jenis_hitung_diskon_id === 1 &&
+                                                                                    <div>Diskon {option.persen_diskon}%</div>
+                                                                                    }
+                                                                                    <div style={{fontSize:'18px', fontWeight:'bold'}}>
+                                                                                        <span>
+                                                                                            {option.harga_produk.map((optionHarga)=>{
+                                                                                                if(parseInt(optionHarga.jenis_harga_id) === parseInt(JSON.parse(localStorage.getItem('user')).jenis_mitra_id)){
+                                                                                                    return (
+                                                                                                        // <span>Rp {this.formatAngka(parseFloat(option.nominal)-(parseFloat(option.nominal)*parseFloat(option.persen_diskon)/100))}</span>
+                                                                                                        <span>Rp {this.formatAngka(parseFloat(optionHarga.nominal)-(parseFloat(optionHarga.nominal)*parseFloat(option.persen_diskon)/100))}</span>
+                                                                                                    )
+                                                                                                }
+                                                                                            })}
+                                                                                        </span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            }
                                                                             Harga {JSON.parse(localStorage.getItem('user')).jenis_mitra}
                                                                         </span>
                                                                         }
